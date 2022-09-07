@@ -1,0 +1,11 @@
+.box{
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, .2) 0px 8px 24px ;
+}
+
+.header{
+    margin-bottom: 30px;
+    text-align: center;
+}
