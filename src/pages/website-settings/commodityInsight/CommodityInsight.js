@@ -66,7 +66,7 @@ const CommodityInsight = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1000);
+      }, 1500);
     });
   }, []);
 
@@ -168,13 +168,14 @@ const CommodityInsight = () => {
 
                                     <td>
                                       <Link to={`/editcommodity/${item.id}`}>
-                                        <button type="button"
-                                        className="btn btn-success"
-                                        data-dismiss="modal">Edit</button>
+                                        <button
+                                          type="button"
+                                          className="btn btn-success"
+                                          data-dismiss="modal"
+                                        >
+                                          Edit
+                                        </button>
                                       </Link>
-                                      
-                                       
-                                    
                                       {/* <button
                                         type="button"
                                         className="btn btn-danger"

@@ -14,9 +14,7 @@ const ProtectedRoutes = () => {
   useEffect(() => {
     axios
       .get("/auth/current-user")
-      .then((response) => {
-        console.log(response.data);
-      })
+      .then(() => {})
       .catch((error) => {
         console.log(error.response.data);
         navigate("/");

@@ -17,8 +17,6 @@ const NewCommodity = () => {
   const [customError, setCustomError] = useState("");
   const [country, setCountry] = useState([{ countryName: "" }]);
 
-
-
   const handleEditor = () => {
     setBriefHistory(editorRef.current.getContent());
   };
@@ -32,8 +30,8 @@ const NewCommodity = () => {
 
     const country = [];
     for (let i = 0; i < countries.length; i++) {
-      const [countryName, shortName] = countries[i].value.split("___");
-      if (countryName && shortName) country.push({countryName, shortName});
+      const [shortName, countryName] = countries[i].value.split("___");
+      if (shortName && countryName) country.push({ shortName, countryName });
     }
     return JSON.stringify(country);
   };
@@ -46,12 +44,12 @@ const NewCommodity = () => {
         countries: getCountry(),
         briefHistory: briefHistory,
       };
-      const formData = new FormData()
-        for (const property in jsonData) {
-          formData.append(`${property}`, jsonData[property]);
-        }
-        formData.append("image", e.target.image.files[0]);
-        console.log(e.target.image.files[0])
+      const formData = new FormData();
+      for (const property in jsonData) {
+        formData.append(`${property}`, jsonData[property]);
+      }
+      formData.append("image", e.target.image.files[0]);
+      console.log(e.target.image.files[0]);
       const { data: result } = await axios.post("/commodity", jsonData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -80,11 +78,6 @@ const NewCommodity = () => {
       }
     }
   };
-
-
-
-
-
 
   const handleAddCountry = () => {
     setCountry([...country, { countryName: "" }]);
@@ -143,13 +136,24 @@ const NewCommodity = () => {
                   <label className="form-label">Country</label>
                   {country.map((info, index) => (
                     <div key={index} className="root my-2">
-                      <select value={country.countryName} name="countries" className="mx-1 form-control country-keys">
-                        {Object.entries(africanCountryData).map((country, index) => {
-                          return <option key={index} value={`${country[0]}___${country[1]}`}>{country[1]}</option>
-                        })}
-
+                      <select
+                        value={country.countryName}
+                        name="countries"
+                        className="mx-1 form-control country-keys"
+                      >
+                        {Object.entries(africanCountryData).map(
+                          (country, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={`${country[0]}___${country[1]}`}
+                              >
+                                {country[1]}
+                              </option>
+                            );
+                          }
+                        )}
                       </select>
-                      
 
                       <div className="d-flex align-items-center">
                         <i
@@ -195,9 +199,7 @@ const NewCommodity = () => {
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark">
-                  Submit
-                </button>
+                <button className="btn btn-dark">Submit</button>
               </div>
             </form>
           </div>

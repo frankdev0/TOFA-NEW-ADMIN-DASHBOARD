@@ -23,15 +23,6 @@ const EditCommodity = () => {
     setBriefHistory(editorRef.current.getContent());
   };
 
-  //   useEffect(() => {
-  //     setId(localStorage.getItem("commodityID"));
-  //     setCountries(localStorage.getItem("countries"));
-  //     setName(localStorage.getItem("name"));
-  //     setBriefHistory(localStorage.getItem("briefHistory"));
-  //  }, [])
-
-  
-
   const navigate = useNavigate();
 
   const { commodityId } = useParams();
@@ -56,34 +47,37 @@ const EditCommodity = () => {
     getInfo();
   }, []);
 
-  // const handleUpdate = (e) => {
-  //     e.preventDefault()
-  //     axios.patch(`/commodity/${id}`,
-  //     {name:name,
-  //     countries:countries,
-
-  //   const navigate = useNavigate();
-
   const getCountry = () => {
     const countries = document.getElementsByClassName("country-keys");
 
     const country = [];
     for (let i = 0; i < countries.length; i++) {
       const [countryName, shortName] = countries[i].value.split("___");
-      if (countryName && shortName) country.push({countryName, shortName});
+      if (countryName && shortName) country.push({ countryName, shortName });
     }
     return JSON.stringify(country);
   };
 
-
   const handleUpdate = async (e) => {
     try {
       e.preventDefault();
-      await axios.patch("/commodity", {
+      const jsonData = {
         name: name,
         countries: getCountry(),
         briefHistory: briefHistory,
+      };
+      const formData = new FormData();
+      for (const property in jsonData) {
+        formData.append(`${property}`, jsonData[property]);
+      }
+      formData.append("image", e.target.image.files[0]);
+      console.log(e.target.image.files[0]);
+      const { data } = await axios.patch(`/commodity/${id}`, jsonData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+      console.log(data);
       toast.success("EDITED SUCCESSFULLY", {
         position: "top-right",
         autoClose: 4000,
@@ -102,8 +96,6 @@ const EditCommodity = () => {
       }
     }
   };
-
-
 
   const [country, setCountry] = useState([{ countryName: "" }]);
 
@@ -152,6 +144,7 @@ const EditCommodity = () => {
                   <label className="form-label">Commodity Name:</label>
                   <input
                     value={name}
+                    name="name"
                     type="text"
                     className="form-control"
                     aria-describedby="emailHelp"
@@ -160,14 +153,26 @@ const EditCommodity = () => {
                 </div>
 
                 <div className="col-6">
-                <label className="form-label">Country</label>
+                  <label className="form-label">Country</label>
                   {country.map((info, index) => (
                     <div key={index} className="root my-2">
-                      <select value={country.countryName} name="countries" className="mx-1 form-control country-keys">
-                        {Object.entries(africanCountryData).map((country, index) => {
-                          return <option key={index} value={`${country[0]}___${country[1]}`}>{country[1]}</option>
-                        })}
-
+                      <select
+                        value={country.countryName}
+                        name="countries"
+                        className="mx-1 form-control country-keys"
+                      >
+                        {Object.entries(africanCountryData).map(
+                          (country, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={`${country[0]}___${country[1]}`}
+                              >
+                                {country[1]}
+                              </option>
+                            );
+                          }
+                        )}
                       </select>
 
                       <div className="d-flex align-items-center">
@@ -188,23 +193,29 @@ const EditCommodity = () => {
               <div>
                 <h4>Commodity Information</h4>
                 <Editor
-                    id="mytextarea"
-                    name="briefHistory"
+                  id="mytextarea"
+                  name="briefHistory"
                   value={briefHistory}
                   onInit={(evt, editor) => (editorRef.current = editor)}
-                  onChange={(e) => setBriefHistory(e.target.value)}
+                  onChange={handleEditor}
                 />
               </div>
 
-              {/* <div className="mb-3" style={{ textAlign: "left" }}> */}
-              {/* { file && <div>
-               
-            <img alt="not found" width={"250px"} src={URL.createObjectURL(file)} />
-            </div>
-          } */}
-              {/* <label className="form-label mx-2">Upload Product</label>
-                <input type="file" id="img" name="fileName" accept="image/*" />
-              </div> */}
+              <div className="mb-3" style={{ textAlign: "left" }}>
+                {/* {(e) =>
+                  e.target.image.files && (
+                    <div>
+                      <img
+                        alt="not found"
+                        width={"250px"}
+                        src={URL.createObjectURL(e.target.image.files)}
+                      />
+                    </div>
+                  )
+                } */}
+                <label className="form-label mx-2">Upload Product</label>
+                <input type="file" id="image" name="image" accept="image/*" />
+              </div>
 
               <div style={{ textAlign: "start" }}>
                 <button className="btn btn-dark" onClick={handleUpdate}>

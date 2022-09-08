@@ -1,24 +1,23 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from '../../components/baseUrl'
-import {applicantDatatabless} from './DummyData';
-import 'jquery/dist/jquery.min.js';
-import "datatables.net-dt/js/dataTables.dataTables"
-import "datatables.net-dt/css/jquery.dataTables.min.css"
-import $ from 'jquery'; 
+import { axios } from "../../components/baseUrl";
+import { applicantDatatabless } from "./DummyData";
+import "jquery/dist/jquery.min.js";
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
+import $ from "jquery";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 
 const Buyers = () => {
-
-
-  const [buyers, setBuyers] = useState([]);
+  const [buyer, setBuyer] = useState([]);
+  const [viewBuyer, setViewBuyer] = useState([]);
 
   const getData = async () => {
     try {
-      axios.get("/buyer").then((response) => {
+      axios.get("/auth/users").then((response) => {
         console.log(response.data);
-        setBuyers(response.data.data);
+        setBuyer(response.data.data);
       });
     } catch (error) {
       console.log(error.response.data.erros);
@@ -31,31 +30,31 @@ const Buyers = () => {
 
   //  if (error) console.log(error)
 
-  const showDetails = (buyerID) => { 
-    axios.get(`/buyer/${buyerID}`).then(() => {
-      getData()
+  const showDetails = (buyerID) => {
+    axios.get(`/auth/users/${buyerID}`).then((response) => {
+      setViewBuyer(response.data.data);
     });
-};
+  };
 
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     //initialize datatable
-$(document).ready(function () {
-    setTimeout(function(){
-    $('#example').DataTable();
-     } ,1000);
-});
-},[])
+    $(document).ready(function() {
+      setTimeout(function() {
+        $("#example").DataTable();
+      }, 1500);
+    });
+  }, []);
 
   return (
     <>
       {/* <!-- main wrapper --> */}
       <div className="dashboard-main-wrapper">
-        <Navbar/>
-        <Sidebar/>
+        <Navbar />
+        <Sidebar />
         {/* <!-- wrapper  --> */}
         <div className="dashboard-wrapper">
           <div className="container-fluid dashboard-content">
@@ -130,7 +129,6 @@ $(document).ready(function () {
                               </button>
                             </div>
                           </div>
-
                         </div>
                       </div>
                       <div className="container">
@@ -143,31 +141,81 @@ $(document).ready(function () {
                             <tr>
                               <th>ID</th>
                               <th>Full Name</th>
-                              <th>Dispute</th>
-                              <th>phoneNumber</th>
-                              <th>Country</th>
+                              <th>Email</th>
+                              <th>Verified</th>
+                              <th>Enabled</th>
                               <th>Action</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {applicantDatatabless.map((item) => {
+                            {buyer.map((item, index) => {
                               return (
                                 <tr key={item.id}>
-                                  <td>{item.id}</td>
+                                  <td>{index + 1}</td>
                                   <td>{item.fullName}</td>
-                                  <td>{item.country}</td>
-                                  <td>{item.phoneNumber}</td>
-                                  <td>{item.productTraded}</td>
-                                  
-                                 
-                                  <td><button
-                                      onClick={(e) => showDetails(item.id)}
+                                  <td>{item.email}</td>
+                                  <td>{item.isVerified}</td>
+                                  <td>{item.isEnabled}</td>
+
+                                  <td>
+                                    <button
                                       type="button"
-                                      className="btn btn-primary" 
+                                      className="btn btn-primary"
+                                      onClick={(e) => showDetails(item.id)}
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#exampleModal"
                                     >
                                       view
-                                    </button>  </td>
-                                  
+                                    </button>
+
+                                    <div
+                                      className="modal fade"
+                                      id="exampleModal"
+                                      tabIndex="-1"
+                                      aria-labelledby="exampleModalLabel"
+                                      aria-hidden="true"
+                                    >
+                                      <div className="modal-dialog">
+                                        <div className="modal-content">
+                                          <div className="modal-header">
+                                            <h5
+                                              className="modal-title"
+                                              id="exampleModalLabel"
+                                            >
+                                              Buyers Information
+                                            </h5>
+                                            <button
+                                              type="button"
+                                              className="btn-close"
+                                              data-bs-dismiss="modal"
+                                              aria-label="Close"
+                                            ></button>
+                                          </div>
+                                          <div className="modal-body">
+                                            {viewBuyer.fullName}
+                                          </div>
+                                          <div className="modal-body">
+                                            {viewBuyer.email}
+                                          </div>
+                                          <div className="modal-footer">
+                                            <button
+                                              type="button"
+                                              className="btn btn-secondary"
+                                              data-bs-dismiss="modal"
+                                            >
+                                              Close
+                                            </button>
+                                            <button
+                                              type="button"
+                                              className="btn btn-primary"
+                                            >
+                                              Save changes
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </td>
                                 </tr>
                               );
                             })}

@@ -30,32 +30,6 @@ const Products = () => {
     }
   };
 
-  const setData = (
-    id,
-    productName,
-    maxDuration,
-    parentCategory,
-    supplyCapacity,
-    category,
-    minDuration,
-    subCategory,
-    unitForMinOrder,
-    unitForSupplyCapacity,
-    productDescription
-  ) => {
-    localStorage.setItem("id", id);
-    localStorage.setItem("productName", productName);
-    localStorage.setItem("minPricePerUnit", minDuration);
-    localStorage.setItem("maxPricePerUnit", maxDuration);
-    localStorage.setItem("supplyCapacity", supplyCapacity);
-    localStorage.setItem("unitForSupplyCapacity", unitForSupplyCapacity);
-    localStorage.setItem("category", category);
-    localStorage.setItem("parentCategory", parentCategory);
-    localStorage.setItem("subCategory", subCategory);
-    localStorage.setItem("unitForMinOrder", unitForMinOrder);
-    localStorage.setItem("productDescription", productDescription);
-  };
-
   useEffect(() => {
     getData();
   }, []);
@@ -69,6 +43,7 @@ const Products = () => {
   const showDetails = (productID) => {
     axios.get(`/product/${productID}`).then((response) => {
       setViewProduct(response.data.data);
+      console.log(response.data.data);
     });
   };
 
@@ -77,7 +52,7 @@ const Products = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1000);
+      }, 1500);
     });
   }, []);
 
@@ -122,12 +97,7 @@ const Products = () => {
                       <div
                         id="example wrapper"
                         className="dataTables_wrapper dt_bootstrap4"
-                      >
-                       
-
-
-
-                      </div>
+                      ></div>
                       <div className="container">
                         <table
                           id="example"
@@ -142,12 +112,12 @@ const Products = () => {
                               <th>Product Name</th>
                               <th>Min Price Per Unit</th>
                               <th>maxPricePerUnit</th>
-                            
+
                               <th>supplyCapacity</th>
 
                               <th>minDuration</th>
                               <th>maxDuration</th>
-                           
+
                               <th>Actionn-two</th>
                             </tr>
                           </thead>
@@ -156,45 +126,19 @@ const Products = () => {
                               return (
                                 <tr key={item.id}>
                                   {/* <td>{item.id}</td> */}
-                                  <td>{index +1}</td>
+                                  <td>{index + 1}</td>
                                   <td>{item.productName}</td>
                                   <td>{item.minPricePerUnit}</td>
                                   <td>{item.maxPricePerUnit}</td>
-                           
+
                                   <td>{item.supplyCapacity}</td>
                                   <td>{item.minDuration}</td>
                                   <td>{item.maxDuration}</td>
-                                
-                                  <td>
-                                    
 
-                                  
-                          {/* <button
-                            className="btn btn-success"
-                            onClick={() =>
-                              setData(
-                                item.id,
-                                item.productName,
-                                item.parentCategory,
-                                item.minDuration,
-                                item.maxDuration,
-                                item.supplyCapacity,
-                                item.category,
-                                item.unitForSupplyCapacity,
-                                item.subCategory,
-                                item.unitForMinOrder,
-                                item.productDescription, 
-                              )
-                            }
-                          >
-                            Edit
-                          </button> */}
-                          <Link to={`/editproduct/${item.id}`}> 
-                          <button>
-                            Edit
-                          </button>
-                          </Link>
-                                    
+                                  <td>
+                                    <Link to={`/editproduct/${item.id}`}>
+                                      <button>Edit</button>
+                                    </Link>
 
                                     {/* <button
                                       type="button"
@@ -239,97 +183,307 @@ const Products = () => {
                                             ></button>
                                           </div>
                                           <div className="modal-body">
-                                            <div className="d-flex top-ctn" style={{width:"100%"}}>
-                                              <div className="top-left-ctn modal-body" style={{width:"50%"}}>
-                                                <h4>Featured Product Image: </h4>
-                                                <div className="product-img-ctn" style={{width:"100%"}}>
-                                                  <div className="product-img-ctn-featured" style={{width:"100%"}}>
-                                                    <img src={viewProduct.productImages && viewProduct.productImages.filter(image => image.isMain == true)[0].image} alt='' style={{width:"100%", height:"auto"}} />
+                                            <div
+                                              className="d-flex top-ctn"
+                                              style={{ width: "100%" }}
+                                            >
+                                              <div
+                                                className="top-left-ctn modal-body"
+                                                style={{ width: "50%" }}
+                                              >
+                                                <h4>
+                                                  Featured Product Image:{" "}
+                                                </h4>
+                                                <div
+                                                  className="product-img-ctn"
+                                                  style={{ width: "100%" }}
+                                                >
+                                                  <div
+                                                    className="product-img-ctn-featured"
+                                                    style={{ width: "100%" }}
+                                                  >
+                                                    <img
+                                                      src={
+                                                        viewProduct.productImages &&
+                                                        viewProduct.productImages.filter(
+                                                          (image) =>
+                                                            image.isMain == true
+                                                        )[0].image
+                                                      }
+                                                      alt=""
+                                                      style={{
+                                                        width: "100%",
+                                                        height: "auto",
+                                                      }}
+                                                    />
                                                   </div>
-                                                  <div className="product-img-ctn-other" style={{width:"100%"}} >
-                                                    {viewProduct.productImages && viewProduct.productImages.filter(image => image.isMain == false).map((image, index) => <img key={index} src={image.image} alt='' style={{width:"100px", height:"100px", margin: "5px", objectFit: "cover"}}/>)}
+                                                  <div
+                                                    className="product-img-ctn-other"
+                                                    style={{ width: "100%" }}
+                                                  >
+                                                    {viewProduct.productImages &&
+                                                      viewProduct.productImages
+                                                        .filter(
+                                                          (image) =>
+                                                            image.isMain ==
+                                                            false
+                                                        )
+                                                        .map((image, index) => (
+                                                          <img
+                                                            key={index}
+                                                            src={image.image}
+                                                            alt=""
+                                                            style={{
+                                                              width: "100px",
+                                                              height: "100px",
+                                                              margin: "5px",
+                                                              objectFit:
+                                                                "cover",
+                                                            }}
+                                                          />
+                                                        ))}
                                                   </div>
                                                 </div>
-                                                <Link to={`/editproduct/${item.id}`}> 
-                                                  <h5 style={{color:"#DC4D04"}}>
+                                                <Link
+                                                  to={`/editproduct/${item.id}`}
+                                                >
+                                                  <h5
+                                                    style={{ color: "#DC4D04" }}
+                                                  >
                                                     Update images
                                                   </h5>
                                                 </Link>
                                               </div>
-                                              <div className="top-right-ctn modal-body" style={{width:"50%"}}>
+                                              <div
+                                                className="top-right-ctn modal-body"
+                                                style={{ width: "50%" }}
+                                              >
                                                 <h4> Product Details</h4>
-                                                <div className="top-right-ctn-body" style={{width:"100%",  border: "1px solid #000000"}}> 
-                                                  <div className="top-right-ctn-body top-cont d-flex" style={{width: "100%",}}> 
-                                                    <div className="top-right-ctn-body top-cont-left" style={{width:"50%", border: "1px solid #DDDDDD"}}> 
+                                                <div
+                                                  className="top-right-ctn-body"
+                                                  style={{
+                                                    width: "100%",
+                                                    border: "1px solid #000000",
+                                                  }}
+                                                >
+                                                  <div
+                                                    className="top-right-ctn-body top-cont d-flex"
+                                                    style={{ width: "100%" }}
+                                                  >
+                                                    <div
+                                                      className="top-right-ctn-body top-cont-left"
+                                                      style={{
+                                                        width: "50%",
+                                                        border:
+                                                          "1px solid #DDDDDD",
+                                                      }}
+                                                    >
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Product Name: </h6>
-                                                        {viewProduct.productName}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Product Name:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.productName
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Subcategory: </h6>
-                                                        {viewProduct.subCategory}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Subcategory:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.subCategory
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Min price: </h6>
-                                                        {viewProduct.minPricePerUnit}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Min price:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.minPricePerUnit
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Category: </h6>
-                                                        {viewProduct.subCategory}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Category:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.subCategory
+                                                        }
                                                       </div>
                                                     </div>
-                                                    <div className="top-right-ctn-body top-cont-right" style={{width:"50%", border: "1px solid #DDDDDD"}}> 
+                                                    <div
+                                                      className="top-right-ctn-body top-cont-right"
+                                                      style={{
+                                                        width: "50%",
+                                                        border:
+                                                          "1px solid #DDDDDD",
+                                                      }}
+                                                    >
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Supply Capacity: </h6>
-                                                        {viewProduct.supplyCapacity}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Supply Capacity:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.supplyCapacity
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Min Duration: </h6>
-                                                        {viewProduct.minDuration}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Min Duration:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.minDuration
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Category: </h6>
-                                                        {viewProduct.subCategory}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Category:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.subCategory
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        <h6 style={{color: "rgba(0, 0, 0, 0.62)"}}> Subcategory: </h6>
-                                                        {viewProduct.subCategory}
+                                                        <h6
+                                                          style={{
+                                                            color:
+                                                              "rgba(0, 0, 0, 0.62)",
+                                                          }}
+                                                        >
+                                                          {" "}
+                                                          Subcategory:{" "}
+                                                        </h6>
+                                                        {
+                                                          viewProduct.subCategory
+                                                        }
                                                       </div>
                                                     </div>
                                                   </div>
-                                                  <div className="top-right-ctn-body bottom-cont"> 
-                                                    <h6 className="modal-body" style={{color: "rgba(0, 0, 0, 0.62)"}}> Cost of product: </h6>
+                                                  <div className="top-right-ctn-body bottom-cont">
+                                                    <h6
+                                                      className="modal-body"
+                                                      style={{
+                                                        color:
+                                                          "rgba(0, 0, 0, 0.62)",
+                                                      }}
+                                                    >
+                                                      {" "}
+                                                      Cost of product:{" "}
+                                                    </h6>
                                                     <div className="d-flex">
                                                       <div className="modal-body">
-                                                        Maximum Price Per Unit: <br/>
-                                                        {viewProduct.maxPricePerUnit}
+                                                        Maximum Price Per Unit:{" "}
+                                                        <br />
+                                                        {
+                                                          viewProduct.maxPricePerUnit
+                                                        }
                                                       </div>
                                                       <div className="modal-body">
-                                                        Currency: <br/>
+                                                        Currency: <br />
                                                         {viewProduct.currency}
                                                       </div>
                                                     </div>
                                                   </div>
                                                 </div>
-                                                <Link to={`/editproduct/${item.id}`}> 
-                                                    <h5 style={{color:"#DC4D04"}}>
-                                                      Update product details
-                                                    </h5>
+                                                <Link
+                                                  to={`/editproduct/${item.id}`}
+                                                >
+                                                  <h5
+                                                    style={{ color: "#DC4D04" }}
+                                                  >
+                                                    Update product details
+                                                  </h5>
                                                 </Link>
                                               </div>
                                             </div>
                                             <div className="bottom-ctn modal-body">
-                                              <h4 >Product Information</h4>
-                                              <div className="modal-body" style={{border: "1px solid #000000"}}>
-                                                ToFa has developed partnerships with Vietnam’s top suppliers to provide high-quality cashew nuts to markets worldwide. Vietnam has been producing cashews throughout the country since the early 1980s. 
-                                                Cashew nuts are grown in various regions in Vietnam, including Binh Phuoc, Dak Nong, Dong Nai, Binh Duong provinces. Particularly, Binh Phuoc province is known as the leading region for the growth of cashew nuts, constituting over 50% of the entire cashew nuts production in Vietnam. 
-
-                                                Tridge can provide two types of cashew nuts for export: kernel and processed nuts. With kernel cashew nuts, there are various sizes ranging from W180 to W500. For processed nuts, salt-roasted cashew is most popular. Moreover, Tridge can provide organic cashew kernel, which is gaining popularity in the market. he cashew nuts in Vietnam are based on size, color, and degree of rupture.
+                                              <h4>Product Information</h4>
+                                              <div
+                                                className="modal-body"
+                                                style={{
+                                                  border: "1px solid #000000",
+                                                }}
+                                              >
+                                                ToFa has developed partnerships
+                                                with Vietnam’s top suppliers to
+                                                provide high-quality cashew nuts
+                                                to markets worldwide. Vietnam
+                                                has been producing cashews
+                                                throughout the country since the
+                                                early 1980s. Cashew nuts are
+                                                grown in various regions in
+                                                Vietnam, including Binh Phuoc,
+                                                Dak Nong, Dong Nai, Binh Duong
+                                                provinces. Particularly, Binh
+                                                Phuoc province is known as the
+                                                leading region for the growth of
+                                                cashew nuts, constituting over
+                                                50% of the entire cashew nuts
+                                                production in Vietnam. Tridge
+                                                can provide two types of cashew
+                                                nuts for export: kernel and
+                                                processed nuts. With kernel
+                                                cashew nuts, there are various
+                                                sizes ranging from W180 to W500.
+                                                For processed nuts, salt-roasted
+                                                cashew is most popular.
+                                                Moreover, Tridge can provide
+                                                organic cashew kernel, which is
+                                                gaining popularity in the
+                                                market. he cashew nuts in
+                                                Vietnam are based on size,
+                                                color, and degree of rupture.
                                               </div>
-                                              <Link to={`/editproduct/${item.id}`}> 
-                                                    <h5 style={{color:"#DC4D04"}}>
-                                                      Update product information
-                                                    </h5>
+                                              <Link
+                                                to={`/editproduct/${item.id}`}
+                                              >
+                                                <h5
+                                                  style={{ color: "#DC4D04" }}
+                                                >
+                                                  Update product information
+                                                </h5>
                                               </Link>
                                             </div>
                                           </div>

@@ -61,8 +61,8 @@ const EditProducts = () => {
       setSubCategory(response.data.data.subCategory);
       setProductDescription(response.data.data.productDescription);
       // setProductInfo(response.data.data.productInfo)
-        const responseSpecifications = response.data.data.productSpecification;
-        Object.keys(responseSpecifications)
+      const responseSpecifications = response.data.data.productSpecification;
+      Object.keys(responseSpecifications);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -70,19 +70,16 @@ const EditProducts = () => {
     }
   };
 
-
-
   useEffect(() => {
     getInfo();
   }, []);
-
 
   const navigate = useNavigate();
 
   const handleUpdate = async (e) => {
     try {
       e.preventDefault();
-        await axios.patch(`/product/${id}`, {
+      await axios.patch(`/product/${id}`, {
         productName: productName,
         parentCategory: parentCategory,
         unitForMinOrder: unitForMinOrder,
@@ -101,12 +98,12 @@ const EditProducts = () => {
         draggable: true,
       });
     } catch (err) {
-        toast.error("FAILED! TRY AGAIN", {
-            position: "top-right",
-            autoClose: 4000,
-            pauseHover: true,
-            draggable: true,
-          });
+      toast.error("FAILED! TRY AGAIN", {
+        position: "top-right",
+        autoClose: 4000,
+        pauseHover: true,
+        draggable: true,
+      });
       console.log(err);
     }
     // navigate("/products");
@@ -129,7 +126,7 @@ const EditProducts = () => {
         <div className="dashboard-wrapper">
           <ToastContainer />
           <div>
-            <form className="mx-5 my-5" >
+            <form className="mx-5 my-5">
               <div className="d-flex justify-content-between">
                 <h2> Create Products</h2>
                 {/* <Link to="/commodityInsight">
@@ -314,12 +311,12 @@ const EditProducts = () => {
                 </div>
               </div>
               <div className="row">
-                 <div className="col-6" style={{ textAlign: "left" }}>
+                <div className="col-6" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
                   {specification.map((info, index) => (
                     <div key={index} className="root my-2">
                       <input
-                        type='text'
+                        type="text"
                         name="Type"
                         value={specification.Type}
                         placeholder="type"
@@ -327,15 +324,15 @@ const EditProducts = () => {
                       />
 
                       <input
-                        type='text'
+                        type="text"
                         name="Color"
                         value={specification.Color}
                         variant="filled"
                         placeholder="value"
                         className="mx-1 form-control specification-values"
-                      /> 
+                      />
 
-               <div className="d-flex align-items-center">
+                      <div className="d-flex align-items-center">
                         <i
                           className="fa-solid fa-plus mx-1 "
                           onClick={() => handleAddFields()}
@@ -344,10 +341,10 @@ const EditProducts = () => {
                           className="fa-solid fa-minus mx-1"
                           onClick={() => handleRemoveFields(index)}
                         ></i>
-                      </div> 
-                 </div>
-                  ))} 
-                 {/* {formErrors.specification && (
+                      </div>
+                    </div>
+                  ))}
+                  {/* {formErrors.specification && (
                     <p className="text-danger">{formErrors.specification}</p>
                   )}  */}
                 </div>
@@ -485,7 +482,11 @@ const EditProducts = () => {
               /> */}
 
               <div style={{ textAlign: "left" }}>
-                <button className="btn btn-dark" type="submit" onClick={handleUpdate}>
+                <button
+                  className="btn btn-dark"
+                  type="submit"
+                  onClick={handleUpdate}
+                >
                   Update
                 </button>
               </div>

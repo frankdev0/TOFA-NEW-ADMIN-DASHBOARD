@@ -1,17 +1,15 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from '../../components/baseUrl'
-import {applicantDatatabless} from './DummyData';
-import 'jquery/dist/jquery.min.js';
-import "datatables.net-dt/js/dataTables.dataTables"
-import "datatables.net-dt/css/jquery.dataTables.min.css"
-import $ from 'jquery'; 
+import { axios } from "../../components/baseUrl";
+import { applicantDatatabless } from "./DummyData";
+import "jquery/dist/jquery.min.js";
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
+import $ from "jquery";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 
 const Inquiries = () => {
-
-
   const [inquiries, setInquiries] = useState([]);
   const [inquiryView, setInquiryView] = useState([]);
 
@@ -32,31 +30,31 @@ const Inquiries = () => {
 
   //  if (error) console.log(error)
 
-  const showDetails = (productID) => { 
+  const showDetails = (productID) => {
     axios.get(`/rfq/${productID}`).then((response) => {
-      setInquiryView(response.data.data)
+      setInquiryView(response.data.data);
     });
-};
+  };
 
   useEffect(() => {
-    getData()
-  }, [])
+    getData();
+  }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     //initialize datatable
-$(document).ready(function () {
-    setTimeout(function(){
-    $('#example').DataTable();
-     } ,1000);
-});
-},[])
+    $(document).ready(function() {
+      setTimeout(function() {
+        $("#example").DataTable();
+      }, 1500);
+    });
+  }, []);
 
   return (
     <>
       {/* <!-- main wrapper --> */}
       <div className="dashboard-main-wrapper">
-        <Navbar/>
-        <Sidebar/>
+        <Navbar />
+        <Sidebar />
         {/* <!-- wrapper  --> */}
         <div className="dashboard-wrapper">
           <div className="container-fluid dashboard-content">
@@ -81,11 +79,7 @@ $(document).ready(function () {
                       <div
                         id="example wrapper"
                         className="dataTables_wrapper dt_bootstrap4"
-                      >
-                        
-
-
-                      </div>
+                      ></div>
 
                       <div className="container">
                         <table
@@ -96,9 +90,9 @@ $(document).ready(function () {
                           <thead>
                             <tr>
                               <th>ID</th>
-                              <th>Full Name</th>
-                              <th>Inquiries</th>
-                              <th>phoneNumber</th>
+                              <th>productName</th>
+                              <th>targetPrice</th>
+                              <th>unit</th>
                               <th>Country</th>
                               <th>paymentTerms</th>
                               <th className="text-center">Action</th>
@@ -108,24 +102,24 @@ $(document).ready(function () {
                             {inquiries.map((item, index) => {
                               return (
                                 <tr key={item.id}>
-                                  <td>{index +1}</td>
-                                  <td>{item.ProductName}</td>
-                                  <td>{item.quantity}</td>
+                                  <td>{index + 1}</td>
+                                  <td>{item.productName}</td>
+                                  <td>{item.targetPrice}</td>
                                   <td>{item.unit}</td>
                                   <td>{item.destinationPort}</td>
                                   <td>{item.paymentTerms}</td>
-                                
-                                  <td >
+
+                                  <td>
                                     <div className="text-center">
-                                    <button
-                                      onClick={(e) => showDetails(item.id)}
-                                      type="button"
-                                      className="btn btn-primary"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#exampleModal"
-                                    >
-                                      view
-                                    </button>
+                                      <button
+                                        onClick={(e) => showDetails(item.id)}
+                                        type="button"
+                                        className="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                      >
+                                        view
+                                      </button>
                                     </div>
 
                                     <div
@@ -149,48 +143,40 @@ $(document).ready(function () {
                                               className="btn-close text-danger"
                                               data-bs-dismiss="modal"
                                               aria-label="Close"
-                                             
                                             ></button>
                                           </div>
-                                          
+
                                           <div className="modal-body px-2">
                                             <label>
-                                              Product Name:{inquiryView.ProductName}
+                                              Product Name:
+                                              {inquiryView.ProductName}
                                             </label>
                                             <br />
                                             <p> Cashew</p>
                                           </div>
                                           <div className="modal-body px-2">
                                             <label>Payment Terms: </label>
-                                            <p>
-                                             {inquiryView.paymentTerms}
-                                            </p>
+                                            <p>{inquiryView.paymentTerms}</p>
                                           </div>
 
                                           <div className="modal-body px-2">
                                             <label>Terms Of Trade: </label>
-                                            <p>
-                                             {inquiryView.termsOfTrade}
-                                            </p>
+                                            <p>{inquiryView.termsOfTrade}</p>
                                           </div>
 
                                           <div className="modal-body px-2">
                                             <label>Destination Port: </label>
+                                            <p>{inquiryView.destinationPort}</p>
+                                          </div>
+                                          <div className="modal-body px-2">
+                                            <label>Quantity Requested:</label>
                                             <p>
-                                             {inquiryView.destinationPort}
+                                              {inquiryView.quantityRequired}
                                             </p>
                                           </div>
                                           <div className="modal-body px-2">
-                                          <label>Quantity Requested:</label>
-                                            <p>
-                                             {inquiryView.quantityRequired}
-                                            </p>
-                                          </div>
-                                          <div className="modal-body px-2">
-                                          <label>Target Price:</label>
-                                            <p>
-                                             {inquiryView.targetPrice}
-                                            </p>
+                                            <label>Target Price:</label>
+                                            <p>{inquiryView.targetPrice}</p>
                                           </div>
 
                                           <div className=" modal-bodyb px-2">
@@ -198,8 +184,12 @@ $(document).ready(function () {
                                             <p> {inquiryView.unit}</p>
                                           </div>
                                           <div className="modal-body px-2">
-                                            <label>Product Specification:</label>
-                                            <p>{ inquiryView.productDescription}</p>
+                                            <label>
+                                              Product Specification:
+                                            </label>
+                                            <p>
+                                              {inquiryView.productDescription}
+                                            </p>
                                             <p>
                                               Commodo eget a et dignissim
                                               dignissim morbi vitae, mi. Mi
@@ -216,7 +206,6 @@ $(document).ready(function () {
                                             </p>
                                           </div>
 
-                                         
                                           <div className="modal-footer">
                                             <button
                                               type="button"
@@ -229,8 +218,7 @@ $(document).ready(function () {
                                         </div>
                                       </div>
                                     </div>
-                                    </td>
-                                  
+                                  </td>
                                 </tr>
                               );
                             })}

@@ -3,7 +3,8 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { axios } from "../../components/baseUrl";
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
+
 const Banners = () => {
   const [banner, setBanner] = useState([]);
   const [viewBanner, setViewBanner] = useState([]);
@@ -154,7 +155,12 @@ const Banners = () => {
 
                                       <div className="modal-body">
                                         Uploaded on:{" "}
-                                        {dayjs[viewBanner.createdAt]}
+                                        {dayjs(viewBanner.createdAt).format(
+                                          "D MMMM YYYY"
+                                        )}
+                                        {/* {dayjs.map((item) => {
+                                          return item.viewBanner.createdAt;
+                                        })} */}
                                       </div>
                                       <div className="modal-body">
                                         Link: {viewBanner.link}

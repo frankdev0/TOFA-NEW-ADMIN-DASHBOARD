@@ -56,7 +56,7 @@ const Disputes = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1000);
+      }, 1500);
     });
   }, []);
 
@@ -166,7 +166,18 @@ const Disputes = () => {
                                   <td>{index + 1}</td>
                                   <td>{item.buyer.fullName}</td>
                                   <td>{item.buyer.email}</td>
-                                  <td>{item.status}</td>
+                                  <td>
+                                    {item.status === "PENDING" && (
+                                      <div className="bg-warning rounded-pill text-center">
+                                        PENDING
+                                      </div>
+                                    )}
+                                    {item.status === "RESOLVED" && (
+                                      <div className="bg-success rounded-pill text-center">
+                                        RESOLVED
+                                      </div>
+                                    )}
+                                  </td>
                                   <td>{item.subject}</td>
                                   <td>{item.complaint}</td>
 
@@ -247,7 +258,7 @@ const Disputes = () => {
                                               }}
                                             >
                                               <p className="text-white  mx-1">
-                                                {viewDisputes.status ==
+                                                {viewDisputes.status ===
                                                 "PENDING" ? (
                                                   <span className="bg-danger rounded-pill text-center px-2 py-1">
                                                     Open
@@ -282,7 +293,7 @@ const Disputes = () => {
                                                 getDispute(viewDisputes.id)
                                               }
                                             >
-                                              Resolved
+                                              Resolve
                                             </button>
                                           </div>
                                         </div>

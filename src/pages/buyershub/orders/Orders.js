@@ -14,6 +14,7 @@ import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import { axios } from "../../components/baseUrl";
+import dayjs from "dayjs";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -36,7 +37,7 @@ const Orders = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1000);
+      }, 2000);
     });
   }, []);
 
@@ -203,7 +204,8 @@ const Orders = () => {
                               <th>IncoTerm</th>
                               <th>paymentTerm</th>
                               <th>ShippingType</th>
-                              <th>Status</th>
+                              <th>Order Status</th>
+                              <th>Payment Status</th>
                               <th>Action</th>
                             </tr>
                           </thead>
@@ -227,7 +229,40 @@ const Orders = () => {
 
                                   <td>{item.paymentTerm}</td>
                                   <td>{item.shippingType}</td>
-                                  <td>{item.status}</td>
+                                  <td>
+                                    {item.status === "PENDING" && (
+                                      <div className="bg-warning rounded-pill text-center">
+                                        PENDING
+                                      </div>
+                                    )}
+                                    {item.status === "PROCESSING" && (
+                                      <div className="bg-primary rounded-pill text-center">
+                                        CONFIRMED
+                                      </div>
+                                    )}
+                                    {item.status === "SHIPPED" && (
+                                      <div className="bg-info rounded-pill text-center">
+                                        SHIPPED
+                                      </div>
+                                    )}
+                                    {item.status === "DELIVERED" && (
+                                      <div className="bg-success rounded-pill text-center">
+                                        DELIVERED
+                                      </div>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {item.status === "PENDING" ? (
+                                      <div className="bg-warning rounded-pill text-center mx-2">
+                                        PENDING
+                                      </div>
+                                    ) : (
+                                      <div className="bg-success rounded-pill text-center mx-2">
+                                        PAID
+                                      </div>
+                                    )}
+                                  </td>
+                                  {/* <td>{item.status}</td> */}
                                   <td>
                                     {/* <button
                                       type="button"
@@ -275,7 +310,11 @@ const Orders = () => {
                                             <div className="top-ctn d-flex">
                                               <div className="modal-body">
                                                 <img
-                                                  src={order.image}
+                                                  src={
+                                                    order.product &&
+                                                    order.product
+                                                      .productImages[0].image
+                                                  }
                                                   alt="order"
                                                   style={{
                                                     width: "125px",
@@ -293,7 +332,10 @@ const Orders = () => {
                                                   {" "}
                                                   Product name:{" "}
                                                 </h6>
-                                                <p>{order.productID}</p>
+                                                <p>
+                                                  {order.product &&
+                                                    order.product.productName}
+                                                </p>
                                                 <h6
                                                   style={{
                                                     color:
@@ -302,7 +344,11 @@ const Orders = () => {
                                                 >
                                                   {" "}
                                                   Date of placed order:{" "}
-                                                  <span>{order.createdAt}</span>
+                                                  <span>
+                                                    {dayjs(
+                                                      order.createdAt
+                                                    ).format("D MMMM YYYY")}
+                                                  </span>
                                                 </h6>
                                               </div>
                                               <div className="modal-body">
@@ -468,7 +514,10 @@ const Orders = () => {
                                                     {" "}
                                                     Buyer's name:{" "}
                                                   </h6>
-                                                  <p>{order.buyerID}</p>
+                                                  <p>
+                                                    {order.buyer &&
+                                                      order.buyer.fullName}
+                                                  </p>
                                                 </div>
                                                 <div className="modal-body">
                                                   <h6
@@ -490,7 +539,9 @@ const Orders = () => {
                                                     }}
                                                   >
                                                     {" "}
-                                                    Email:{" "}
+                                                    Email:
+                                                    {order.buyer &&
+                                                      order.buyer.email}
                                                   </h6>
                                                   <p>{order.email}</p>
                                                 </div>
