@@ -42,7 +42,7 @@ const Sidebar = () => {
 
                 <div className={open ? "sidebar-item open" : "sidebar-item"}>
                   <div className="sidebar-title">
-                    <span onClick={() => setOpen(!open)} className='headings'>
+                    <span onClick={() => setOpen(!open)} className="headings">
                       <i className="icon-globe"></i>
                       Website Settings
                     </span>
@@ -87,7 +87,10 @@ const Sidebar = () => {
 
                 <div className={isOpen ? "sidebar-item open" : "sidebar-item"}>
                   <div className="sidebar-title">
-                    <span onClick={() => setIsOpen(!isOpen)} className='headings'>
+                    <span
+                      onClick={() => setIsOpen(!isOpen)}
+                      className="headings"
+                    >
                       <i className="icon-bag"></i>
                       Buyer's Hub
                     </span>
@@ -137,7 +140,7 @@ const Sidebar = () => {
 
                 <div className={tofa ? "sidebar-item open" : "sidebar-item"}>
                   <div className="sidebar-title">
-                    <span onClick={() => setTofa(!tofa)} className='headings'>
+                    <span onClick={() => setTofa(!tofa)} className="headings">
                       <i className="icon-graduation"></i>
                       TOFA Academy
                     </span>
@@ -164,7 +167,10 @@ const Sidebar = () => {
                   className={supplier ? "sidebar-item open" : "sidebar-item"}
                 >
                   <div className="sidebar-title">
-                    <span onClick={() => setSupplier(!supplier)} className='headings'>
+                    <span
+                      onClick={() => setSupplier(!supplier)}
+                      className="headings"
+                    >
                       <i className="icon-grid"></i>Suppliers Marketplace
                     </span>
                     <i
@@ -214,7 +220,7 @@ const Sidebar = () => {
                 <li className="nav-item" style={{ textAlign: "left" }}>
                   <a
                     className="nav-link"
-                    href="comingsoon"
+                    href="/users"
                     aria-expanded="false"
                     data-target="#submenu-6"
                     aria-controls="submenu-6"

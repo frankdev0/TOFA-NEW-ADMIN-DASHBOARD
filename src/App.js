@@ -14,7 +14,7 @@ import CreateFaq from "./pages/website-settings/faqs/CreateFaq";
 import Faqs from "./pages/website-settings/faqs/Faqs";
 import CreateTestimonial from "./pages/website-settings/testimonial/CreateTestimonial";
 import Testimonial from "./pages/website-settings/testimonial/Testimonial";
-import Users from "./pages/users/Users";
+import CreateUser from "./pages/users/CreateUser";
 import Products from "./pages/buyershub/products/Products";
 import CreateProducts from "./pages/buyershub/products/CreateProducts";
 import CreateBanner from "./pages/website-settings/bannners/CreateBanners";
@@ -29,6 +29,7 @@ import EditTestimonial from "./pages/website-settings/testimonial/EditTestimonia
 import EditCommodity from "./pages/website-settings/commodityInsight/EditCommodity";
 import EditBanner from "./pages/website-settings/bannners/EditBannner";
 import ProtectedRoutes from "./pages/components/ProtectedRoutes";
+import Users from "./pages/users/Users";
 
 function App() {
   return (
@@ -65,6 +66,11 @@ function App() {
             />
             <Route
               exact
+              path="/createtestimonial/"
+              element={<CreateTestimonial />}
+            />
+            <Route
+              exact
               path="/editbanner/:bannerId"
               element={<EditBanner />}
             />
@@ -74,7 +80,8 @@ function App() {
               element={<EditCommodity />}
             />
             <Route exact path="/nav" element={<Navbar />} />
-            <Route exact path="/user" element={<Users />} />
+            <Route exact path="/createuser" element={<CreateUser />} />
+            <Route exact path="/users" element={<Users />} />
             <Route exact path="/sidebar" element={<Sidebar />} />
             <Route exact path="/faq" element={<Faqs />} />
             <Route exact path="/createfaq" element={<CreateFaq />} />
