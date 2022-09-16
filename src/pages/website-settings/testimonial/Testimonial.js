@@ -7,18 +7,20 @@ import { Link } from "react-router-dom";
 const Testimonial = () => {
   const [testimonial, setTestimonial] = useState([]);
   const [viewTestimonial, setViewTestimonial] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/testimonial").then((response) => {
         console.log(response.data.data);
         setTestimonial(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
     }
   };
-
 
   useEffect(() => {
     getData();
@@ -31,10 +33,31 @@ const Testimonial = () => {
   // };
 
   const showDetails = (testimonialID) => {
+    setViewLoader(true);
     axios.get(`/testimonial/${testimonialID}`).then((response) => {
       setViewTestimonial(response.data.data);
+      setViewLoader(false);
     });
   };
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -90,7 +113,7 @@ const Testimonial = () => {
                         {testimonial.map((item, index) => {
                           return (
                             <tr key={item.id}>
-                              <td>{index +1}</td>
+                              <td>{index + 1}</td>
                               <td>{item.name}</td>
                               <td>{item.company}</td>
                               <td>{item.message}</td>
@@ -98,14 +121,18 @@ const Testimonial = () => {
                                 {/* <button className="btn btn-danger mx-2" onClick={(e) => handleDelete(item.id)}>
                                   Delete
                                 </button> */}
-                              
-                                  <div className="text-center mx-2">
-                                <Link to={`/edittestimonial/${item.id}`}>
-                                        <button type="button"
-                                        className="btn btn-success"
-                                        data-dismiss="modal">Edit</button>
-                                      </Link>
-                                      </div>
+
+                                <div className="text-center mx-2">
+                                  <Link to={`/edittestimonial/${item.id}`}>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success"
+                                      data-dismiss="modal"
+                                    >
+                                      Edit
+                                    </button>
+                                  </Link>
+                                </div>
                                 <button
                                   onClick={() => showDetails(item.id)}
                                   type="button"
@@ -116,11 +143,6 @@ const Testimonial = () => {
                                   View
                                 </button>
 
-                                
-
-                               
-                            
-
                                 <div
                                   className="modal fade"
                                   id="exampleModal"
@@ -128,32 +150,49 @@ const Testimonial = () => {
                                   aria-labelledby="exampleModalLabel"
                                   aria-hidden="true"
                                 >
-                                  <div className="modal-dialog">
-                                    <div className="modal-content">
-                                      <div className="modal-header">
-                                        <h5
-                                          className="modal-title"
-                                          id="exampleModalLabel"
-                                        >
-                                          TESTIMONIAL
-                                        </h5>
-                                      </div>
-                                      <div className="modal-body">
-                                        <p>{viewTestimonial.name}</p>
-                                        <p>{viewTestimonial.company}</p>
-                                        <p>{viewTestimonial.message}</p>
-                                      </div>
-                                      <div className="modal-footer">
-                                        <button
-                                          type="button"
-                                          className="btn btn-secondary"
-                                          data-bs-dismiss="modal"
-                                        >
-                                          Close
-                                        </button>
+                                  {viewLoader ? (
+                                    <div
+                                      className="spinner mx-auto"
+                                      align="center"
+                                      id="spinner"
+                                      style={{
+                                        position: "absolute",
+                                        top: "calc(50% - 60px)",
+                                        left: "calc(50% - 60px)",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        textAlign: "center",
+                                        margin: "auto",
+                                      }}
+                                    ></div>
+                                  ) : (
+                                    <div className="modal-dialog">
+                                      <div className="modal-content">
+                                        <div className="modal-header">
+                                          <h5
+                                            className="modal-title"
+                                            id="exampleModalLabel"
+                                          >
+                                            TESTIMONIAL
+                                          </h5>
+                                        </div>
+                                        <div className="modal-body">
+                                          <p>{viewTestimonial.name}</p>
+                                          <p>{viewTestimonial.company}</p>
+                                          <p>{viewTestimonial.message}</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                          <button
+                                            type="button"
+                                            className="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                          >
+                                            Close
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </div>
                               </td>
                             </tr>

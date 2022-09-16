@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import MessageCenter from "./pages/buyershub/message-center/MessageCenter";
@@ -30,70 +30,121 @@ import EditCommodity from "./pages/website-settings/commodityInsight/EditCommodi
 import EditBanner from "./pages/website-settings/bannners/EditBannner";
 import ProtectedRoutes from "./pages/components/ProtectedRoutes";
 import Users from "./pages/users/Users";
+import ConfirmPassword from "./pages/login/ConfirmPassword";
+import SecurityQuestion from "./pages/login/SecurityQuestion";
+// import { AuthContext, AuthContextProvider } from "./utils/contexts/AuthContext";
+import Unauthorized from "./pages/components/unauthorized/Unauthorized";
+import AppState, { AppContext } from "./utils/contexts/AppState";
+// import Protected from "./pages/components/Protected";
 
 function App() {
+  const dataRes = useContext(AppContext);
+
+  console.log("these are the data response values", dataRes.type);
+
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Login />} />
-          <Route element={<ProtectedRoutes />}>
-            <Route exact path="/createbanner" element={<CreateBanner />} />
-            <Route exact path="/banners" element={<Banners />} />
-            <Route exact path="/newcommodity" element={<NewCommodity />} />
-            <Route exact path="/orders" element={<Orders />} />
-            <Route exact path="/orders" element={<Orders />} />
-            <Route exact path="/corders" element={<COrders />} />
-            <Route exact path="/message" element={<MessageCenter />} />
-            <Route exact path="/overview" element={<Overview />} />
-            <Route exact path="/testimonial" element={<Testimonial />} />
-            <Route exact path="/products" element={<Products />} />
-            <Route exact path="/createproduct" element={<CreateProducts />} />
-            <Route exact path="/disputes" element={<Disputes />} />
-            <Route exact path="/inquiry" element={<Inquiries />} />
-            <Route exact path="/applicants" element={<Applicants />} />
+    <AppState>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="*" element={<Unauthorized />} />
             <Route
               exact
-              path="/editproduct/:productId"
-              element={<EditProducts />}
+              path="/confirmpassword"
+              element={<ConfirmPassword />}
             />
-            <Route exact path="/buyers" element={<Buyers />} />
-            <Route exact path="/editfaq/:myFaqId" element={<EditFaq />} />
-            <Route
-              exact
-              path="/edittestimonial/:myTestimonialId"
-              element={<EditTestimonial />}
-            />
-            <Route
-              exact
-              path="/createtestimonial/"
-              element={<CreateTestimonial />}
-            />
-            <Route
-              exact
-              path="/editbanner/:bannerId"
-              element={<EditBanner />}
-            />
-            <Route
-              exact
-              path="/editcommodity/:commodityId"
-              element={<EditCommodity />}
-            />
-            <Route exact path="/nav" element={<Navbar />} />
-            <Route exact path="/createuser" element={<CreateUser />} />
-            <Route exact path="/users" element={<Users />} />
-            <Route exact path="/sidebar" element={<Sidebar />} />
-            <Route exact path="/faq" element={<Faqs />} />
-            <Route exact path="/createfaq" element={<CreateFaq />} />
-            <Route
-              exact
-              path="/commodityInsight"
-              element={<CommodityInsight />}
-            />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+
+            <Route element={<ProtectedRoutes />}>
+              <Route
+                exact
+                path="/securityquestion"
+                element={<SecurityQuestion />}
+              />
+            </Route>
+            {/* <Route
+              element={
+                !dataRes.type === "SUPER_ADMIN" ? (
+                  <ProtectedRoutes />
+                ) : (
+                  <Unauthorized />
+                )
+              }
+            > */}
+            {dataRes.type === "SUPER_ADMIN" ? (
+              <Route element={<ProtectedRoutes />}>
+                <Route exact path="/newcommodity" element={<NewCommodity />} />
+                <Route exact path="/orders" element={<Orders />} />
+                <Route exact path="/orders" element={<Orders />} />
+                <Route exact path="/corders" element={<COrders />} />
+                <Route exact path="/message" element={<MessageCenter />} />
+                <Route exact path="/overview" element={<Overview />} />
+                <Route exact path="/testimonial" element={<Testimonial />} />
+                <Route exact path="/products" element={<Products />} />
+                <Route
+                  exact
+                  path="/createproduct"
+                  element={<CreateProducts />}
+                />
+                <Route exact path="/disputes" element={<Disputes />} />
+                <Route exact path="/inquiry" element={<Inquiries />} />
+                <Route exact path="/applicants" element={<Applicants />} />
+                <Route
+                  exact
+                  path="/editproduct/:productId"
+                  element={<EditProducts />}
+                />
+                <Route exact path="/buyers" element={<Buyers />} />
+                <Route exact path="/editfaq/:myFaqId" element={<EditFaq />} />
+                <Route
+                  exact
+                  path="/edittestimonial/:myTestimonialId"
+                  element={<EditTestimonial />}
+                />
+                <Route
+                  exact
+                  path="/createtestimonial/"
+                  element={<CreateTestimonial />}
+                />
+                <Route
+                  exact
+                  path="/editbanner/:bannerId"
+                  element={<EditBanner />}
+                />
+                <Route
+                  exact
+                  path="/editcommodity/:commodityId"
+                  element={<EditCommodity />}
+                />
+                <Route exact path="/nav" element={<Navbar />} />
+                <Route exact path="/createuser" element={<CreateUser />} />
+                <Route exact path="/users" element={<Users />} />
+                <Route exact path="/sidebar" element={<Sidebar />} />
+                <Route exact path="/faq" element={<Faqs />} />
+                <Route exact path="/createfaq" element={<CreateFaq />} />
+                <Route
+                  exact
+                  path="/commodityInsight"
+                  element={<CommodityInsight />}
+                />
+              </Route>
+            ) : (
+              <Route exact path="*" element={<Unauthorized />} />
+            )}
+            {dataRes.type === "WEB_ADMIN" ? (
+              <Route element={<ProtectedRoutes />}>
+                <Route exact path="/createbanner" element={<CreateBanner />} />
+                <Route exact path="/banners" element={<Banners />} />
+              </Route>
+            ) : (
+              <Route exact path="*" element={<Unauthorized />} />
+            )}
+
+            {/* </Route> */}
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </AppState>
   );
 }
 

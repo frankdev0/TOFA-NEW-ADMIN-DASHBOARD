@@ -12,12 +12,15 @@ import Sidebar from "../../components/sidebar/Sidebar";
 const Buyers = () => {
   const [buyer, setBuyer] = useState([]);
   const [viewBuyer, setViewBuyer] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
-      axios.get("/auth/users").then((response) => {
+      axios.get("/auth/buyers").then((response) => {
         console.log(response.data);
         setBuyer(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
@@ -31,8 +34,11 @@ const Buyers = () => {
   //  if (error) console.log(error)
 
   const showDetails = (buyerID) => {
-    axios.get(`/auth/users/${buyerID}`).then((response) => {
+    setViewLoader(true);
+    axios.get(`/auth/buyers/${buyerID}`).then((response) => {
       setViewBuyer(response.data.data);
+      console.log(response.data.data);
+      setViewLoader(false);
     });
   };
 
@@ -48,6 +54,25 @@ const Buyers = () => {
       }, 1500);
     });
   }, []);
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -142,6 +167,7 @@ const Buyers = () => {
                               <th>ID</th>
                               <th>Full Name</th>
                               <th>Email</th>
+                              <th>Phone Number</th>
                               <th>Verified</th>
                               <th>Enabled</th>
                               <th>Action</th>
@@ -154,6 +180,7 @@ const Buyers = () => {
                                   <td>{index + 1}</td>
                                   <td>{item.fullName}</td>
                                   <td>{item.email}</td>
+                                  <td>{item.phoneNumber}</td>
                                   <td>{item.isVerified}</td>
                                   <td>{item.isEnabled}</td>
 
@@ -175,45 +202,66 @@ const Buyers = () => {
                                       aria-labelledby="exampleModalLabel"
                                       aria-hidden="true"
                                     >
-                                      <div className="modal-dialog">
-                                        <div className="modal-content">
-                                          <div className="modal-header">
-                                            <h5
-                                              className="modal-title"
-                                              id="exampleModalLabel"
-                                            >
-                                              Buyers Information
-                                            </h5>
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              data-bs-dismiss="modal"
-                                              aria-label="Close"
-                                            ></button>
-                                          </div>
-                                          <div className="modal-body">
-                                            {viewBuyer.fullName}
-                                          </div>
-                                          <div className="modal-body">
-                                            {viewBuyer.email}
-                                          </div>
-                                          <div className="modal-footer">
-                                            <button
-                                              type="button"
-                                              className="btn btn-secondary"
-                                              data-bs-dismiss="modal"
-                                            >
-                                              Close
-                                            </button>
-                                            <button
-                                              type="button"
-                                              className="btn btn-primary"
-                                            >
-                                              Save changes
-                                            </button>
+                                      {viewLoader ? (
+                                        <div
+                                          className="spinner mx-auto"
+                                          align="center"
+                                          id="spinner"
+                                          style={{
+                                            position: "absolute",
+                                            top: "calc(50% - 60px)",
+                                            left: "calc(50% - 60px)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            margin: "auto",
+                                          }}
+                                        ></div>
+                                      ) : (
+                                        <div className="modal-dialog">
+                                          <div className="modal-content">
+                                            <div className="modal-header">
+                                              <h5
+                                                className="modal-title"
+                                                id="exampleModalLabel"
+                                              >
+                                                Buyers Information
+                                              </h5>
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                              ></button>
+                                            </div>
+                                            <div className="modal-body">
+                                              Full Name:{viewBuyer.fullName}
+                                            </div>
+                                            <div className="modal-body">
+                                              Phone Number:
+                                              {viewBuyer.phoneNumber}
+                                            </div>
+                                            <div className="modal-body">
+                                              Email: {viewBuyer.email}
+                                            </div>
+                                            <div className="modal-body">
+                                              Enabled: {viewBuyer.isEnabled}
+                                            </div>
+                                            <div className="modal-body">
+                                              Verified: {viewBuyer.isVerified}
+                                            </div>
+                                            <div className="modal-footer">
+                                              <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                data-bs-dismiss="modal"
+                                              >
+                                                Close
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
+                                      )}
                                     </div>
                                   </td>
                                 </tr>

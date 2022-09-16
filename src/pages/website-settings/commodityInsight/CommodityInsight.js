@@ -19,24 +19,20 @@ import { axios } from "../../components/baseUrl";
 const CommodityInsight = () => {
   const [commodity, setCommodity] = useState([]);
   const [viewCommodity, setViewCommodity] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/commodity").then((response) => {
         console.log(response.data.data);
         setCommodity(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
     }
   };
-
-  // const setData = (id, country, name, briefHistory) => {
-  //   localStorage.setItem("commodityID", id);
-  //   localStorage.setItem("name", name);
-  //   localStorage.setItem("briefHistory", briefHistory);
-  //   localStorage.setItem("country", country);
-  // };
 
   useEffect(() => {
     getData();
@@ -49,17 +45,16 @@ const CommodityInsight = () => {
   // };
 
   const showDetails = (commodityID) => {
+    setViewLoader(true);
     axios.get(`/commodity/${commodityID}`).then((response) => {
       setViewCommodity(response.data.data);
+      setViewLoader(false);
+
       console.log(response.data.data);
     });
   };
 
-  // const updateHandler = (commodityID) => {
-  //   axios.patch(`/commodity/${commodityID}`).then((response) => {
-  //     setViewCommodity(response.data.data);
-  //   });
-  // };
+  useEffect(() => {}, [loading]);
 
   useEffect(() => {
     //initialize datatable
@@ -69,6 +64,25 @@ const CommodityInsight = () => {
       }, 1500);
     });
   }, []);
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <div>
@@ -195,72 +209,74 @@ const CommodityInsight = () => {
                                         view{" "}
                                       </button>
                                       <div
-                                        className="modal fade"
+                                        className="modal fade p-relative"
                                         id="exampleModal"
                                         tabIndex="-1"
                                         aria-labelledby="exampleModalLabel"
                                         aria-hidden="true"
                                       >
-                                        <div className="modal-dialog">
-                                          <div className="modal-content">
-                                            <div className="modal-header">
-                                              <h5
-                                                className="modal-title"
-                                                id="exampleModalLabel"
-                                              >
-                                                Product Information
-                                              </h5>
-                                              <button
-                                                type="button"
-                                                className="btn-close"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"
-                                              ></button>
-                                            </div>
-                                            <div align="right">
-                                              {/* <Link to="/editcommodity">
-                                                <button
-                                                  className="btn btn-success"
-                                                  onClick={() =>
-                                                    setData(
-                                                      item.id,
-                                                      item.name,
-                                                      item.briefHistory,
-                                                      item.country
-                                                    )
-                                                  }
+                                        {viewLoader ? (
+                                          <div
+                                            className="spinner mx-auto"
+                                            align="center"
+                                            id="spinner"
+                                            style={{
+                                              position: "absolute",
+                                              top: "calc(50% - 60px)",
+                                              left: "calc(50% - 60px)",
+                                              justifyContent: "center",
+                                              alignItems: "center",
+                                              textAlign: "center",
+                                              margin: "auto",
+                                            }}
+                                          ></div>
+                                        ) : (
+                                          <div className="modal-dialog">
+                                            <div className="modal-content">
+                                              <div className="modal-header">
+                                                <h5
+                                                  className="modal-title"
+                                                  id="exampleModalLabel"
                                                 >
-                                                  Edit
-                                                </button>
-                                              </Link> */}
-                                            </div>
-                                            <div className="d-flex ">
-                                              <div className="modal-body">
-                                                Commodity Name:{" "}
-                                                {viewCommodity.name}
+                                                  Product Information
+                                                </h5>
+                                                <button
+                                                  type="button"
+                                                  className="btn-close"
+                                                  data-bs-dismiss="modal"
+                                                  aria-label="Close"
+                                                ></button>
                                               </div>
-                                              <div className="modal-body">
-                                                Country: {viewCommodity.country}
+                                              <div align="right"></div>
+                                              <div className="d-flex ">
+                                                <div className="modal-body">
+                                                  Commodity Name:{" "}
+                                                  {viewCommodity.name}
+                                                </div>
+                                                <div className="modal-body">
+                                                  Country:{" "}
+                                                  {viewCommodity.country}
+                                                </div>
                                               </div>
-                                            </div>
-                                            <div className="d-flex">
-                                              <div className="modal-body">
-                                                brief History:{" "}
-                                                {viewCommodity.briefHistory}
+                                              <div className="d-flex">
+                                                <div className="modal-body">
+                                                  brief History:{" "}
+                                                  {viewCommodity.briefHistory}
+                                                </div>
                                               </div>
-                                            </div>
 
-                                            <div className="modal-footer">
-                                              <button
-                                                type="button"
-                                                className="btn btn-secondary"
-                                                data-bs-dismiss="modal"
-                                              >
-                                                Close
-                                              </button>
+                                              <div className="modal-footer">
+                                                <button
+                                                  type="button"
+                                                  className="btn btn-secondary"
+                                                  data-bs-dismiss="modal"
+                                                >
+                                                  Close
+                                                </button>
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
+                                        )}
                                       </div>
                                     </td>
                                   </tr>

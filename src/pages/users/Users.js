@@ -11,23 +11,26 @@ import Sidebar from "../components/sidebar/Sidebar";
 const Users = () => {
   const [buyer, setBuyer] = useState([]);
   const [viewBuyer, setViewBuyer] = useState([]);
+  const [loading, setLoading] = useState(false);
+  // const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
-      axios.get("/auth/users").then((response) => {
+      axios.get("/auth/employees").then((response) => {
         console.log(response.data);
         setBuyer(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
     }
   };
 
-  //   const showDetails = (buyerID) => {
-  //     axios.get(`/auth/users/${buyerID}`).then((response) => {
-  //       setViewBuyer(response.data.data);
-  //     });
-  //   };
+  const showDetails = (employeeID) => {
+    axios.get(`/auth/employees/${employeeID}`).then((response) => {
+      setViewBuyer(response.data.data);
+    });
+  };
 
   useEffect(() => {
     getData();
@@ -41,6 +44,25 @@ const Users = () => {
       }, 1500);
     });
   }, []);
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -91,7 +113,9 @@ const Users = () => {
                             <tr>
                               <th>ID</th>
                               <th>Full Name</th>
+                              <th>Role</th>
                               <th>Email</th>
+                              <th>Action</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -100,12 +124,14 @@ const Users = () => {
                                 <tr key={item.id}>
                                   <td>{index + 1}</td>
                                   <td>{item.fullName}</td>
+                                  <td>{item.type}</td>
+                                  <td>{item.email}</td>
 
                                   <td>
                                     <button
                                       type="button"
                                       className="btn btn-primary"
-                                      //   onClick={(e) => showDetails(item.id)}
+                                      onClick={(e) => showDetails(item.id)}
                                       data-bs-toggle="modal"
                                       data-bs-target="#exampleModal"
                                     >

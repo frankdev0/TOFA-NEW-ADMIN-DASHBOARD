@@ -12,12 +12,15 @@ import Sidebar from "../../components/sidebar/Sidebar";
 const Disputes = () => {
   const [disputes, setDisputes] = useState([]);
   const [viewDisputes, setViewDisputes] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/dispute").then((response) => {
         console.log(response.data);
         setDisputes(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
@@ -25,10 +28,12 @@ const Disputes = () => {
   };
 
   const showDetails = (disputeID) => {
+    setViewLoader(true);
     try {
       axios.get(`/dispute/${disputeID}`).then((response) => {
         console.log(response.data.data);
         setViewDisputes(response.data.data);
+        setViewLoader(false);
       });
     } catch (err) {
       console.log(err);
@@ -59,6 +64,25 @@ const Disputes = () => {
       }, 1500);
     });
   }, []);
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -168,12 +192,12 @@ const Disputes = () => {
                                   <td>{item.buyer.email}</td>
                                   <td>
                                     {item.status === "PENDING" && (
-                                      <div className="bg-warning rounded-pill text-center">
+                                      <div className="text-warning rounded-pill text-center">
                                         PENDING
                                       </div>
                                     )}
                                     {item.status === "RESOLVED" && (
-                                      <div className="bg-success rounded-pill text-center">
+                                      <div className="text-success rounded-pill text-center">
                                         RESOLVED
                                       </div>
                                     )}
@@ -208,96 +232,113 @@ const Disputes = () => {
                                       aria-labelledby="exampleModalLabel"
                                       aria-hidden="true"
                                     >
-                                      <div className="modal-dialog">
-                                        <div className="modal-content">
-                                          <div className="modal-header">
-                                            <h5
-                                              className="modal-title"
-                                              id="exampleModalLabel"
-                                            >
-                                              TOFA Dispute Pipeline
-                                            </h5>
-                                            <button
-                                              type="button"
-                                              className="btn-close text-danger"
-                                              data-bs-dismiss="modal"
-                                              aria-label="Close"
-                                            ></button>
-                                          </div>
-
-                                          <div
-                                            className="modal-body px-2 d-flex"
-                                            style={{
-                                              justifyContent: "space-between",
-                                            }}
-                                          >
-                                            <div className="">
-                                              <label>Customer Name: </label>
-                                              <br />
-                                              <p>
-                                                {viewDisputes.buyer &&
-                                                  viewDisputes.buyer.fullName}
-                                              </p>
+                                      {viewLoader ? (
+                                        <div
+                                          className="spinner mx-auto"
+                                          align="center"
+                                          id="spinner"
+                                          style={{
+                                            position: "absolute",
+                                            top: "calc(50% - 60px)",
+                                            left: "calc(50% - 60px)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            margin: "auto",
+                                          }}
+                                        ></div>
+                                      ) : (
+                                        <div className="modal-dialog">
+                                          <div className="modal-content">
+                                            <div className="modal-header">
+                                              <h5
+                                                className="modal-title"
+                                                id="exampleModalLabel"
+                                              >
+                                                TOFA Dispute Pipeline
+                                              </h5>
+                                              <button
+                                                type="button"
+                                                className="btn-close text-danger"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                              ></button>
                                             </div>
-                                          </div>
-                                          <div className="modal-body px-2">
-                                            <label>Date: </label>
-                                            <p>
-                                              Tuesday, November 30, 2021 2:00:19
-                                              PM
-                                            </p>
-                                          </div>
 
-                                          <div className="modal-body px-2 d-flex">
-                                            Dispute Status:
                                             <div
-                                              className=""
+                                              className="modal-body px-2 d-flex"
                                               style={{
-                                                width: "75px",
-                                                height: "30px",
+                                                justifyContent: "space-between",
                                               }}
                                             >
-                                              <p className="text-white  mx-1">
-                                                {viewDisputes.status ===
-                                                "PENDING" ? (
-                                                  <span className="bg-danger rounded-pill text-center px-2 py-1">
-                                                    Open
-                                                  </span>
-                                                ) : (
-                                                  <span className="bg-success rounded-pill text-center px-1 py-1 ">
-                                                    Resolved
-                                                  </span>
-                                                )}
+                                              <div className="">
+                                                <label>Customer Name: </label>
+                                                <br />
+                                                <p>
+                                                  {viewDisputes.buyer &&
+                                                    viewDisputes.buyer.fullName}
+                                                </p>
+                                              </div>
+                                            </div>
+                                            <div className="modal-body px-2">
+                                              <label>Date: </label>
+                                              <p>
+                                                Tuesday, November 30, 2021
+                                                2:00:19 PM
                                               </p>
                                             </div>
-                                          </div>
 
-                                          <div className=" modal-bodyb px-2">
-                                            <label>Subject:</label>
-                                            <p>{viewDisputes.subject} </p>
-                                          </div>
-                                          <div className="modal-body px-2">
-                                            <label>Complaint:</label>
-                                            <p>{viewDisputes.complaint}</p>
-                                          </div>
+                                            <div className="modal-body px-2 d-flex">
+                                              Dispute Status:
+                                              <div
+                                                className=""
+                                                style={{
+                                                  width: "75px",
+                                                  height: "30px",
+                                                }}
+                                              >
+                                                <p className="text-white  mx-1">
+                                                  {viewDisputes.status ===
+                                                  "PENDING" ? (
+                                                    <span className="bg-danger rounded-pill text-center px-2 py-1">
+                                                      Open
+                                                    </span>
+                                                  ) : (
+                                                    <span className="bg-success rounded-pill text-center px-1 py-1 ">
+                                                      Resolved
+                                                    </span>
+                                                  )}
+                                                </p>
+                                              </div>
+                                            </div>
 
-                                          <div className="modal-footer">
-                                            <button
-                                              type="button"
-                                              className="btn btn-dark"
-                                              style={{
-                                                background: "#4f4f4f",
-                                                borderRadius: "5px",
-                                              }}
-                                              onClick={(e) =>
-                                                getDispute(viewDisputes.id)
-                                              }
-                                            >
-                                              Resolve
-                                            </button>
+                                            <div className=" modal-bodyb px-2">
+                                              <label>Subject:</label>
+                                              <p>{viewDisputes.subject} </p>
+                                            </div>
+                                            <div className="modal-body px-2">
+                                              <label>Complaint:</label>
+                                              <p>{viewDisputes.complaint}</p>
+                                            </div>
+
+                                            <div className="modal-footer">
+                                              <button
+                                                type="button"
+                                                className="btn btn-dark"
+                                                style={{
+                                                  background: "#4f4f4f",
+                                                  borderRadius: "5px",
+                                                }}
+                                                onClick={(e) =>
+                                                  getDispute(viewDisputes.id)
+                                                }
+                                              >
+                                                Resolve
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
+                                      )}
                                     </div>
                                   </td>
                                 </tr>

@@ -8,23 +8,20 @@ import "./faq.css";
 const Faqs = () => {
   const [faq, setFaq] = useState([]);
   const [viewFaq, setViewFaq] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/faq").then((response) => {
         console.log(response.data);
         setFaq(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data.erros);
     }
   };
-
-  // const setData = (id, question, answer) => {
-  //   localStorage.setItem("faqID", id);
-  //   localStorage.setItem("answer", answer);
-  //   localStorage.setItem("question", question);
-  // };
 
   useEffect(() => {
     getData();
@@ -36,22 +33,32 @@ const Faqs = () => {
   //   });
   // };
 
-  // const setID = (id) => {
-  //   console.log(id)
-  //   localStorage.setItem('ID', id)
-  // }
-
-  // const updateHandler = (faqID) => {
-  //   axios.get(`/faq/${faqID}`).then((response) => {
-  //     setViewFaq(response.data.data);
-  //   });
-  // };
-
   const showDetails = (faqID) => {
+    setViewLoader(true);
     axios.get(`/faq/${faqID}`).then((response) => {
       setViewFaq(response.data.data);
+      setViewLoader(false);
     });
   };
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -111,17 +118,21 @@ const Faqs = () => {
                         {faq.map((item, index) => {
                           return (
                             <tr key={item.id}>
-                              <td>{index +1}</td>
+                              <td>{index + 1}</td>
                               <td>{item.question}</td>
                               <td>{item.answer}</td>
                               <td className="text-center d-flex">
                                 <div className="text-center mx-2">
-                              <Link to={`/editfaq/${item.id}`}>
-                                        <button type="button"
-                                        className="btn btn-success"
-                                        data-dismiss="modal">Edit</button>
-                                      </Link>
-                                      </div>
+                                  <Link to={`/editfaq/${item.id}`}>
+                                    <button
+                                      type="button"
+                                      className="btn btn-success"
+                                      data-dismiss="modal"
+                                    >
+                                      Edit
+                                    </button>
+                                  </Link>
+                                </div>
                                 {/* <button className="btn btn-danger mx-2" onClick={(e) => handleDelete(item.id)}>
                                   Delete
                                 </button> */}
@@ -142,17 +153,33 @@ const Faqs = () => {
                                   aria-labelledby="exampleModalLabel"
                                   aria-hidden="true"
                                 >
-                                  <div className="modal-dialog">
-                                    <div className="modal-content">
-                                      <div className="modal-header">
-                                        <h5
-                                          className="modal-title"
-                                          id="exampleModalLabel"
-                                        >
-                                          FAQ
-                                        </h5>
+                                  {viewLoader ? (
+                                    <div
+                                      className="spinner mx-auto"
+                                      align="center"
+                                      id="spinner"
+                                      style={{
+                                        position: "absolute",
+                                        top: "calc(50% - 60px)",
+                                        left: "calc(50% - 60px)",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        textAlign: "center",
+                                        margin: "auto",
+                                      }}
+                                    ></div>
+                                  ) : (
+                                    <div className="modal-dialog">
+                                      <div className="modal-content">
+                                        <div className="modal-header">
+                                          <h5
+                                            className="modal-title"
+                                            id="exampleModalLabel"
+                                          >
+                                            FAQ
+                                          </h5>
 
-                                        {/* <Link to="/editfaq">
+                                          {/* <Link to="/editfaq">
                                           <button
                                             className="btn btn-success"
                                             onClick={() =>
@@ -166,23 +193,24 @@ const Faqs = () => {
                                             Edit
                                           </button>
                                         </Link> */}
-                                      </div>
+                                        </div>
 
-                                      <div className="modal-body">
-                                        <p>{viewFaq.answer}</p>
-                                        <p>{viewFaq.question}</p>
-                                      </div>
-                                      <div className="modal-footer">
-                                        <button
-                                          type="button"
-                                          className="btn btn-secondary"
-                                          data-bs-dismiss="modal"
-                                        >
-                                          Close
-                                        </button>
+                                        <div className="modal-body text-left">
+                                          <p>Answer: {viewFaq.question}</p>
+                                          <p>Question: {viewFaq.answer}</p>
+                                        </div>
+                                        <div className="modal-footer">
+                                          <button
+                                            type="button"
+                                            className="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                          >
+                                            Close
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </div>
                               </td>
                             </tr>

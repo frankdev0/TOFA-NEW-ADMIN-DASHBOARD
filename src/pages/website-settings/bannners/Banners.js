@@ -8,12 +8,15 @@ import dayjs from "dayjs";
 const Banners = () => {
   const [banner, setBanner] = useState([]);
   const [viewBanner, setViewBanner] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/banner").then((response) => {
         console.log(response.data.data);
         setBanner(response.data.data);
+        setLoading(true);
       });
     } catch (error) {
       console.log(error.response.data);
@@ -31,11 +34,32 @@ const Banners = () => {
   // };
 
   const showDetails = (bannerID) => {
+    setViewLoader(true);
     axios.get(`/banner/${bannerID}`).then((response) => {
       setViewBanner(response.data.data);
       console.log(response.data.data);
+      setViewLoader(false);
     });
   };
+
+  if (!loading) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <>
@@ -135,60 +159,77 @@ const Banners = () => {
                                   aria-labelledby="exampleModalLabel"
                                   aria-hidden="true"
                                 >
-                                  <div className="modal-dialog">
-                                    <div className="modal-content">
-                                      <div className="modal-header">
-                                        <h5
-                                          className="modal-title"
-                                          id="exampleModalLabel"
-                                        >
-                                          Banner Information
-                                        </h5>
-                                        <button
-                                          type="button"
-                                          className="btn-close"
-                                          data-bs-dismiss="modal"
-                                          aria-label="Close"
-                                        ></button>
-                                      </div>
-                                      <div align="right">{/* empty */}</div>
+                                  {viewLoader ? (
+                                    <div
+                                      className="spinner mx-auto"
+                                      align="center"
+                                      id="spinner"
+                                      style={{
+                                        position: "absolute",
+                                        top: "calc(50% - 60px)",
+                                        left: "calc(50% - 60px)",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        textAlign: "center",
+                                        margin: "auto",
+                                      }}
+                                    ></div>
+                                  ) : (
+                                    <div className="modal-dialog">
+                                      <div className="modal-content">
+                                        <div className="modal-header">
+                                          <h5
+                                            className="modal-title"
+                                            id="exampleModalLabel"
+                                          >
+                                            Banner Information
+                                          </h5>
+                                          <button
+                                            type="button"
+                                            className="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                          ></button>
+                                        </div>
+                                        <div align="right">{/* empty */}</div>
 
-                                      <div className="modal-body">
-                                        Uploaded on:{" "}
-                                        {dayjs(viewBanner.createdAt).format(
-                                          "D MMMM YYYY"
-                                        )}
-                                        {/* {dayjs.map((item) => {
+                                        <div className="modal-body">
+                                          Uploaded on:{" "}
+                                          {dayjs(viewBanner.createdAt).format(
+                                            "D MMMM YYYY"
+                                          )}
+                                          {/* {dayjs.map((item) => {
                                           return item.viewBanner.createdAt;
                                         })} */}
-                                      </div>
-                                      <div className="modal-body">
-                                        Link: {viewBanner.link}
-                                      </div>
-                                      <div className="d-flex">
+                                        </div>
                                         <div className="modal-body">
-                                          <img
-                                            src={viewBanner.image}
-                                            alt="banner"
-                                            style={{
-                                              width: "60%",
-                                              height: "60%",
-                                            }}
-                                          />
+                                          Link: {viewBanner.link}
+                                        </div>
+                                        <div className="d-flex">
+                                          <div className="modal-body">
+                                            <img
+                                              src={viewBanner.image}
+                                              alt="banner"
+                                              style={{
+                                                width: "60%",
+                                                height: "60%",
+                                              }}
+                                            />
+                                          </div>
+                                        </div>
+
+                                        <div className="modal-footer">
+                                          <button
+                                            type="button"
+                                            className="btn btn-secondary"
+                                            data-bs-dismiss="modal"
+                                          >
+                                            Close
+                                          </button>
                                         </div>
                                       </div>
-
-                                      <div className="modal-footer">
-                                        <button
-                                          type="button"
-                                          className="btn btn-secondary"
-                                          data-bs-dismiss="modal"
-                                        >
-                                          Close
-                                        </button>
-                                      </div>
                                     </div>
-                                  </div>
+                                  )}
                                 </div>
                               </td>
                             </tr>

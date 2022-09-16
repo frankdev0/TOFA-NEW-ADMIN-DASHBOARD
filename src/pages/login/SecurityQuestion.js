@@ -1,42 +1,30 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
-// import { AuthContext } from "../../utils/contexts/AuthContext";
-// import { useFetch } from "../../useFetch";
 
-const Login = () => {
+const SecurityQuestion = () => {
   const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    password: "",
+  const [questions, setQuestions] = useState({
+    question1: "",
+    question2: "",
   });
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
 
-  // const { currentUser } = useContext(AuthContext);
-  // console.log("This is the currently signed in user", currentUser);
-
-  //   const {error, loading, data} = useFetch("/auth/signin")
-
-  //   if(error) console.log(error)
-
-  //   if (loading) return <h1>LOADING....</h1>
-
   const handleChange = (e) => {
-    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+    setQuestions({ ...questions, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log({ userInfo });
-      const { data } = await axios.post("/auth/signin-employee", {
-        email: userInfo.email,
-        password: userInfo.password,
+      console.log({ questions });
+      const { data } = await axios.post("/auth/signin", {
+        question: questions.question1,
+        question2: questions.question2,
       });
-      // dispatch({ type: "LOGIN", payload: data });
       console.log(data);
     } catch (err) {
       if (err.response.data.errors[0].field) {
@@ -57,7 +45,7 @@ const Login = () => {
     }
   };
   return (
-    <div className="login">
+    <div>
       <section>
         {/* <!-- ============================================================== -->
     <!-- login page  -->
@@ -65,30 +53,31 @@ const Login = () => {
         <div className="splash-container">
           <div className="card ">
             <div className="card-header text-center">
-              <a href="../index.html">
+              <div>
                 <img
                   width="100px"
                   className="logo-img mb-3"
                   src={logo}
                   alt="logo"
                 />
-              </a>
+              </div>
               <span className="splash-description">
-                Login below to continue
+                Answer the Following Questions to Confirm Your Account
               </span>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <input
-                    className="form-control form-control-lg"
-                    id="username"
-                    type="text"
-                    name="email"
-                    placeholder="email"
-                    autoComplete="off"
-                    onChange={handleChange}
-                  />
+                  <select className="form-control bg-light">
+                    {" "}
+                    ....Please Select a security question
+                    <option className="bg-light">
+                      What is the name of your first pet
+                    </option>
+                    <option>What is the name of your bestfriend</option>
+                    <option>What is the name of your favorite pet</option>
+                    <option>What was the name of your first girlfriend</option>
+                  </select>
                 </div>
                 {formErrors.email && (
                   <p className="text-danger">{formErrors.email}</p>
@@ -98,8 +87,36 @@ const Login = () => {
                     className="form-control form-control-lg"
                     id="password"
                     type="password"
-                    name="password"
-                    placeholder="Password"
+                    name="confirmPassword"
+                    placeholder="Answer"
+                    onChange={handleChange}
+                  />
+                  {formErrors.password && (
+                    <p className="text-danger">{formErrors.password}</p>
+                  )}
+                </div>
+                <div className="form-group">
+                  <select className="form-control bg-light">
+                    {" "}
+                    ....Please Select a security question
+                    <option className="bg-light">
+                      What is the name of your first pet
+                    </option>
+                    <option>What is the name of your bestfriend</option>
+                    <option>What is the name of your favorite pet</option>
+                    <option>What was the name of your first girlfriend</option>
+                  </select>
+                </div>
+                {formErrors.email && (
+                  <p className="text-danger">{formErrors.email}</p>
+                )}
+                <div className="form-group">
+                  <input
+                    className="form-control form-control-lg"
+                    id="password"
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Answer"
                     onChange={handleChange}
                   />
                   {formErrors.password && (
@@ -108,16 +125,11 @@ const Login = () => {
                 </div>
                 {/* {formErrors.pass} */}
                 <button type="submit" className="btn btn-dark btn-lg btn-block">
-                  Sign in
+                  Submit
                 </button>
               </form>
             </div>
             <div className="card-footer bg-white p-0  ">
-              <div className="card-footer-item card-footer-item-bordered">
-                <a href="signup" className="footer-link">
-                  Create An Account
-                </a>
-              </div>
               <div className="card-footer-item card-footer-item-bordered">
                 <a href="link" className="footer-link">
                   Forgot Password
@@ -126,16 +138,9 @@ const Login = () => {
             </div>
           </div>
         </div>
-
-        {/* <!-- ============================================================== -->
-    <!-- end login page  -->
-    <!-- ============================================================== -->
-    <!-- Optional JavaScript -->
-    <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.js"></script> */}
       </section>
     </div>
   );
 };
 
-export default Login;
+export default SecurityQuestion;
