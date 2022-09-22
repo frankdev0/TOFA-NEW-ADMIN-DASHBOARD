@@ -158,7 +158,7 @@ const Products = () => {
                                   <td>{item.minDuration}</td>
                                   <td>{item.maxDuration}</td>
 
-                                  <td>
+                                  <td className="d-flex">
                                     <Link to={`/editproduct/${item.id}`}>
                                       <button className="btn btn-success mx-2">
                                         Edit
@@ -177,7 +177,7 @@ const Products = () => {
                                     <button
                                       onClick={(e) => showDetails(item.id)}
                                       type="button"
-                                      className="btn btn-primary"
+                                      className="btn btn-primary mx-2"
                                       data-bs-toggle="modal"
                                       data-bs-target="#exampleModal"
                                     >

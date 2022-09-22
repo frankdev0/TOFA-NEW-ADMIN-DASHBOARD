@@ -8,21 +8,42 @@ export const AppContext = createContext();
 // }
 
 const AppState = ({ children }) => {
-  const [users, setUsers] = useState("");
+  const [user, setUser] = useState(null);
+  // const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     axios
       .get("/auth/current-user")
       .then((response) => {
-        setUsers(response.data.currentUser);
+        setUser(response.data.currentUser);
+        // setLoading(true);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
 
-  const value = users;
+  // const value = user;
+  // if (!loading) {
+  //   return (
+  //     <div
+  //       className="spinner mx-auto"
+  //       align="center"
+  //       id="spinner"
+  //       style={{
+  //         position: "absolute",
+  //         top: "calc(50% - 60px)",
+  //         left: "calc(50% - 60px)",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         textAlign: "center",
+  //         margin: "auto",
+  //       }}
+  //     ></div>
+  //   );
+  // }
 
-  return <AppContext.Provider value={users}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={user}>{children}</AppContext.Provider>;
 };
 
 export default AppState;

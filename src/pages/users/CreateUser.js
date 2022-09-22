@@ -9,6 +9,8 @@ import { axios } from "../components/baseUrl";
 
 const CreateUsers = () => {
   const [file, setFile] = useState("");
+  const [formErrors, setFormErrors] = useState({});
+  const [customError, setCustomError] = useState({});
   // const [info, setInfo] = useState("");
   const [user, setUser] = useState({
     fullName: "",
@@ -33,8 +35,20 @@ const CreateUsers = () => {
       });
       // setInfo(data.data.response);
       console.log(data);
-    } catch (error) {
-      console.log(error.response.data);
+    } catch (err) {
+      if (err.response.data.errors[0].field) {
+        console.log(err.response.data.errors);
+        setFormErrors(
+          err.response.data.errors.reduce(function(obj, err) {
+            obj[err.field] = err.message;
+            return obj;
+          }, {})
+        );
+      } else {
+        console.log(err.response.data.errors[0].message);
+        setCustomError();
+        alert(customError);
+      }
     }
   };
 
@@ -47,16 +61,19 @@ const CreateUsers = () => {
           <div className="single">
             <div className="row">
               <div style={{ textAlign: "left" }} className="my-5 col-6">
-                <h1>Add User</h1>
+                <h1>Add Employee</h1>
               </div>
 
               <div
                 className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                 align="right"
               >
-                <buttonn className="btn btn-dark" onClick={() => navigate(-1)}>
+                <button
+                  className="btn btn-dark px-4"
+                  onClick={() => navigate(-1)}
+                >
                   Back
-                </buttonn>
+                </button>
               </div>
             </div>
 
@@ -83,6 +100,9 @@ const CreateUsers = () => {
                     name="fullName"
                     onChange={handleChange}
                   />
+                  {formErrors.fullName && (
+                    <p className="text-danger">{formErrors.fullName}</p>
+                  )}
 
                   <label className="la">Email</label>
                   <input
@@ -93,6 +113,10 @@ const CreateUsers = () => {
                     onChange={handleChange}
                   />
 
+                  {formErrors.email && (
+                    <p className="text-danger">{formErrors.email}</p>
+                  )}
+
                   <label className="lab">Phone Number</label>
                   <input
                     className="form-control"
@@ -101,6 +125,9 @@ const CreateUsers = () => {
                     name="phoneNumber"
                     onChange={handleChange}
                   />
+                  {formErrors.phoneNumber && (
+                    <p className="text-danger">{formErrors.phoneNumber}</p>
+                  )}
                   <label className="la">Role</label>
                   <select
                     className="form-control bg-light"
@@ -109,13 +136,16 @@ const CreateUsers = () => {
                   >
                     {" "}
                     <option>....Please Select a Role</option>
-                    <option>BUYER</option>
-                    <option>FINANCE</option>
-                    <option>SOURCE_PRO_AGENT</option>
-                    <option>SOURCE_PRO_ADMIN</option>
-                    <option>WEBSITE_ADMIN</option>
                     <option>SUPER_ADMIN</option>
+                    <option>SOURCE_PRO_ADMIN</option>
+                    <option>MARKETPLACE_ADMINN</option>
+                    <option>FINANCE</option>
+                    <option>WEBSITE_ADMIN</option>
+                    <option>SOURCE_PRO_AGENT</option>
                   </select>
+                  {formErrors.role && (
+                    <p className="text-danger">{formErrors.role}</p>
+                  )}
                 </div>
 
                 <div className="col-6">

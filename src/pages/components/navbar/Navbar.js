@@ -1,89 +1,132 @@
-import React from 'react';
-import avatar5 from '../../../assets/avatar-5.jpg'
-import avatar1 from '../../../assets/avatar-1.jpg'
-import avatar3 from '../../../assets/avatar-3.jpg'
-import avatar2 from '../../../assets/avatar-2.jpg'
-import avatar4 from '../../../assets/avatar-4.jpg'
+import React, { useRef, useState } from "react";
+import logo from "../../../assets/logo.JPG";
+import avatar3 from "../../../assets/avatar-3.jpg";
+
+import { axios } from "../baseUrl";
+import { useNavigate } from "react-router-dom";
+import "./navbar.css";
 
 const Navbar = () => {
+  const [currentUser, setCurrentUser] = useState();
+  const [toggleLogout, setToggleLogout] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleRef = useRef();
+
+  const handleLogout = () => {
+    axios
+      .get("auth/signout")
+      .then((response) => {
+        setCurrentUser(response.data.currentUser);
+        console.log("this is from protected route", response.data.currentUser);
+        if (setCurrentUser) {
+          navigate("/login");
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+      });
+  };
+
+  //   const toggleMyMenu = () => {
+  //     toggleRef.current("subMenu");
+  //   };
+
   return (
+    <div className="dashboard-header">
+      <nav className="navbar navbar-expand-lg bg-white fixed-top">
+        <a className="navbar-brand" href="index.html">
+          TOFA ADMIN{" "}
+        </a>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div
+          className="collapse navbar-collapse justify-content-end"
+          id="navbarSupportedContent"
+        >
+          <ul className="navbar-nav ml-auto navbar-right-top">
+            <li className="nav-item">
+              <div id="custom-search" className="top-search-bar">
+                <img
+                  src={avatar3}
+                  alt="tobad"
+                  className="user-avatar-md rounded-circle"
+                  onClick={() => setToggleLogout(!toggleLogout)}
+                />
+                {/* <input
+                  className="form-control"
+                  type="text"
+                  placeholder="Search.."
+                /> */}
+              </div>
+            </li>
+            <li className="nav-item dropdown notification">
+              <a
+                className="nav-link nav-icons"
+                href="comingsoon"
+                id="navbarDropdownMenuLink1"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i className="fas fa-fw fa-bell"></i>{" "}
+                <span className="indicator"></span>
+              </a>
+            </li>
 
-<div className="dashboard-header">
-            <nav className="navbar navbar-expand-lg bg-white fixed-top">
-                <a className="navbar-brand" href="index.html">TOFA ADMIN </a>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-                    <ul className="navbar-nav ml-auto navbar-right-top">
-                        <li className="nav-item">
-                            <div id="custom-search" className="top-search-bar">
-                                <input className="form-control" type="text" placeholder="Search.."/>
-                            </div>
-                        </li>
-                        <li className="nav-item dropdown notification">
-                            <a className="nav-link nav-icons" href="comingsoon" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i className="fas fa-fw fa-bell"></i> <span className="indicator"></span></a>
-                            <ul className="dropdown-menu dropdown-menu-right notification-dropdown">
-                                <li>
-                                    <div className="notification-title"> Notification</div>
-                                    <div className="notification-list">
-                                        <div className="list-group">
-                                            <a href="comingsoon" className="list-group-item list-group-item-action active">
-                                                <div className="notification-info">
-                                                    <div className="notification-list-user-img"><img src={avatar2} alt="tobad" className="user-avatar-md rounded-circle"/></div>
-                                                    <div className="notification-list-user-block"><span className="notification-list-user-name">Jeremy Rakestraw</span>accepted your invitation to join the team.
-                                                        <div className="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="comingsoon" className="list-group-item list-group-item-action">
-                                                <div className="notification-info">
-                                                    <div className="notification-list-user-img"><img src={avatar3} alt="tobad" className="user-avatar-md rounded-circle"/></div>
-                                                    <div className="notification-list-user-block"><span className="notification-list-user-name">John Abraham</span>is now following you
-                                                        <div className="notification-date">2 days ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="comingsoon" className="list-group-item list-group-item-action">
-                                                <div className="notification-info">
-                                                    <div className="notification-list-user-img"><img src={avatar4} alt="tob" className="user-avatar-md rounded-circle"/></div>
-                                                    <div className="notification-list-user-block"><span className="notification-list-user-name">Monaan Pechi</span> is watching your main repository
-                                                        <div className="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <a href="comingsoon" className="list-group-item list-group-item-action">
-                                                <div className="notification-info">
-                                                    <div className="notification-list-user-img"><img src={avatar5} alt="tob" className="user-avatar-md rounded-circle"/></div>
-                                                    <div className="notification-list-user-block"><span className="notification-list-user-name">Jessica Caruso</span>accepted your invitation to join the team.
-                                                        <div className="notification-date">2 min ago</div>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div className="list-footer"> <a href="comingsoon">View all notifications</a></div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="nav-item dropdown nav-user">
-                            <a className="nav-link nav-user-img" href="comingsoon" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src={avatar1} alt="bg" className="user-avatar-md rounded-circle"/></a>
-                            <div className="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
-                                <div className="nav-user-info">
-                                    <h5 className="mb-0 text-white nav-user-name">John Abraham</h5>
-                                </div>
-                                <a className="dropdown-item" href="comingsoon"><i className="fas fa-user mr-2"></i>My Account</a>
-                                <a className="dropdown-item" href="comingsoon"><i className="fas fa-power-off mr-2"></i>Logout</a>
-                            </div>
-                        </li>
-                    </ul>
+            <div
+              className={toggleLogout ? "sub-menu-wrap-two" : "sub-menu-wrap"}
+              id="subMenu"
+              ref={toggleRef}
+            >
+              <div className="sub-menu">
+                <div className="user-info">
+                  <img
+                    src={logo}
+                    alt="tobad"
+                    className="user-avatar-md rounded-circle"
+                  />
+                  <h3 className="mt-3 mx-2">Nnaemeka Ogunewe</h3>
                 </div>
-            </nav>
-        </div>
-   
-  )
-}
+                <hr />
+                <a href="sub-menu-link" className="sub-menu-link">
+                  <i className="fa fa-user" aria-hidden="true"></i>
+                  {/* <img src={profile} alt="profile" /> */}
+                  <p>Edit Profile </p>
+                </a>
+                <a href="sub-menu-link" className="sub-menu-link">
+                  {/* <img src={setting} alt="profile" /> */}
+                  <i className="fa fa-cogs" aria-hidden="true"></i>
 
-export default Navbar
+                  <p>Settings & Privacy </p>
+                </a>
+                <a href="sub-menu-link" className="sub-menu-link">
+                  <i className="fa fa-question-circle" aria-hidden="true"></i>
+                  {/* <img src={help} alt="profile" /> */}
+
+                  <p>Help & Support </p>
+                </a>
+                <a className="sub-menu-link">
+                  {/* <img src={logout} alt="profile" /> */}
+                  <i className="fa fa-sign-out" aria-hidden="true"></i>
+                  <p onClick={handleLogout}>Logout </p>
+                </a>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  );
+};
+
+export default Navbar;

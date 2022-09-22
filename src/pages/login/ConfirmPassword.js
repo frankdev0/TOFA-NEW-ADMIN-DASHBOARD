@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axios } from "../components/baseUrl";
 
 const ConfirmPassword = () => {
@@ -11,46 +11,61 @@ const ConfirmPassword = () => {
     confirmPassword: "",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [customError, setCustomError] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [popupMsg, setPopupMsg] = useState("");
+
+  const { userId, setPasswordToken } = useParams();
 
   const handleChange = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
   };
 
+  const validate = (values) => {
+    const errors = {};
+
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (values.password.length < 6) {
+      errors.password = "Password needs to be 6 characters or more";
+    } else if (userInfo.password !== userInfo.confirmPassword) {
+      errors.password = "Password and Confirm Password must match";
+    } else if (
+      userInfo.password.length > 10 ||
+      userInfo.confirmPassword.length > 10
+    ) {
+      errors.password = "Password cannot be more than 10 characters";
+    }
+    return errors;
+  };
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+    }
+  }, [formErrors]);
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log({ userInfo });
-      const { data } = await axios.post("/auth/signin", {
+      setFormErrors(validate(userInfo));
+      setIsSubmit(true);
+      await axios.post("/auth/set-employee-password", {
         password: userInfo.password,
-        confirmPassword: userInfo.confirmPassword,
+        token: setPasswordToken,
+        employeeID: userId,
       });
-      console.log(data);
+      setPopupMsg("password has been set for this User!");
     } catch (err) {
-      if (err.response.data.errors[0].field) {
-        setFormErrors(
-          err.response.data.errors.reduce(function(obj, err) {
-            obj[err.field] = err.message;
-            return obj;
-          }, {})
-        );
-      } else {
-        console.log(err.response.data.errors[0].message);
-        setCustomError(err.response.data.errors[0].message);
-        alert(customError);
-      }
+      console.log(err);
     }
-    if (!formErrors.email || !formErrors.password) {
-      navigate("/overview");
+    if (isSubmit) {
+      navigate("/securityquestion");
     }
   };
   return (
     <div>
       <section>
-        {/* <!-- ============================================================== -->
-    <!-- login page  -->
-    <!-- ============================================================== --> */}
         <div className="splash-container">
+          <div className="bg-success text-light mx-auto">{popupMsg}</div>
           <div className="card ">
             <div className="card-header text-center">
               <div>
@@ -62,7 +77,7 @@ const ConfirmPassword = () => {
                 />
               </div>
               <span className="splash-description">
-                Enter New Password to Login
+                Set New Password to Login
               </span>
             </div>
             <div className="card-body">
@@ -77,9 +92,7 @@ const ConfirmPassword = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {formErrors.email && (
-                  <p className="text-danger">{formErrors.email}</p>
-                )}
+
                 <div className="form-group">
                   <input
                     className="form-control form-control-lg"
@@ -89,13 +102,11 @@ const ConfirmPassword = () => {
                     placeholder="Confirm Password"
                     onChange={handleChange}
                   />
-                  {formErrors.password && (
-                    <p className="text-danger">{formErrors.password}</p>
-                  )}
+                  <p className="text-danger">{formErrors.password}</p>
                 </div>
                 {/* {formErrors.pass} */}
-                <button type="submit" className="btn btn-dark btn-lg btn-block">
-                  Login in
+                <button type="submit" className="btn btn-dark">
+                  Set Password
                 </button>
               </form>
             </div>

@@ -1,5 +1,11 @@
-import React, { useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
 import MessageCenter from "./pages/buyershub/message-center/MessageCenter";
 import Orders from "./pages/buyershub/orders/Orders";
@@ -38,9 +44,28 @@ import AppState, { AppContext } from "./utils/contexts/AppState";
 // import Protected from "./pages/components/Protected";
 
 function App() {
+  // const [loading, setLoading] = useState(false)
+
   const dataRes = useContext(AppContext);
 
-  console.log("these are the data response values", dataRes.type);
+  if (!dataRes) {
+    return (
+      <div
+        className="spinner mx-auto"
+        align="center"
+        id="spinner"
+        style={{
+          position: "absolute",
+          top: "calc(50% - 60px)",
+          left: "calc(50% - 60px)",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          margin: "auto",
+        }}
+      ></div>
+    );
+  }
 
   return (
     <AppState>
@@ -48,10 +73,9 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route exact path="/login" element={<Login />} />
-            <Route exact path="*" element={<Unauthorized />} />
             <Route
               exact
-              path="/confirmpassword"
+              path="/set-password/:userId/:setPasswordToken"
               element={<ConfirmPassword />}
             />
 
@@ -71,7 +95,7 @@ function App() {
                 )
               }
             > */}
-            {dataRes.type === "SUPER_ADMIN" ? (
+            {dataRes && dataRes.type === "SUPER_ADMIN" ? (
               <Route element={<ProtectedRoutes />}>
                 <Route exact path="/newcommodity" element={<NewCommodity />} />
                 <Route exact path="/orders" element={<Orders />} />
@@ -129,15 +153,15 @@ function App() {
                 />
               </Route>
             ) : (
-              <Route exact path="*" element={<Unauthorized />} />
+              <Route exact path="/*" element={<Unauthorized />} />
             )}
-            {dataRes.type === "WEB_ADMIN" ? (
+            {dataRes && dataRes.type === "WEBSITE_ADMIN" ? (
               <Route element={<ProtectedRoutes />}>
                 <Route exact path="/createbanner" element={<CreateBanner />} />
                 <Route exact path="/banners" element={<Banners />} />
               </Route>
             ) : (
-              <Route exact path="*" element={<Unauthorized />} />
+              <Route exact path="/*" element={<Unauthorized />} />
             )}
 
             {/* </Route> */}

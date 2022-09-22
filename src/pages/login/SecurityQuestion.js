@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
@@ -6,41 +6,61 @@ import { axios } from "../components/baseUrl";
 
 const SecurityQuestion = () => {
   const navigate = useNavigate();
-  const [questions, setQuestions] = useState({
-    question1: "",
-    question2: "",
-  });
   const [formErrors, setFormErrors] = useState({});
-  const [customError, setCustomError] = useState("");
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [securityQuestion, setSecurityQuestion] = useState({
+    question_one: "",
+    question_two: "",
+    answer_one: "",
+    answer_two: "",
+  });
 
   const handleChange = (e) => {
-    setQuestions({ ...questions, [e.target.name]: e.target.value });
+    setSecurityQuestion({
+      ...securityQuestion,
+      [e.target.name]: e.target.value,
+    });
   };
+
+  const validate = (values) => {
+    const errors = {};
+    if (!values.answer_one) {
+      errors.answer_one = "Please answer the security question";
+    }
+    if (!values.answer_two) {
+      errors.answer_two = "Please answer the security question";
+    }
+  };
+
+  useEffect(() => {
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
+    }
+  }, [formErrors]);
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      console.log({ questions });
-      const { data } = await axios.post("/auth/signin", {
-        question: questions.question1,
-        question2: questions.question2,
+      setFormErrors(validate(securityQuestion));
+      setIsSubmit(true);
+      const securityQuestions = [
+        {
+          question: securityQuestion.question_one,
+          answer: securityQuestion.answer_one,
+        },
+        {
+          question: securityQuestion.question_two,
+          answer: securityQuestion.answer_two,
+        },
+      ];
+      console.log("for security question", securityQuestions);
+      const res = await axios.post("/auth/security-questions", {
+        securityQuestions: securityQuestions,
       });
-      console.log(data);
-    } catch (err) {
-      if (err.response.data.errors[0].field) {
-        setFormErrors(
-          err.response.data.errors.reduce(function(obj, err) {
-            obj[err.field] = err.message;
-            return obj;
-          }, {})
-        );
-      } else {
-        console.log(err.response.data.errors[0].message);
-        setCustomError(err.response.data.errors[0].message);
-        alert(customError);
-      }
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
     }
-    if (!formErrors.email || !formErrors.password) {
+    if (isSubmit) {
       navigate("/overview");
     }
   };
@@ -68,7 +88,11 @@ const SecurityQuestion = () => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <select className="form-control bg-light">
+                  <select
+                    className="form-control bg-light"
+                    onChange={handleChange}
+                    name="question_one"
+                  >
                     {" "}
                     ....Please Select a security question
                     <option className="bg-light">
@@ -79,51 +103,44 @@ const SecurityQuestion = () => {
                     <option>What was the name of your first girlfriend</option>
                   </select>
                 </div>
-                {formErrors.email && (
-                  <p className="text-danger">{formErrors.email}</p>
-                )}
                 <div className="form-group">
                   <input
                     className="form-control form-control-lg"
-                    id="password"
-                    type="password"
-                    name="confirmPassword"
+                    type="text"
+                    name="answer_one"
                     placeholder="Answer"
                     onChange={handleChange}
                   />
-                  {formErrors.password && (
-                    <p className="text-danger">{formErrors.password}</p>
-                  )}
+                  <p className="text-danger">{formErrors.answer_one}</p>
                 </div>
                 <div className="form-group">
-                  <select className="form-control bg-light">
-                    {" "}
+                  <select
+                    className="form-control bg-light"
+                    onChange={handleChange}
+                    name="question_two"
+                  >
                     ....Please Select a security question
                     <option className="bg-light">
                       What is the name of your first pet
                     </option>
-                    <option>What is the name of your bestfriend</option>
+                    <option>
+                      What is the name of your bestfriend/girlfriend
+                    </option>
                     <option>What is the name of your favorite pet</option>
                     <option>What was the name of your first girlfriend</option>
                   </select>
                 </div>
-                {formErrors.email && (
-                  <p className="text-danger">{formErrors.email}</p>
-                )}
                 <div className="form-group">
                   <input
                     className="form-control form-control-lg"
-                    id="password"
-                    type="password"
-                    name="confirmPassword"
+                    type="text"
+                    name="answer_two"
                     placeholder="Answer"
                     onChange={handleChange}
                   />
-                  {formErrors.password && (
-                    <p className="text-danger">{formErrors.password}</p>
-                  )}
+                  <p className="text-danger">{formErrors.answer_two}</p>
                 </div>
-                {/* {formErrors.pass} */}
+
                 <button type="submit" className="btn btn-dark btn-lg btn-block">
                   Submit
                 </button>
