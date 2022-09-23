@@ -96,6 +96,7 @@ const CreateProducts = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setProductDetails("");
       toast.success("SUCCESSFULLY CREATED NEW PRODUCT", {
         position: "top-right",
         autoClose: 4000,
@@ -466,16 +467,12 @@ const CreateProducts = () => {
                       onChange={onSelectFile}
                     />
 
-                    <div className="iamges d-flex">
+                    <div className="iamges d-flex image-container">
                       {selectedImages &&
                         selectedImages.map((image, index) => {
                           return (
-                            <div
-                              key={image}
-                              className="image"
-                              style={{ position: "relative" }}
-                            >
-                              <img src={image} alt="" />
+                            <div key={image} style={{ position: "relative" }}>
+                              <img src={image} alt="" className="image" />
                               {/* <button
                             onClick={() =>
                               setSelectedImages(

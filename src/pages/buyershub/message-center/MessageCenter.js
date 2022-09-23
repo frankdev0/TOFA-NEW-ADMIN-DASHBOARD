@@ -8,12 +8,20 @@ import dayjs from "dayjs";
 const MessageCenter = () => {
   const [messageList, setMessageList] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [image, setImage] = useState([]);
 
   const handleChange = (e) => {
     setCurrentMessage(e.target.value);
   };
 
   const dataResponse = useContext(AppContext);
+
+  const selectImageHandler = (e) => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+      console.log(e.target.files[0]);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -348,6 +356,7 @@ const MessageCenter = () => {
                             type="file"
                             className="custom-file-input"
                             id="customFile"
+                            onChange={selectImageHandler}
                             style={{ display: "none" }}
                           />
                           <label
