@@ -16,11 +16,17 @@ const EditCommodity = () => {
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [briefHistory, setBriefHistory] = useState("");
-  const [countries, setCountries] = useState([]);
+  const [countries, setCountries] = useState([{ countryName: "" }]);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleEditor = () => {
     setBriefHistory(editorRef.current.getContent());
+  };
+
+  const handleCountryInput = (index, e) => {
+    const values = [...countries];
+    values[index][e.target.name] = e.target.value;
+    setCountries(values);
   };
 
   const navigate = useNavigate();
@@ -172,40 +178,44 @@ const EditCommodity = () => {
 
                 <div className="col-6">
                   <label className="form-label">Country</label>
-                  {countries.map((country) => (
-                    <div key={country.id} className="root my-2">
-                      <select
-                        value={country.Name}
-                        onChange={(e) => setCountries()}
-                        name="countries"
-                        className="mx-1 form-control country-keys"
-                      >
-                        {Object.entries(africanCountryData).map(
-                          (country, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={`${country[0]}___${country[1]}`}
-                              >
-                                {country.countryName}
-                              </option>
-                            );
-                          }
-                        )}
-                      </select>
+                  {countries &&
+                    countries.map((country, index) => (
+                      <div className="root my-2">
+                        <select
+                          key={country.id}
+                          defaultValue={country.countryName}
+                          onChange={(e) => handleCountryInput(index, e)}
+                          name="countries"
+                          className="mx-1 form-control country-keys"
+                        >
+                          {Object.entries(africanCountryData).map(
+                            (country, index) => {
+                              return (
+                                <option
+                                  key={index}
+                                  defaultValue={`${country[0]}___${country[1]}`}
+                                  // value={name.countryName}
+                                >
+                                  {country[1]}
+                                  {/* {country.countryName} */}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
 
-                      <div className="d-flex align-items-center">
-                        <i
-                          className="fa-solid fa-plus mx-1 "
-                          onClick={() => handleAddCountry()}
-                        ></i>
-                        <i
-                          className="fa-solid fa-minus mx-1"
-                          // onClick={() => handleRemoveCountry(index)}
-                        ></i>
+                        <div className="d-flex align-items-center">
+                          <i
+                            className="fa-solid fa-plus mx-1 "
+                            onClick={() => handleAddCountry()}
+                          ></i>
+                          <i
+                            className="fa-solid fa-minus mx-1"
+                            // onClick={() => handleRemoveCountry(index)}
+                          ></i>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
 
