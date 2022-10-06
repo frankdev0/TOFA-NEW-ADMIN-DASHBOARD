@@ -121,7 +121,11 @@ const Banners = () => {
                               <th scope="row">{index + 1}</th>
                               <td>
                                 {" "}
-                                <img src={item.image} alt="banner" />
+                                <img
+                                  src={item.image}
+                                  alt="banner"
+                                  style={{ width: "100px", height: "100px" }}
+                                />
                               </td>
                               <td>{item.callToAction}</td>
                               <td>{item.link}</td>

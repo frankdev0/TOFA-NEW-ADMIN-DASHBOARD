@@ -16,7 +16,7 @@ const EditCommodity = () => {
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [briefHistory, setBriefHistory] = useState("");
-  const [countries, setCountries] = useState("");
+  const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleEditor = () => {
@@ -26,7 +26,6 @@ const EditCommodity = () => {
   const navigate = useNavigate();
 
   const { commodityId } = useParams();
-  console.log(commodityId);
 
   const getInfo = async () => {
     try {
@@ -34,7 +33,11 @@ const EditCommodity = () => {
       setId(response.data.data.id);
       setName(response.data.data.name);
       setBriefHistory(response.data.data.briefHistory);
-      setCountries(response.data.data.countries);
+      setCountries(response.data.data.countriesTraded);
+      console.log(
+        "these are the countries",
+        response.data.data.countriesTraded
+      );
       console.log(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -42,6 +45,8 @@ const EditCommodity = () => {
       setIsLoading(false);
     }
   };
+
+  // const newCountry = countries.map((item) => item.countriesTraded);
 
   useEffect(() => {
     getInfo();
@@ -65,18 +70,16 @@ const EditCommodity = () => {
         name: name,
         countries: getCountry(),
         briefHistory: briefHistory,
+        commodityID: commodityId,
       };
       const formData = new FormData();
       for (const property in jsonData) {
         formData.append(`${property}`, jsonData[property]);
       }
       formData.append("image", e.target.image.files[0]);
-      console.log(e.target.image.files[0]);
-      const { data } = await axios.patch(`/commodity/${id}`, jsonData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      console.log("target files", e.target.image.files[0]);
+      console.log("my jsonData", jsonData);
+      const { data } = await axios.patch("/commodity", jsonData);
       console.log(data);
       toast.success("EDITED SUCCESSFULLY", {
         position: "top-right",
@@ -92,7 +95,7 @@ const EditCommodity = () => {
           pauseHover: true,
           draggable: true,
         });
-        console.log(error);
+        console.log(error.response);
       }
     }
   };
@@ -140,7 +143,7 @@ const EditCommodity = () => {
         <div className="dashboard-wrapper">
           <ToastContainer />
           <div>
-            <form className="mx-5 my-5">
+            <form className="mx-5 my-5" onSubmit={handleUpdate}>
               <div className="d-flex justify-content-between">
                 <h2> Edit Commodity Insight</h2>
 
@@ -169,10 +172,11 @@ const EditCommodity = () => {
 
                 <div className="col-6">
                   <label className="form-label">Country</label>
-                  {country.map((info, index) => (
-                    <div key={index} className="root my-2">
+                  {countries.map((country) => (
+                    <div key={country.id} className="root my-2">
                       <select
-                        value={country.countryName}
+                        value={country.Name}
+                        onChange={(e) => setCountries()}
                         name="countries"
                         className="mx-1 form-control country-keys"
                       >
@@ -183,7 +187,7 @@ const EditCommodity = () => {
                                 key={index}
                                 value={`${country[0]}___${country[1]}`}
                               >
-                                {country[1]}
+                                {country.countryName}
                               </option>
                             );
                           }
@@ -197,7 +201,7 @@ const EditCommodity = () => {
                         ></i>
                         <i
                           className="fa-solid fa-minus mx-1"
-                          onClick={() => handleRemoveCountry(index)}
+                          // onClick={() => handleRemoveCountry(index)}
                         ></i>
                       </div>
                     </div>
@@ -213,6 +217,7 @@ const EditCommodity = () => {
                   value={briefHistory}
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onChange={handleEditor}
+                  init={{ forced_root_block: " " }}
                 />
               </div>
 
@@ -233,7 +238,7 @@ const EditCommodity = () => {
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark" onClick={handleUpdate}>
+                <button className="btn btn-dark" type="submit">
                   Submit
                 </button>
               </div>

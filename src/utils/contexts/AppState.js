@@ -8,18 +8,19 @@ export const AppContext = createContext();
 // }
 
 const AppState = ({ children }) => {
-  const [user, setUser] = useState(null);
-  // const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState("");
+  const [userLoading, setUserLoading] = useState(true);
 
   useEffect(() => {
     axios
       .get("/auth/current-user")
       .then((response) => {
         setUser(response.data.currentUser);
-        // setLoading(true);
+        setUserLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setUserLoading(false);
       });
   }, []);
 
@@ -42,8 +43,8 @@ const AppState = ({ children }) => {
   //     ></div>
   //   );
   // }
-
-  return <AppContext.Provider value={user}>{children}</AppContext.Provider>;
+  const value = { user, userLoading };
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
 export default AppState;

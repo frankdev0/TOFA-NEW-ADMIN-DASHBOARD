@@ -39,10 +39,13 @@ const NewCommodity = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      const newString = briefHistory
+        .replace(/^\<p\>/, "")
+        .replace(/\<\/p\>$/, "");
       const jsonData = {
         name: commodity.name,
         countries: getCountry(),
-        briefHistory: briefHistory,
+        briefHistory: newString,
       };
       const formData = new FormData();
       for (const property in jsonData) {
@@ -175,7 +178,7 @@ const NewCommodity = () => {
                   )}
                 </div>
               </div>
-              <div>
+              <div style={{ textAlign: "left" }}>
                 <h4>Commodity Information</h4>
                 <Editor
                   id="mytextarea"

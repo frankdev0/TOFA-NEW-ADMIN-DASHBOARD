@@ -4,11 +4,12 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import avatar1 from "../../../assets/avatar-1.jpg";
 import { AppContext } from "../../../utils/contexts/AppState";
 import dayjs from "dayjs";
+import "./message.css";
 
 const MessageCenter = () => {
   const [messageList, setMessageList] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
-  const [image, setImage] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const handleChange = (e) => {
     setCurrentMessage(e.target.value);
@@ -16,25 +17,35 @@ const MessageCenter = () => {
 
   const dataResponse = useContext(AppContext);
 
-  const selectImageHandler = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-      console.log(e.target.files[0]);
-    }
+  const selectImageHandler = (event) => {
+    const selectedFiles = event.target.files;
+    const selectedFilesArray = Array.from(selectedFiles);
+
+    const imagesArray = selectedFilesArray.map((file) => {
+      return URL.createObjectURL(file);
+    });
+    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+
+    // console.log(imagesArray);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!currentMessage) return false;
+
+    if (!currentMessage && selectedImages.length === 0) return;
+
     const obj = {
       id: Math.random(),
       own: true,
       email: dataResponse.email,
       time: new Date(),
       message: currentMessage,
+      imgs: selectedImages,
     };
+    // console.log(selectedImages);
     setMessageList((prevState) => [...prevState, obj]);
     setCurrentMessage("");
+    setSelectedImages([]);
   };
   return (
     <div>
@@ -66,147 +77,6 @@ const MessageCenter = () => {
                 </div>
                 <div className="aside-nav collapse aside-body">
                   <div className="chat-list">
-                    <a
-                      href="comingsoon"
-                      className="btn-account"
-                      role="button"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
-                        <img
-                          src={avatar1}
-                          alt="User Avatar"
-                          className="user-avatar-lg rounded-circle"
-                        />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
-                    <hr />
-
                     <a href="comingsoon" className="btn-account" role="button">
                       <span className="user-avatar">
                         <img
@@ -230,34 +100,12 @@ const MessageCenter = () => {
 
             <div className="main-content container-fluid p-0">
               <div className="chat-header bg-white border-bottom">
-                <h2 className="active-user-chat">John Abraham</h2>
+                <h2 className="active-user-chat">John Abraham </h2>
               </div>
               <div className="content-container">
                 <div className="chat-module">
                   <div className="chat-module-top">
                     <div className="chat-module-body border-bottom">
-                      {/* <div className="media chat-item">
-                                        <img alt="Daniel" src={avatar1} className="rounded-circle user-avatar-lg" />
-                                        <div className="media-body">
-                                            <div className="chat-item-title">
-                                                <span className="chat-item-author">Daniel</span>
-                                                <span>Yesterday</span>
-                                            </div>
-                                            <div className="chat-item-body">
-                                                <p>Quisque condimentum elit quis nibh condimentum, in maximus tortor viverra. 🤓</p>
-                                            </div>
-                                            <div className="media media-attachment">
-                                                <div className="avatar bg-primary">
-                                                    <i className="fas fa-file"></i>
-                                                </div>
-                                                <div className="media-body">
-                                                    <a href="comingsoon" className="">questionnaire-draft.doc</a>
-                                                    <span>24kb Document</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
                       <div>
                         <img
                           alt="Kimberly"
@@ -265,11 +113,21 @@ const MessageCenter = () => {
                           className="rounded-circle user-avatar-lg"
                         />
                         {messageList.map((msg, index) => {
-                          console.log(msg);
                           return (
                             <div className="media-body" key={index}>
                               <div className="chat-item-body">
                                 {msg && msg.message}
+                                <div className="mt-2">
+                                  {msg.imgs.length > 0 &&
+                                    msg.imgs.map((img, i) => (
+                                      <img
+                                        key={`image-${i}`}
+                                        width={100}
+                                        height={100}
+                                        src={img}
+                                      />
+                                    ))}
+                                </div>
                               </div>
                               <div>{msg && msg.email}</div>
                               <span>
@@ -278,6 +136,8 @@ const MessageCenter = () => {
                             </div>
                           );
                         })}
+
+                        <div> {}</div>
                       </div>
                     </div>
                   </div>
@@ -351,8 +211,9 @@ const MessageCenter = () => {
                         <button type="button" className="btn btn-link">
                           <i className="far fa-smile"></i>
                         </button>
-                        <div className="custom-file custom-file-naked">
+                        <div className="send">
                           <input
+                            multiple={true}
                             type="file"
                             className="custom-file-input"
                             id="customFile"

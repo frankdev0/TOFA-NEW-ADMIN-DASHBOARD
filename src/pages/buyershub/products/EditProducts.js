@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-// import IconButton from "@mui/material/IconButton";
-// import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { axios } from "../../components/baseUrl";
 // import { useAppContext } from "../../../utils/contexts/AppContext";
 // import DropFileInput from "../../components/DropFileInput";
@@ -23,32 +23,70 @@ const EditProducts = () => {
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [productDescription, setProductDescription] = useState("");
-  //   const [productInfo, setProductInfo] = useState({})
+  const [featuredImage, setFeaturedImage] = useState("");
+  const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [specification, setSpecification] = useState([{ Type: "", Color: "" }]);
+  const [specification, setSpecification] = useState([{ type: "", value: "" }]);
+  const [productSpecific, setProductSpecific] = useState([]);
 
-  //   const {name} = useAppContext()
+  const [imageFile, setImageFile] = useState("");
 
-  //   console.log(name)
+  const handleInput = (index, e) => {
+    const values = [...productSpecific];
+    values[index][e.target.name] = e.target.value;
+    setProductSpecific(values);
+  };
+
+  const handleCountryInput = (index, e) => {
+    const values = [...countries];
+    values[index][e.target.name] = e.target.value;
+    setCountries(values);
+  };
 
   const handleAddFields = () => {
-    setSpecification([...specification, { Type: "", Color: "" }]);
+    setProductSpecific([...productSpecific, ["", ""]]);
+  };
+
+  const handleAddCountry = () => {
+    setCountries([...countries, { countryName: "", price: "" }]);
   };
 
   const handleRemoveFields = (index) => {
-    const values = [...specification];
-    values.splice(index, 1);
-    setSpecification(values);
+    const myValues = [...productSpecific];
+    myValues.splice(index, 1);
+    setProductSpecific(myValues);
   };
 
+  const handleRemoveCountry = (index) => {
+    const countryValues = [...countries];
+    countryValues.splice(index, 1);
+    setCountries(countryValues);
+  };
+
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  const onSelectFile = (event) => {
+    const selectedFiles = event.target.files;
+    const selectedFilesArray = Array.from(selectedFiles);
+
+    const imagesArray = selectedFilesArray.map((file) => {
+      return URL.createObjectURL(file);
+    });
+    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+
+    console.log(selectedFiles);
+  };
+
+  // const [countries, setCountries] = useState([{ countryName: "", price: "" }]);
+
   const { productId } = useParams();
-  console.log(productId);
 
   const getInfo = async () => {
     try {
       const response = await axios.get(`/product/${productId}`);
       // setProductInfo(response.data.data)
+      console.log(response.data.data);
       setId(response.data.data.id);
       setProductName(response.data.data.productName);
       setParentCategory(response.data.data.parentCategory);
@@ -60,9 +98,35 @@ const EditProducts = () => {
       setCategory(response.data.data.category);
       setSubCategory(response.data.data.subCategory);
       setProductDescription(response.data.data.productDescription);
+      setCountries(response.data.data.CountryTraded);
+      console.log("countriesssss", response.data.data.CountryTraded);
+      setFeaturedImage(
+        response.data.data.productImages &&
+          response.data.data.productImages.filter(
+            (image) => image.isMain == true
+          )[0].image
+      );
+
       // setProductInfo(response.data.data.productInfo)
       const responseSpecifications = response.data.data.productSpecification;
-      Object.keys(responseSpecifications);
+      console.log("product Specification", responseSpecifications);
+
+      setProductSpecific(Object.entries(responseSpecifications));
+
+      // const checkObj = {};
+      // checkObj.myType = specific[0][0];
+      // setMyType(checkObj.myType);
+      // checkObj.myValue = specific[0][1];
+      // setMyValue(checkObj.myValue);
+      // setProductSpecific(checkObj);
+
+      // let newObj = {};
+      // specific[0].forEach((element) => {
+      //   newObj[element] = specific[0].map((item) => item[1]);
+      // });
+
+      // console.log("this is the new obj", newObj);
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -76,10 +140,50 @@ const EditProducts = () => {
 
   const navigate = useNavigate();
 
+  const getCountry = () => {
+    const countries = document.getElementsByClassName("country-keys");
+    const prices = document.getElementsByClassName("country-values");
+
+    const country = [];
+    // [{ countryName: string, price: string }]
+    for (let i = 0; i < countries.length; i++) {
+      const countryName = countries[i].value;
+      const price = prices[i].value;
+      if (countryName && price) country.push({ countryName, price });
+    }
+    return country;
+  };
+
+  const getSpecifications = () => {
+    const keys = document.getElementsByClassName("specification-keys");
+    const values = document.getElementsByClassName("specification-values");
+
+    const specification = {};
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i].value;
+      const value = values[i].value;
+      if (key && value) specification[key] = value;
+    }
+    return specification;
+  };
+
   const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      await axios.patch(`/product/${id}`, {
+      // const myObj = { type: myType, value: myValue };
+      // console.log("my check object", myObj);
+      // console.log("my check object two", productSpecific);
+      // console.log(countries);
+      // console.log(productSpecific);
+      // console.log(myType);
+      // console.log(myValue);
+      // const formData = new FormData();
+      // for (const property in jsonData) {
+      //   formData.append(`${property}`, jsonData[property]);
+      // }
+      // formData.append("productImages", imageFile);
+      // console.log("from the featured Image", imageFile);
+      console.log({
         productName: productName,
         parentCategory: parentCategory,
         unitForMinOrder: unitForMinOrder,
@@ -90,7 +194,27 @@ const EditProducts = () => {
         category: category,
         subCategory: subCategory,
         productDescription: productDescription,
+        // featuredImage: imageFile,
+        specification: getSpecifications(),
+        countryTraded: getCountry(),
       });
+      // return;
+      const { data: result } = await axios.patch(`/product/${id}`, {
+        productName: productName,
+        parentCategory: parentCategory,
+        unitForMinOrder: unitForMinOrder,
+        supplyCapacity: supplyCapacity,
+        unitForSupplyCapacity: unitForSupplyCapacity,
+        minDuration: minDuration,
+        maxDuration: maxDuration,
+        category: category,
+        subCategory: subCategory,
+        productDescription: productDescription,
+        featuredImage: imageFile,
+        specification: getSpecifications(),
+        countries: getCountry(),
+      });
+      console.log(result);
       toast.success("SUCCESSFULLY CREATED NEW COMMODITY", {
         position: "top-right",
         autoClose: 4000,
@@ -193,13 +317,7 @@ const EditProducts = () => {
                     <option> MINERALS_AND_METALLURGY</option>
                     <option> AGRICULTURE</option>
                   </select>
-                  {/* <input
-                    name="parentCategory"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  /> */}
+
                   {/* {formErrors.parentCategory && (
                     <p className="text-danger">{formErrors.parentCategory}</p>
                   )} */}
@@ -328,76 +446,79 @@ const EditProducts = () => {
               <div className="row">
                 <div className="col-6" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
-                  {specification.map((info, index) => (
-                    <div key={index} className="root my-2">
-                      <input
-                        type="text"
-                        name="Type"
-                        value={specification.Type}
-                        placeholder="type"
-                        className="mx-1 form-control specification-keys"
-                      />
+                  {console.log("the specifics", productSpecific)}
+                  {productSpecific &&
+                    productSpecific.map((spec, index) => (
+                      <div key={index} className="root my-2">
+                        <input
+                          type="text"
+                          defaultValue={spec[0]}
+                          // value={spec[0]}
+                          onChange={(e) => handleInput(index, e)}
+                          className="mx-1 form-control specification-keys"
+                        />
 
-                      <input
-                        type="text"
-                        name="Color"
-                        value={specification.Color}
-                        variant="filled"
-                        placeholder="value"
-                        className="mx-1 form-control specification-values"
-                      />
+                        <input
+                          type="text"
+                          defaultValue={spec[1]}
+                          // value={spec[1]}
+                          onChange={(e) => handleInput(index, e)}
+                          className="mx-1 form-control specification-values"
+                        />
 
-                      <div className="d-flex align-items-center">
-                        <i
-                          className="fa-solid fa-plus mx-1 "
-                          onClick={() => handleAddFields()}
-                        ></i>
-                        <i
-                          className="fa-solid fa-minus mx-1"
-                          onClick={() => handleRemoveFields(index)}
-                        ></i>
+                        <div className="d-flex align-items-center">
+                          <i
+                            className="fa-solid fa-plus mx-1 "
+                            onClick={() => handleAddFields()}
+                          ></i>
+                          <i
+                            className="fa-solid fa-minus mx-1"
+                            onClick={() => handleRemoveFields(index)}
+                          ></i>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+
                   {/* {formErrors.specification && (
                     <p className="text-danger">{formErrors.specification}</p>
                   )}  */}
                 </div>
 
-                <div className="col-6">
+                <div className="col-6" style={{ textAlign: "left" }}>
                   <label className="form-label">Country</label>
-                  {/* {country.map((info, index) => (
-                    <div key={index} className="root my-2">
-                      <input
-                        type='text'
-                        name="countryName"
-                        value={country.countryName}
-                        variant="filled"
-                        placeholder="country name"
-                        className="mx-1 form-control country-keys"
-                      />
+                  {console.log("the countries", countries)}
+                  {countries &&
+                    countries.map((country, index) => (
+                      <div key={index} className="root my-2">
+                        <input
+                          type="text"
+                          defaultValue={country.countryName}
+                          placeholder="country name"
+                          onChange={(e) => handleCountryInput(index, e)}
+                          className="mx-1 form-control country-keys"
+                        />
 
-                      <input
-                        type="text"
-                        name="price"
-                        value={country.price}
-                        variant="filled"
-                        placeholder="price"
-                        className="mx-1 form-control country-values"
-                      /> */}
+                        <input
+                          type="text"
+                          defaultValue={country.price}
+                          onChange={(e) => handleCountryInput(index, e)}
+                          variant="filled"
+                          placeholder="price"
+                          className="mx-1 form-control country-values"
+                        />
 
-                  {/* <div className="d-flex align-items-center">
-                        <i
-                          className="fa-solid fa-plus mx-1 "
-                          onClick={() => handleAddCountry()}
-                        ></i>
-                        <i
-                          className="fa-solid fa-minus mx-1"
-                          onClick={() => handleRemoveCountry(index)}
-                        ></i>
-                      </div> */}
-                  {/* </div>
-                  ))} */}
+                        <div className="d-flex align-items-center">
+                          <i
+                            className="fa-solid fa-plus mx-1 "
+                            onClick={() => handleAddCountry()}
+                          ></i>
+                          <i
+                            className="fa-solid fa-minus mx-1"
+                            onClick={() => handleRemoveCountry(index)}
+                          ></i>
+                        </div>
+                      </div>
+                    ))}
                   {/* {formErrors.country && (
                     <p className="text-danger">{formErrors.country}</p>
                   )} */}
@@ -418,90 +539,88 @@ const EditProducts = () => {
                 )} */}
               </div>
 
-              {/* <div className="row">
-                  <div className="col-6 box">
-                    <h3 className="header">Featured Images</h3> */}
+              <div className="row">
+                <div className="col-6 box">
+                  <h3 className="header">Featured Images</h3>
+                  <input
+                    type="file"
+                    name="productImages"
+                    onChange={(e) => setImageFile(e.target.files[0])}
+                    accept="image/*"
+                  />
+                  <br />
 
-              {/* <DropFileInput
-                      onFileChange={(files) => onFileChange(files)}
-                    /> */}
-              {/* <input type="file" name="featuredImage" />
-                  </div>
-                  <div className="col-6 mx-auto">
+                  <img
+                    src={featuredImage}
+                    alt="featured"
+                    className="my-3 px-2"
+                    style={{ width: "100px", height: "100px" }}
+                  />
+                </div>
+
+                <div className="col-6 mx-auto">
                   <div className="mb-3" style={{ textAlign: "left" }}>
-                <label className="form-label d-block">Other Images</label>
-                <input
-                  type="file"
-                  name="otherImages"
-                  accept="image/*"
-                  multiple
-                  onChange={onSelectFile}
-                /> */}
+                    <label className="form-label d-block">Other Images</label>
+                    <input
+                      type="file"
+                      name="otherImages"
+                      accept="image/*"
+                      multiple
+                      onChange={onSelectFile}
+                    />
 
-              {/* <div className="iamges d-flex">
-                  {selectedImages &&
-                    selectedImages.map((image, index) => {
-                      return (
-                        <div
-                          key={image}
-                          className="image"
-                          style={{ position: "relative" }}
-                        >
-                          <img src={image} alt="" /> */}
-              {/* <button
-                            onClick={() =>
-                              setSelectedImages(
-                                selectedImages.filter((e) => e !== image)
-                              )
-                            }
-                          >
-                            delete image
-                          </button> */}
-              {/* <div
-                            className="bin-icon"
-                            style={{
-                              position: "absolute",
-                              top: "50%",
-                              left: "0",
-                              color: "red",
-                            }}
-                          >
-                            <IconButton
-                              className="text-danger"
-                              aria-label="delete"
-                              size="small"
-                              onClick={() =>
-                                setSelectedImages(
-                                  selectedImages.filter((e) => e !== image)
-                                )
-                              }
+                    <div className="iamges d-flex">
+                      {selectedImages &&
+                        selectedImages.map((image, index) => {
+                          return (
+                            <div
+                              key={image}
+                              className="image"
+                              style={{ position: "relative" }}
                             >
-                              <DeleteIcon fontSize="inherit" />
-                            </IconButton>
-                          </div>
-                        </div>
-                      );
-                    })}
-                    {console.log(selectedImages)}
-                </div>
+                              <img src={image} alt="" />
+                              <button
+                                onClick={() =>
+                                  setSelectedImages(
+                                    selectedImages.filter((e) => e !== image)
+                                  )
+                                }
+                              >
+                                delete image
+                              </button>
+                              <div
+                                className="bin-icon"
+                                style={{
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "0",
+                                  color: "red",
+                                }}
+                              >
+                                <IconButton
+                                  className="text-danger"
+                                  aria-label="delete"
+                                  size="small"
+                                  onClick={() =>
+                                    setSelectedImages(
+                                      selectedImages.filter((e) => e !== image)
+                                    )
+                                  }
+                                >
+                                  <DeleteIcon fontSize="inherit" />
+                                </IconButton>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      {console.log(selectedImages)}
+                    </div>
                   </div>
                 </div>
-              </div> */}
+              </div>
 
-              {/* <input
-                className="productInput"
-                type="file"
-                id="file"
-                style={{ display: "none" }}
-                onChange={(e) => setFile(e.target.files[0])}
-              /> */}
-
-              <div style={{ textAlign: "left" }}>
-                <button
-                  className="btn btn-dark"
-                  type="submit"
-                  onClick={handleUpdate}
-                >
+              <div style={{ textAlign: "left", margin: "10px" }}>
+                <button className="btn btn-dark px-3" onClick={handleUpdate}>
                   Update
                 </button>
               </div>

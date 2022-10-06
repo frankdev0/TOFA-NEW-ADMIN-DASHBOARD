@@ -1,4 +1,7 @@
-buttons{
-    margin: 0;
-    padding: 0;
+ .brief{
+    width: 50px !important;
+    height: 50px !important;
+    text-overflow: ellipsis !important;
+    overflow: hidden !important;
+    background-color: bisque;
 }

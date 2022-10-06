@@ -40,7 +40,7 @@ const Orders = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 2000);
+      }, 1500);
     });
   }, []);
 

@@ -57,7 +57,7 @@ const Products = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1500);
+      }, 2000);
     });
   }, []);
   if (!loading) {

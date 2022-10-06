@@ -46,9 +46,9 @@ import AppState, { AppContext } from "./utils/contexts/AppState";
 function App() {
   // const [loading, setLoading] = useState(false)
 
-  const dataRes = useContext(AppContext);
+  const { user, userLoading } = useContext(AppContext);
 
-  if (!dataRes) {
+  if (userLoading) {
     return (
       <div
         className="spinner mx-auto"
@@ -88,14 +88,14 @@ function App() {
             </Route>
             {/* <Route
               element={
-                !dataRes.type === "SUPER_ADMIN" ? (
+                !user.type === "SUPER_ADMIN" ? (
                   <ProtectedRoutes />
                 ) : (
                   <Unauthorized />
                 )
               }
             > */}
-            {dataRes && dataRes.type === "SUPER_ADMIN" ? (
+            {user && user.type === "SUPER_ADMIN" ? (
               <Route element={<ProtectedRoutes />}>
                 <Route exact path="/newcommodity" element={<NewCommodity />} />
                 <Route exact path="/orders" element={<Orders />} />
@@ -104,7 +104,9 @@ function App() {
                 <Route exact path="/message" element={<MessageCenter />} />
                 <Route exact path="/overview" element={<Overview />} />
                 <Route exact path="/testimonial" element={<Testimonial />} />
+                <Route exact path="/banners" element={<Banners />} />
                 <Route exact path="/products" element={<Products />} />
+                <Route exact path="/createbanner" element={<CreateBanner />} />
                 <Route
                   exact
                   path="/createproduct"
@@ -144,7 +146,7 @@ function App() {
                 <Route exact path="/createuser" element={<CreateUser />} />
                 <Route exact path="/users" element={<Users />} />
                 <Route exact path="/sidebar" element={<Sidebar />} />
-                <Route exact path="/faq" element={<Faqs />} />
+
                 <Route exact path="/createfaq" element={<CreateFaq />} />
                 <Route
                   exact
@@ -155,10 +157,9 @@ function App() {
             ) : (
               <Route exact path="/*" element={<Unauthorized />} />
             )}
-            {dataRes && dataRes.type === "WEBSITE_ADMIN" ? (
+            {user && user.type === "WEBSITE_ADMIN" ? (
               <Route element={<ProtectedRoutes />}>
-                <Route exact path="/createbanner" element={<CreateBanner />} />
-                <Route exact path="/banners" element={<Banners />} />
+                <Route exact path="/faq" element={<Faqs />} />
               </Route>
             ) : (
               <Route exact path="/*" element={<Unauthorized />} />

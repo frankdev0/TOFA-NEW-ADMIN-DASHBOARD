@@ -23,6 +23,10 @@ const CreateProducts = () => {
     specification: "",
     productDescription: "",
   });
+  const [specifications, setSpecifications] = useState([
+    { type: "", value: "" },
+  ]);
+  const [country, setCountry] = useState([{ countryName: "", price: "" }]);
 
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
@@ -30,6 +34,10 @@ const CreateProducts = () => {
   //   imageOne:"",
   //   imageTwo:""
   // })
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const handleProductChange = (e) => {
     setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
@@ -48,6 +56,23 @@ const CreateProducts = () => {
     return JSON.stringify(specification);
   };
 
+  const handleInput = (index, event) => {
+    const values = [...specifications];
+    values[index][event.target.name] = event.target.value;
+    setSpecifications(values);
+  };
+
+  //  const getCountry = () => {
+  //    const countries = document.getElementsByClassName("country-keys");
+
+  //    const country = [];
+  //    for (let i = 0; i < countries.length; i++) {
+  //      const [shortName, countryName] = countries[i].value.split("___");
+  //      if (shortName && countryName) country.push({ shortName, countryName });
+  //    }
+  //    return JSON.stringify(country);
+  //  };
+
   const getCountry = () => {
     const countries = document.getElementsByClassName("country-keys");
     const prices = document.getElementsByClassName("country-values");
@@ -65,8 +90,11 @@ const CreateProducts = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
+      const specific = getSpecifications();
+      console.log("these are specs", specifications);
+      const africanCountry = getCountry();
       const jsonData = {
-        productName: productDetails.productName,
+        productName: capitalizeFirstLetter(productDetails.productName),
         currency: "NGN",
         parentCategory: productDetails.parentCategory,
         unitForMinOrder: productDetails.unitForMinOrder,
@@ -77,10 +105,10 @@ const CreateProducts = () => {
         subCategory: productDetails.subCategory,
         productDescription: productDetails.productDescription,
         supplyCapacity: productDetails.supplyCapacity,
+        // specification: capitalizeFirstLetter(specific),
         specification: getSpecifications(),
-        countries: getCountry(),
+        countries: capitalizeFirstLetter(africanCountry),
       };
-
       const formData = new FormData();
       for (const property in jsonData) {
         formData.append(`${property}`, jsonData[property]);
@@ -135,9 +163,6 @@ const CreateProducts = () => {
     console.log(selectedFiles);
   };
 
-  const [specification, setSpecification] = useState([{ Type: "", Color: "" }]);
-  const [country, setCountry] = useState([{ countryName: "", price: "" }]);
-
   // const handleChangeInput = (index, event) => {
   //   const values = [...specification];
   //   const countryValues = [...country];
@@ -148,7 +173,7 @@ const CreateProducts = () => {
   // };
 
   const handleAddFields = () => {
-    setSpecification([...specification, { Type: "", Color: "" }]);
+    setSpecifications([...specifications, { type: "", value: "" }]);
   };
 
   const handleAddCountry = () => {
@@ -156,9 +181,9 @@ const CreateProducts = () => {
   };
 
   const handleRemoveFields = (index) => {
-    const values = [...specification];
+    const values = [...specifications];
     values.splice(index, 1);
-    setSpecification(values);
+    setSpecifications(values);
   };
 
   const handleRemoveCountry = (index) => {
@@ -358,20 +383,22 @@ const CreateProducts = () => {
               <div className="row">
                 <div className="col-6" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
-                  {specification.map((info, index) => (
+                  {specifications.map((specification, index) => (
                     <div key={index} className="root my-2">
                       <input
                         type="text"
-                        name="Type"
-                        value={specification.Type}
+                        name="type"
+                        value={specification.type}
+                        onChange={(event) => handleInput(index, event)}
                         placeholder="type"
                         className="mx-1 form-control specification-keys"
                       />
 
                       <input
                         type="text"
-                        name="Color"
-                        value={specification.Color}
+                        name="value"
+                        value={specification.value}
+                        onChange={(event) => handleInput(index, event)}
                         variant="filled"
                         placeholder="value"
                         className="mx-1 form-control specification-values"
@@ -432,6 +459,49 @@ const CreateProducts = () => {
                     <p className="text-danger">{formErrors.country}</p>
                   )}
                 </div>
+
+                {/* <div className="col-6">
+                  <label className="form-label">Country</label>
+                  {country.map((info, index) => (
+                    <div key={index} className="root my-2">
+                      <select
+                        value={country.countryName}
+                        name="countries"
+                        className="mx-1 form-control country-keys"
+                      >
+                        {Object.entries(africanCountryData).map(
+                          (country, index) => {
+                            return (
+                              <option
+                                key={index}
+                                value={`${country[0]}___${country[1]}`}
+                              >
+                                {country[1]}
+                              </option>
+                            );
+                          }
+                        )}
+                      </select>
+
+                      <div className="d-flex align-items-center">
+                        <i
+                          className="fa-solid fa-plus mx-1 "
+                          onClick={() => handleAddCountry()}
+                        ></i>
+                        <i
+                          className="fa-solid fa-minus mx-1"
+                          onClick={() => handleRemoveCountry(index)}
+                        ></i>
+                        {formErrors.country && (
+                          <p className="text-danger">{formErrors.country}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {formErrors.country && (
+                    <p className="text-danger">{formErrors.country}</p>
+                  )}
+                </div> */}
               </div>
 
               <div className="mb-3" style={{ textAlign: "left" }}>

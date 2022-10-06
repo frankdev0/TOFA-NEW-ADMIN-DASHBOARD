@@ -15,19 +15,22 @@ const EditBanner = () => {
   const [id, setId] = useState(0);
   const [image, setImage] = useState("");
   const [link, setLink] = useState("");
-  const [callToAction, setCallToAction] = useState({});
+  const [callToAction, setCallToAction] = useState("");
+  const [imageFile, setImageFile] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
 
   const { bannerId } = useParams();
-  console.log(bannerId);
 
   const getInfo = async () => {
     try {
       const response = await axios.get(`/banner/${bannerId}`);
-      setCallToAction(response.data.data);
+      setCallToAction(response.data.data.callToAction);
+      setImage(response.data.data.image);
+      setLink(response.data.data.link);
+      setId(response.data.data.id);
       console.log(response.data.data);
       setIsLoading(false);
     } catch (error) {
@@ -40,16 +43,24 @@ const EditBanner = () => {
     getInfo();
   }, []);
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    axios
-      .patch(`/banner/${id}`, {
-        link: link,
-        callToAction: callToAction,
-      })
-      .then(() => {
-        navigate("/banners");
-      });
+    const jsonData = {
+      callToAction: callToAction,
+      link: link,
+    };
+    const formData = new FormData();
+    for (const property in jsonData) {
+      formData.append(`${property}`, jsonData[property]);
+    }
+    formData.append("image", imageFile);
+    console.log(imageFile);
+    const { data: result } = await axios.patch(`/banner/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(result);
     toast.success("EDITED SUCCESSFULLY", {
       position: "top-right",
       autoClose: 4000,
@@ -89,7 +100,7 @@ const EditBanner = () => {
         <div className="dashboard-wrapper">
           <ToastContainer />
           <div>
-            <form className="mx-5 my-5">
+            <form className="mx-5 my-5" onSubmit={handleUpdate}>
               <div className="d-flex justify-content-between">
                 <h2> Edit Banner</h2>
                 {/* <Link to="/commodityInsight">
@@ -109,7 +120,7 @@ const EditBanner = () => {
                 <div className="col-6 mt-2">
                   <label className="form-label">Call To Action:</label>
                   <input
-                    value={callToAction.callToAction}
+                    value={callToAction}
                     type="text"
                     className="form-control"
                     aria-describedby="emailHelp"
@@ -119,7 +130,7 @@ const EditBanner = () => {
                 <div className="col-6 mt-2">
                   <label className="form-label">Call To Action:</label>
                   <input
-                    value={callToAction.link}
+                    value={link}
                     type="text"
                     className="form-control"
                     aria-describedby="emailHelp"
@@ -128,10 +139,24 @@ const EditBanner = () => {
                 </div>
               </div>
 
+              <div className="form-group">
+                <label className="form-label mx-2">Upload Banner</label>
+                <input
+                  type="file"
+                  id="image"
+                  onChange={(e) => setImageFile(e.target.files[0])}
+                  name="image"
+                  accept="image/*"
+                />
+                <img
+                  src={image}
+                  alt="banner image"
+                  style={{ width: "100px", height: "100px" }}
+                />
+              </div>
+
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark" onClick={handleUpdate}>
-                  Submit
-                </button>
+                <button className="btn btn-dark">Submit</button>
               </div>
             </form>
           </div>

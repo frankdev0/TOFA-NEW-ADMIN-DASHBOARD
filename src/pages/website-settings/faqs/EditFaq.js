@@ -115,12 +115,9 @@ const EditFaq = () => {
                   className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                   align="right"
                 >
-                  <buttonn
-                    className="btn btn-dark"
-                    onClick={() => navigate(-1)}
-                  >
+                  <button className="btn btn-dark" onClick={() => navigate(-1)}>
                     Back
-                  </buttonn>
+                  </button>
                 </div>
               </div>
               {/* <!-- end pageheader --> */}

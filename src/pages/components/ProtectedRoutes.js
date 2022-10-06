@@ -17,6 +17,7 @@ const ProtectedRoutes = () => {
       .get("/auth/current-user")
       .then((response) => {
         setCurrentUser(response.data.currentUser);
+        console.log("Protected Route =>", response);
         console.log("this is from protected route", response.data.currentUser);
       })
       .catch((error) => {

@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 // import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 import "jquery/dist/jquery.min.js";
+import "./editor.css";
 
 //Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables";
@@ -40,7 +41,7 @@ const CommodityInsight = () => {
 
   // const handleDelete = (commodityID) => {
   //   axios.delete(`/commodity/${commodityID}`).then((response) => {
-  //    getData()
+  //     getData();
   //   });
   // };
 
@@ -180,7 +181,7 @@ const CommodityInsight = () => {
                                     <td>{item.name}</td>
                                     <td>{item.briefHistory}</td>
 
-                                    <td>
+                                    <td width={100}>
                                       <Link to={`/editcommodity/${item.id}`}>
                                         <button
                                           type="button"
@@ -254,8 +255,20 @@ const CommodityInsight = () => {
                                                   {viewCommodity.name}
                                                 </div>
                                                 <div className="modal-body">
-                                                  Country:{" "}
-                                                  {viewCommodity.country}
+                                                  Country Trade:{" "}
+                                                  {viewCommodity.countriesTraded &&
+                                                    viewCommodity.countriesTraded.map(
+                                                      (country, id) => {
+                                                        return (
+                                                          <div key={id}>
+                                                            {
+                                                              country.countryName
+                                                            }{" "}
+                                                            {country.shortName}
+                                                          </div>
+                                                        );
+                                                      }
+                                                    )}
                                                 </div>
                                               </div>
                                               <div className="d-flex">
