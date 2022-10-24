@@ -6,6 +6,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { axios } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import "./products.css";
+import { africanCountryData } from "./africanCountries";
 // import DropFileInput from "../../components/DropFileInput";
 // import OtherImages from "./OtherImages";
 
@@ -18,7 +21,7 @@ const CreateProducts = () => {
     unitForSupplyCapacity: "",
     minDuration: "",
     maxDuration: "",
-    category: "",
+    minOrder: "",
     subCategory: "",
     specification: "",
     productDescription: "",
@@ -87,21 +90,26 @@ const CreateProducts = () => {
     return JSON.stringify(country);
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const specific = getSpecifications();
+      const newCountry = getCountry();
       console.log("these are specs", specifications);
+      console.log("these are countries", newCountry);
       const africanCountry = getCountry();
       const jsonData = {
         productName: capitalizeFirstLetter(productDetails.productName),
-        currency: "NGN",
+        currency: "USD",
+        category: "hazzle",
         parentCategory: productDetails.parentCategory,
         unitForMinOrder: productDetails.unitForMinOrder,
         unitForSupplyCapacity: productDetails.unitForSupplyCapacity,
         minDuration: productDetails.minDuration,
         maxDuration: productDetails.maxDuration,
-        category: productDetails.category,
+        minOrdersAllowed: productDetails.minOrder,
         subCategory: productDetails.subCategory,
         productDescription: productDetails.productDescription,
         supplyCapacity: productDetails.supplyCapacity,
@@ -124,6 +132,11 @@ const CreateProducts = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(result);
+
+      setTimeout(() => {
+        navigate(-1);
+      }, 4000);
       setProductDetails("");
       toast.success("SUCCESSFULLY CREATED NEW PRODUCT", {
         position: "top-right",
@@ -163,15 +176,6 @@ const CreateProducts = () => {
     console.log(selectedFiles);
   };
 
-  // const handleChangeInput = (index, event) => {
-  //   const values = [...specification];
-  //   const countryValues = [...country];
-  //   values[index][event.target.value] = event.target.value;
-  //   countryValues[index][event.target.value] = event.target.value;
-  //   setSpecification(values);
-  //   setCountry(countryValues);
-  // };
-
   const handleAddFields = () => {
     setSpecifications([...specifications, { type: "", value: "" }]);
   };
@@ -182,35 +186,33 @@ const CreateProducts = () => {
 
   const handleRemoveFields = (index) => {
     const values = [...specifications];
-    values.splice(index, 1);
-    setSpecifications(values);
+    if (values.length > 1) {
+      values.splice(index, 1);
+      setSpecifications(values);
+    }
   };
 
   const handleRemoveCountry = (index) => {
     const countryValues = [...country];
-    countryValues.splice(index, 1);
-    setCountry(countryValues);
+    if (countryValues.length > 1) {
+      countryValues.splice(index, 1);
+      setCountry(countryValues);
+    }
   };
   return (
     <>
-      {/* <!-- main wrapper --> */}
       <div className="dashboard-main-wrapper">
-        {/* <!-- navbar --> */}
         <Navbar />
 
-        {/* <!-- left sidebar --> */}
         <Sidebar />
 
-        {/* <!-- wrapper  --> */}
         <div className="dashboard-wrapper">
           <ToastContainer />
           <div>
             <form className="mx-5 my-5" onSubmit={handleSubmit}>
               <div className="d-flex justify-content-between">
                 <h2> Create Products</h2>
-                {/* <Link to="/commodityInsight">
-                <button className="btn btn-primary m-3">Show Commodity</button>
-              </Link> */}
+
                 <div
                   className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                   align="right"
@@ -227,7 +229,7 @@ const CreateProducts = () => {
                   <input
                     name="productName"
                     type="text"
-                    className="form-control"
+                    className="form-control product_input"
                     aria-describedby="emailHelp"
                     onChange={handleProductChange}
                   />
@@ -240,12 +242,12 @@ const CreateProducts = () => {
                   <label className="form-label">Parent Category</label>
 
                   <select
-                    className="form-control"
+                    className="form-control product_input"
                     name="parentCategory"
                     aria-describedby="Default select example"
                     onChange={handleProductChange}
-                    placeholder="parent category"
                   >
+                    <option>Select Parent Cateogory</option>
                     <option>CONSTRUCTION_MATERIAL</option>
                     <option>FOOD_AND_BEVERAGE</option>
                     <option>APPAREL</option>
@@ -255,79 +257,86 @@ const CreateProducts = () => {
                     <option> MINERALS_AND_METALLURGY</option>
                     <option> AGRICULTURE</option>
                   </select>
-                  {/* <input
-                    name="parentCategory"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  /> */}
+
                   {formErrors.parentCategory && (
                     <p className="text-danger">{formErrors.parentCategory}</p>
                   )}
                 </div>
 
-                <div className="col-4 ">
-                  <label className="form-label">Supply Capacity</label>
+                <div className="col-4 mb-3">
+                  <label className="form-label">Sub Category</label>
                   <input
-                    type="number"
-                    name="supplyCapacity"
-                    className="form-control"
+                    name="subCategory"
+                    type="text"
+                    className="form-control product_input"
+                    aria-describedby="emailHelp"
                     onChange={handleProductChange}
-                  ></input>
-                  {formErrors.supplyCapacity && (
-                    <p className="text-danger">{formErrors.supplyCapacity}</p>
+                  />
+                  {formErrors.subCategory && (
+                    <p className="text-danger">{formErrors.subCategory}</p>
                   )}
                 </div>
-
-                {/* <div className="col-4 mb-3">
-                  <label className="form-label">Currency</label>
-                  <input
-                    name="currency"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                  />
-                </div> */}
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4 mb-3">
-                  <label className="form-label">Unit of Min order</label>
-                  <input
-                    name="unitForMinOrder"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  />
+                <div className="col-4 mb-3 ">
+                  <label className="form-label">Supply Capacity</label>
+                  <div className="d-flex">
+                    <input
+                      type="number"
+                      name="supplyCapacity"
+                      className="form-control supply_capacity"
+                      onChange={handleProductChange}
+                    />
+
+                    <select
+                      className="unit_style"
+                      name="unitForSupplyCapacity"
+                      onChange={handleProductChange}
+                    >
+                      <option>tones</option>
+                      <option>kilo</option>
+                      <option>grams</option>
+                      <option>meter</option>
+                    </select>
+                  </div>
                   {formErrors.unitForMinOrder && (
                     <p className="text-danger">{formErrors.unitForMinOrder}</p>
                   )}
                 </div>
 
-                <div className="col-4  mb-3">
-                  <label className="form-label">Unit of Supply Capacity</label>
-                  <input
-                    name="unitForSupplyCapacity"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  />
-                  {formErrors.unitForSupplyCapacity && (
-                    <p className="text-danger">
-                      {formErrors.unitForSupplyCapacity}
-                    </p>
+                <div className="col-4">
+                  <label className="form-label">Min Order</label>
+                  <div className=" d-flex">
+                    <input
+                      type="number"
+                      name="minOrder"
+                      className="form-control supply_capacity"
+                      onChange={handleProductChange}
+                    />
+
+                    <select
+                      className="unit_style"
+                      name="unitForMinOrder"
+                      onChange={handleProductChange}
+                    >
+                      <option>tones</option>
+                      <option>kilo</option>
+                      <option>grams</option>
+                      <option>meter</option>
+                    </select>
+                  </div>
+                  {formErrors.supplyCapacity && (
+                    <p className="text-danger">{formErrors.supplyCapacity}</p>
                   )}
                 </div>
 
                 <div className="col-4 mb-3">
-                  <label className="form-label">Min Duration</label>
+                  <label className="form-label"> Min Lead-Time</label>
                   <input
                     name="minDuration"
                     type="text"
-                    className="form-control"
+                    className="form-control product_input"
                     aria-describedby="emailHelp"
                     onChange={handleProductChange}
                   />
@@ -339,11 +348,11 @@ const CreateProducts = () => {
 
               <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-4  mb-3">
-                  <label className="form-label">Max Duration</label>
+                  <label className="form-label">Max Lead-Time</label>
                   <input
                     name="maxDuration"
                     type="text"
-                    className="form-control"
+                    className="form-control product_input"
                     aria-describedby="emailHelp"
                     onChange={handleProductChange}
                   />
@@ -352,36 +361,7 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4 mb-3">
-                  <label className="form-label">Category</label>
-                  <input
-                    name="category"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  />
-                  {formErrors.category && (
-                    <p className="text-danger">{formErrors.category}</p>
-                  )}
-                </div>
-
-                <div className="col-4 mb-3">
-                  <label className="form-label">Sub Category</label>
-                  <input
-                    name="subCategory"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={handleProductChange}
-                  />
-                  {formErrors.subCategory && (
-                    <p className="text-danger">{formErrors.subCategory}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-6" style={{ textAlign: "left" }}>
+                <div className="col-4" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
                   {specifications.map((specification, index) => (
                     <div key={index} className="root my-2">
@@ -420,8 +400,54 @@ const CreateProducts = () => {
                     <p className="text-danger">{formErrors.specification}</p>
                   )}
                 </div>
+                <div className="col-4">
+                  <label className="form-label">Country</label>
+                  {country.map((info, index) => (
+                    <div key={index} className="root my-2">
+                      <select
+                        value={country.countryName}
+                        name="countries"
+                        className="mx-1 form-control country-keys"
+                      >
+                        {Object.entries(africanCountryData).map(
+                          (country, index) => {
+                            return (
+                              <option key={index} value={`${country[1]}`}>
+                                {country[1]}
+                              </option>
+                            );
+                          }
+                        )}
+                      </select>
+                      <input
+                        type="text"
+                        name="price"
+                        value={country.price}
+                        variant="filled"
+                        placeholder="price"
+                        className="mx-1 form-control country-values"
+                      />
 
-                <div className="col-6">
+                      <div className="d-flex align-items-center">
+                        <i
+                          className="fa-solid fa-plus mx-1 "
+                          onClick={() => handleAddCountry()}
+                        ></i>
+                        <i
+                          className="fa-solid fa-minus mx-1"
+                          onClick={() => handleRemoveCountry(index)}
+                        ></i>
+                        {formErrors.country && (
+                          <p className="text-danger">{formErrors.country}</p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {formErrors.country && (
+                    <p className="text-danger">{formErrors.country}</p>
+                  )}
+                </div>
+                {/* <div className="col-4">
                   <label className="form-label">Country</label>
                   {country.map((info, index) => (
                     <div key={index} className="root my-2">
@@ -431,7 +457,7 @@ const CreateProducts = () => {
                         value={country.countryName}
                         variant="filled"
                         placeholder="country name"
-                        className="mx-1 form-control country-keys"
+                        className="mx-1 form-control country-keys "
                       />
 
                       <input
@@ -458,49 +484,6 @@ const CreateProducts = () => {
                   {formErrors.country && (
                     <p className="text-danger">{formErrors.country}</p>
                   )}
-                </div>
-
-                {/* <div className="col-6">
-                  <label className="form-label">Country</label>
-                  {country.map((info, index) => (
-                    <div key={index} className="root my-2">
-                      <select
-                        value={country.countryName}
-                        name="countries"
-                        className="mx-1 form-control country-keys"
-                      >
-                        {Object.entries(africanCountryData).map(
-                          (country, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={`${country[0]}___${country[1]}`}
-                              >
-                                {country[1]}
-                              </option>
-                            );
-                          }
-                        )}
-                      </select>
-
-                      <div className="d-flex align-items-center">
-                        <i
-                          className="fa-solid fa-plus mx-1 "
-                          onClick={() => handleAddCountry()}
-                        ></i>
-                        <i
-                          className="fa-solid fa-minus mx-1"
-                          onClick={() => handleRemoveCountry(index)}
-                        ></i>
-                        {formErrors.country && (
-                          <p className="text-danger">{formErrors.country}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  {formErrors.country && (
-                    <p className="text-danger">{formErrors.country}</p>
-                  )}
                 </div> */}
               </div>
 
@@ -517,16 +500,16 @@ const CreateProducts = () => {
                 )}
               </div>
 
-              <div className="row">
+              <div className="row mx-1">
                 <div className="col-6 box">
-                  <h3 className="header">Featured Images</h3>
+                  <h3 className="header">Featured Image</h3>
 
                   {/* <DropFileInput
                       onFileChange={(files) => onFileChange(files)}
                     /> */}
                   <input type="file" name="featuredImage" />
                 </div>
-                <div className="col-6 mx-auto">
+                <div className="col-6 ">
                   <div className="mb-3" style={{ textAlign: "left" }}>
                     <label className="form-label d-block">Other Images</label>
                     <input
@@ -583,16 +566,8 @@ const CreateProducts = () => {
                 </div>
               </div>
 
-              {/* <input
-                className="productInput"
-                type="file"
-                id="file"
-                style={{ display: "none" }}
-                onChange={(e) => setFile(e.target.files[0])}
-              /> */}
-
-              <div style={{ textAlign: "left" }}>
-                <button className="btn btn-dark">Submit</button>
+              <div className="mx-2" style={{ textAlign: "left" }}>
+                <button className="btn btn-dark mt-3 px-4">Submit</button>
               </div>
             </form>
           </div>

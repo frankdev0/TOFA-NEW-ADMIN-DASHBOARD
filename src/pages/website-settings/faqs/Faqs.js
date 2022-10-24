@@ -3,7 +3,13 @@ import { axios } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import { Link } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
+import $ from "jquery";
 import "./faq.css";
+import "jquery/dist/jquery.min.js";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const Faqs = () => {
   const [faq, setFaq] = useState([]);
@@ -27,11 +33,37 @@ const Faqs = () => {
     getData();
   }, []);
 
-  // const handleDelete = (faqID) => {
-  //   axios.delete(`/faq/${faqID}`).then(() => {
-  //     getData();
-  //   });
-  // };
+  useEffect(() => {
+    //initialize datatable
+    $(document).ready(function() {
+      setTimeout(function() {
+        $("#example").DataTable();
+      }, 2000);
+    });
+  }, []);
+
+  const handleDelete = (faqID) => {
+    axios.delete(`/faq/${faqID}`).then(() => {
+      getData();
+    });
+  };
+
+  const submit = (faqID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(faqID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
 
   const showDetails = (faqID) => {
     setViewLoader(true);
@@ -102,122 +134,156 @@ const Faqs = () => {
                     All FAQ's
                   </h5>
                   <div className="card-body">
-                    <table
-                      className="table table-bordered"
-                      style={{ textAlign: "left" }}
-                    >
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Question</th>
-                          <th scope="col">Answer</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {faq.map((item, index) => {
-                          return (
-                            <tr key={item.id}>
-                              <td>{index + 1}</td>
-                              <td>{item.question}</td>
-                              <td>{item.answer}</td>
-                              <td className="text-center d-flex">
-                                <div className="text-center mx-2">
-                                  <Link to={`/editfaq/${item.id}`}>
-                                    <button
-                                      type="button"
-                                      className="btn btn-success"
-                                      data-dismiss="modal"
-                                    >
-                                      Edit
-                                    </button>
-                                  </Link>
-                                </div>
-                                {/* <button className="btn btn-danger mx-2" onClick={(e) => handleDelete(item.id)}>
-                                  Delete
-                                </button> */}
-                                <button
-                                  onClick={() => showDetails(item.id)}
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  View
-                                </button>
-
-                                <div
-                                  className="modal fade"
-                                  id="exampleModal"
-                                  tabIndex="-1"
-                                  aria-labelledby="exampleModalLabel"
-                                  aria-hidden="true"
-                                >
-                                  {viewLoader ? (
-                                    <div
-                                      className="spinner mx-auto"
-                                      align="center"
-                                      id="spinner"
-                                      style={{
-                                        position: "absolute",
-                                        top: "calc(50% - 60px)",
-                                        left: "calc(50% - 60px)",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        textAlign: "center",
-                                        margin: "auto",
-                                      }}
-                                    ></div>
-                                  ) : (
-                                    <div className="modal-dialog">
-                                      <div className="modal-content">
-                                        <div className="modal-header">
-                                          <h5
-                                            className="modal-title"
-                                            id="exampleModalLabel"
-                                          >
-                                            FAQ
-                                          </h5>
-
-                                          {/* <Link to="/editfaq">
-                                          <button
-                                            className="btn btn-success"
-                                            onClick={() =>
-                                              setToLocalStorage(
-                                                item.id,
-                                                item.question,
-                                                item.answer
-                                              )
-                                            }
-                                          >
-                                            Edit
-                                          </button>
-                                        </Link> */}
-                                        </div>
-
-                                        <div className="modal-body text-left">
-                                          <p>Answer: {viewFaq.question}</p>
-                                          <p>Question: {viewFaq.answer}</p>
-                                        </div>
-                                        <div className="modal-footer">
-                                          <button
-                                            type="button"
-                                            className="btn btn-secondary"
-                                            data-bs-dismiss="modal"
-                                          >
-                                            Close
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </td>
+                    <div className="table-responsive">
+                      <div className="container">
+                        <table
+                          id="example"
+                          className="table table-hover table-bordered"
+                          style={{ width: "100%", textAlign: "left" }}
+                        >
+                          <thead>
+                            <tr>
+                              <th>ID</th>
+                              <th>Question</th>
+                              <th>Answer</th>
+                              <th>Action</th>
                             </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                          </thead>
+                          <tbody>
+                            {faq.map((item, index) => {
+                              return (
+                                <tr key={item.id}>
+                                  <td>{index + 1}</td>
+                                  <td>{item.question}</td>
+                                  <td>{item.answer}</td>
+
+                                  <td className="action-table">
+                                    <div className="nav-item dropdown">
+                                      <Link
+                                        className="nav-link main-nav-link position-absolute"
+                                        align="right"
+                                        to="#"
+                                        id="navbarDropdown"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        style={{
+                                          right: "-15px",
+                                          top: "-10px",
+                                          color: "black",
+                                        }}
+                                      >
+                                        <i
+                                          className="fa fa-chevron-down"
+                                          align="right"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </Link>
+                                      <ul
+                                        className="dropdown-menu animate slideIn"
+                                        aria-labelledby="navbarDropdown"
+                                        style={{ width: "100px !important" }}
+                                      >
+                                        <li>
+                                          <div
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                              showDetails(item.id)
+                                            }
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                          >
+                                            View
+                                          </div>
+                                        </li>
+                                        <li>
+                                          <Link to={`/editfaq/${item.id}`}>
+                                            <div className="dropdown-item">
+                                              Edit
+                                            </div>
+                                          </Link>
+                                        </li>
+                                        <li>
+                                          <div
+                                            className="dropdown-item text-danger"
+                                            onClick={(e) => submit(item.id)}
+                                          >
+                                            Delete
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+
+                                    <div
+                                      className="modal fade p-relative"
+                                      id="exampleModal"
+                                      tabIndex="-1"
+                                      aria-labelledby="exampleModalLabel"
+                                      aria-hidden="true"
+                                    >
+                                      {viewLoader ? (
+                                        <div
+                                          className="spinner mx-auto"
+                                          align="center"
+                                          id="spinner"
+                                          style={{
+                                            position: "absolute",
+                                            top: "calc(50% - 60px)",
+                                            left: "calc(50% - 60px)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            margin: "auto",
+                                          }}
+                                        ></div>
+                                      ) : (
+                                        <div className="modal-dialog">
+                                          <div className="modal-content">
+                                            <div className="modal-header">
+                                              <h5
+                                                className="modal-title"
+                                                id="exampleModalLabel"
+                                              >
+                                                FAQ
+                                              </h5>
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                              ></button>
+                                            </div>
+
+                                            <div className="d-flex ">
+                                              <div className="modal-body">
+                                                Question: {viewFaq.question}
+                                              </div>
+                                              <div className="modal-body">
+                                                Answer: {viewFaq.answer}
+                                              </div>
+                                            </div>
+
+                                            <div className="modal-footer">
+                                              <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                data-bs-dismiss="modal"
+                                              >
+                                                Close
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

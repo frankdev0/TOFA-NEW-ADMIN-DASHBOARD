@@ -4,6 +4,8 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
 import { axios } from "../../components/baseUrl";
 import dayjs from "dayjs";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const Banners = () => {
   const [banner, setBanner] = useState([]);
@@ -27,11 +29,28 @@ const Banners = () => {
     getData();
   }, []);
 
-  // const handleDelete = (bannerID) => {
-  //   axios.delete(`/banners/${bannerID}`).then(() => {
-  //     getData();
-  //   });
-  // };
+  const handleDelete = (bannerID) => {
+    axios.delete(`/banners/${bannerID}`).then(() => {
+      getData();
+    });
+  };
+
+  const submit = (bannerID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(bannerID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
 
   const showDetails = (bannerID) => {
     setViewLoader(true);
@@ -111,6 +130,7 @@ const Banners = () => {
                           <th scope="col">Banner Image</th>
                           <th scope="col">Call to Action</th>
                           <th scope="col">Link</th>
+                          <th scope="col">Section</th>
                           <th scope="col">Action</th>
                         </tr>
                       </thead>
@@ -129,33 +149,62 @@ const Banners = () => {
                               </td>
                               <td>{item.callToAction}</td>
                               <td>{item.link}</td>
+                              <td>{item.section}</td>
 
                               <td>
-                                <Link to={`/editbanner/${item.id}`}>
-                                  <button
-                                    type="button"
-                                    className="btn btn-success mx-2"
-                                    data-dismiss="modal"
+                                <div className="nav-item dropdown">
+                                  <Link
+                                    className="nav-link main-nav-link position-absolute"
+                                    align="right"
+                                    to="#"
+                                    id="navbarDropdown"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    style={{
+                                      right: "-15px",
+                                      top: "-10px",
+                                      color: "black",
+                                    }}
                                   >
-                                    Edit
-                                  </button>
-                                </Link>
-
-                                <button
-                                  onClick={(e) => showDetails(item.id)}
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  view{" "}
-                                </button>
-                                {/* <button
-                                  className="btn btn-danger mx-2"
-                                  onClick={(e) => handleDelete(item.id)}
-                                >
-                                  Delete
-                                </button> */}
+                                    <i
+                                      className="fa fa-chevron-down"
+                                      align="right"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </Link>
+                                  <ul
+                                    className="dropdown-menu animate slideIn"
+                                    aria-labelledby="navbarDropdown"
+                                    style={{ width: "100px !important" }}
+                                  >
+                                    <li>
+                                      <div
+                                        className="dropdown-item"
+                                        onClick={(e) => showDetails(item.id)}
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal"
+                                      >
+                                        View
+                                      </div>
+                                    </li>
+                                    <li>
+                                      <Link to={`/editbanner/${item.id}`}>
+                                        <div className="dropdown-item">
+                                          Edit
+                                        </div>
+                                      </Link>
+                                    </li>
+                                    <li>
+                                      <div
+                                        className="dropdown-item text-danger"
+                                        onClick={(e) => submit(item.id)}
+                                      >
+                                        Delete
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
                                 <div
                                   className="modal fade"
                                   id="exampleModal"

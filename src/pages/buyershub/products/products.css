@@ -1,8 +1,9 @@
 .box{
     background-color: #fff;
-    padding: 30px;
+    padding: 20px;
     border-radius: 10px;
     box-shadow: rgba(149, 157, 165, .2) 0px 8px 24px ;
+
 }
 
 .header{
@@ -22,4 +23,30 @@
     width: 50px !important;
     object-fit: cover !important;
     margin: 5px;
+}
+
+.supply_capacity{
+    border: none !important;
+    border-bottom: 1px solid gray !important;
+ 
+
+    height: 40px;
+}
+
+.product_input{
+    border: none !important;
+    border-bottom: 1px solid gray !important;
+
+    height: 40px;
+}
+
+.myborder{
+border-bottom: 1px solid gray;
+}
+
+.unit_style{
+height: 40px;
+
+border: none !important;
+border-bottom: 1px solid gray !important;
 }

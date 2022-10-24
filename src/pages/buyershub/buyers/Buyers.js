@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
 import { axios } from "../../components/baseUrl";
-import { applicantDatatabless } from "./DummyData";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -101,61 +100,6 @@ const Buyers = () => {
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
-                      <div
-                        id="example wrapper"
-                        className="dataTables_wrapper dt_bootstrap4"
-                      >
-                        <div className="row">
-                          <div
-                            className="col-sm-12 md-6"
-                            style={{ textAlign: "left" }}
-                          >
-                            <div className="dt-buttons my-3">
-                              <button
-                                className="btn btn-outline-light buttons-copy buttons-html5"
-                                tabIndex="0"
-                                aria-controls="example"
-                                type="button"
-                              >
-                                <span>Copy</span>
-                              </button>
-                              <button
-                                className="btn btn-outline-light buttons-excel buttons-html5"
-                                tabIndex="0"
-                                aria-controls="example"
-                                type="button"
-                              >
-                                <span>Excel</span>
-                              </button>
-                              <button
-                                className="btn btn-outline-light buttons-pdf buttons-html5"
-                                tabIndex="0"
-                                aria-controls="example"
-                                type="button"
-                              >
-                                <span>PDF</span>
-                              </button>
-                              <button
-                                className="btn btn-outline-light buttons-print"
-                                tabIndex="0"
-                                aria-controls="example"
-                                type="button"
-                              >
-                                <span>Print</span>
-                              </button>
-                              <button
-                                className="btn btn-outline-light buttons-collection dropdown-toggle buttons-colvis"
-                                tabIndex="0"
-                                aria-controls="example"
-                                type="button"
-                                aria-haspopup="true"
-                              >
-                                <span>Column Visibility</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                       <div className="container">
                         <table
                           id="example"
@@ -168,8 +112,7 @@ const Buyers = () => {
                               <th>Full Name</th>
                               <th>Email</th>
                               <th>Phone Number</th>
-                              <th>Verified</th>
-                              <th>Enabled</th>
+
                               <th>Action</th>
                             </tr>
                           </thead>
@@ -181,8 +124,6 @@ const Buyers = () => {
                                   <td>{item.fullName}</td>
                                   <td>{item.email}</td>
                                   <td>{item.phoneNumber}</td>
-                                  <td>{item.isVerified}</td>
-                                  <td>{item.isEnabled}</td>
 
                                   <td>
                                     <button

@@ -52,6 +52,10 @@ const EditFaq = () => {
         question: question,
       });
 
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+
       toast.success("EDITED SUCCESSFULLY", {
         position: "top-right",
         autoClose: 2000,

@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { axios } from "../../components/baseUrl";
+
 // import { useAppContext } from "../../../utils/contexts/AppContext";
 // import DropFileInput from "../../components/DropFileInput";
 // import OtherImages from "./OtherImages";
@@ -113,20 +114,6 @@ const EditProducts = () => {
 
       setProductSpecific(Object.entries(responseSpecifications));
 
-      // const checkObj = {};
-      // checkObj.myType = specific[0][0];
-      // setMyType(checkObj.myType);
-      // checkObj.myValue = specific[0][1];
-      // setMyValue(checkObj.myValue);
-      // setProductSpecific(checkObj);
-
-      // let newObj = {};
-      // specific[0].forEach((element) => {
-      //   newObj[element] = specific[0].map((item) => item[1]);
-      // });
-
-      // console.log("this is the new obj", newObj);
-
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -170,19 +157,6 @@ const EditProducts = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      // const myObj = { type: myType, value: myValue };
-      // console.log("my check object", myObj);
-      // console.log("my check object two", productSpecific);
-      // console.log(countries);
-      // console.log(productSpecific);
-      // console.log(myType);
-      // console.log(myValue);
-      // const formData = new FormData();
-      // for (const property in jsonData) {
-      //   formData.append(`${property}`, jsonData[property]);
-      // }
-      // formData.append("productImages", imageFile);
-      // console.log("from the featured Image", imageFile);
       console.log({
         productName: productName,
         parentCategory: parentCategory,
@@ -214,8 +188,11 @@ const EditProducts = () => {
         specification: getSpecifications(),
         countries: getCountry(),
       });
+      setTimeout(() => {
+        navigate(-1);
+      }, 4000);
       console.log(result);
-      toast.success("SUCCESSFULLY CREATED NEW COMMODITY", {
+      toast.success("EDITED SUCCESSFULLY", {
         position: "top-right",
         autoClose: 4000,
         pauseHover: true,

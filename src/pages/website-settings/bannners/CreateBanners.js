@@ -5,6 +5,8 @@ import { axios } from "../../components/baseUrl";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const CreateBanner = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -12,6 +14,7 @@ const CreateBanner = () => {
   const [banner, setBanner] = useState({
     action: "",
     link: "",
+    section: "",
   });
 
   const navigate = useNavigate();
@@ -20,12 +23,27 @@ const CreateBanner = () => {
     setBanner({ ...banner, [e.target.name]: e.target.value });
   };
 
+  const [selectedImages, setSelectedImages] = useState([]);
+
+  const onSelectFile = (event) => {
+    const selectedFiles = event.target.files;
+    const selectedFilesArray = Array.from(selectedFiles);
+
+    const imagesArray = selectedFilesArray.map((file) => {
+      return URL.createObjectURL(file);
+    });
+    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+
+    console.log(selectedFiles);
+  };
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const jsonData = {
         callToAction: banner.action,
         link: banner.link,
+        section: banner.section,
       };
       const formData = new FormData();
       for (const property in jsonData) {
@@ -33,11 +51,14 @@ const CreateBanner = () => {
       }
       formData.append("image", e.target.image.files[0]);
       console.log(e.target.image.files[0]);
-      const {data: result} = await axios.post("/banner", formData, {
+      const { data: result } = await axios.post("/banner", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      setTimeout(() => {
+        navigate(-1);
+      }, 5000);
       toast.success("SUCCESSFULLY CREATED NEW BANNER", {
         position: "top-right",
         autoClose: 4000,
@@ -64,8 +85,6 @@ const CreateBanner = () => {
     //   navigate("/banner");
     // }
   };
-
-
 
   return (
     <div>
@@ -138,22 +157,71 @@ const CreateBanner = () => {
                         </div>
                         <div className="form-group">
                           <label className="form-label mx-2">
-                            Upload Banner
+                            Upload Banner{" "}
+                            <select name="section" onChange={handleChange}>
+                              <option>...Select Banner</option>
+                              <option>Hero Section Banner</option>
+                              <option>Buyers Hub Slider</option>
+                            </select>
                           </label>
+                          {formErrors.section && (
+                            <p className="text-danger">{formErrors.section}</p>
+                          )}
                           <input
                             type="file"
                             id="image"
                             name="image"
                             accept="image/*"
+                            onChange={onSelectFile}
+                            multiple
                           />
+
+                          <div className="iamges d-flex image-container">
+                            {selectedImages &&
+                              selectedImages.map((image, index) => {
+                                return (
+                                  <div
+                                    key={image}
+                                    style={{ position: "relative" }}
+                                  >
+                                    <img src={image} alt="" className="image" />
+
+                                    <div
+                                      className="bin-icon"
+                                      style={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "0",
+                                        color: "red",
+                                      }}
+                                    >
+                                      <IconButton
+                                        className="text-danger"
+                                        aria-label="delete"
+                                        size="small"
+                                        onClick={() =>
+                                          setSelectedImages(
+                                            selectedImages.filter(
+                                              (e) => e !== image
+                                            )
+                                          )
+                                        }
+                                      >
+                                        <DeleteIcon fontSize="inherit" />
+                                      </IconButton>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            {console.log(selectedImages)}
+                          </div>
+
                           {formErrors.image && (
                             <p className="text-danger">{formErrors.image}</p>
                           )}
                         </div>
                         <div className="form-group">
-                          <button className="btn btn-dark">
-                            Save Banner
-                          </button>
+                          <button className="btn btn-dark">Save Banner</button>
                         </div>
                       </form>
                     </div>

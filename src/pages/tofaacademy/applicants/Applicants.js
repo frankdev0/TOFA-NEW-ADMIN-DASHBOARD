@@ -35,12 +35,6 @@ const Applicants = () => {
     });
   };
 
-  //  const {data, loading, error} = useFetch("/order")
-
-  //  if (loading) return <h1>LOADING ....</h1>
-
-  //  if (error) console.log(error)
-
   // const handleDelete = (applicantID) => {
   //   axios.delete(`/product/${applicantID}`).then(() => {
 
@@ -56,7 +50,7 @@ const Applicants = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1000);
+      }, 1500);
     });
   }, []);
 

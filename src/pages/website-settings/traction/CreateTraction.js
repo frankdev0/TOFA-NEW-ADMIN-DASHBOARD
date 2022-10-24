@@ -1,34 +1,32 @@
 import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { useNavigate } from "react-router-dom";
 import { axios } from "../../components/baseUrl";
+import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-// import { useNavigate} from 'react-router-dom';
+import { dark } from "@mui/material/styles/createPalette";
 
-const CreateTestimonial = () => {
+const CreateTraction = () => {
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
-  const [testimonial, setTestimonial] = useState({
+  const [traction, setTraction] = useState({
     name: "",
-    company: "",
-    message: "",
+    count: "",
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setTestimonial({ ...testimonial, [e.target.name]: e.target.value });
+    setTraction({ ...traction, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const { data: result } = await axios.post("/testimonial", {
-        name: testimonial.name,
-        company: testimonial.company,
-        message: testimonial.message,
+      const { data: result } = await axios.post("/traction ", {
+        name: traction.name,
+        count: traction.count,
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -36,12 +34,12 @@ const CreateTestimonial = () => {
       setTimeout(() => {
         navigate(-1);
       }, 2500);
-      toast.success("SUCCESSFULLY CREATED FAQ", {
+      toast.success("SUCCESSFULLY CREATED TRACTION", {
         position: "top-right",
-        autoClose: 2000,
+        autoClose: 4000,
         pauseHover: true,
         draggable: true,
-        className: "custom-toast",
+        className: dark,
       });
       console.log(result);
     } catch (err) {
@@ -58,6 +56,17 @@ const CreateTestimonial = () => {
         alert(customError);
       }
     }
+    // if (!formErrors.question || !formErrors.answer) {
+    // navigate("/faq")
+    // } else {
+    //   toast.error("FILL IN THE FIELDS"), {
+    //     position: "top-right",
+    //     autoClose: 8000,
+    //     pauseHover: true,
+    //     draggable: true,
+    //     className: dark,
+    //   }
+    // }
   };
 
   return (
@@ -76,10 +85,10 @@ const CreateTestimonial = () => {
             <div className="container-fluid dashboard-content">
               <ToastContainer />
               {/* <!-- pageheader --> */}
-              <div className="row">
+              <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  <div className="page-header" style={{ textAlign: "left" }}>
-                    <h2 className="pageheader-title">Testimonial</h2>
+                  <div className="page-header">
+                    <h2 className="pageheader-title">Traction</h2>
                   </div>
                 </div>
               </div>
@@ -88,9 +97,7 @@ const CreateTestimonial = () => {
               <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div className="card">
-                    <h5 className="card-header font-bold">
-                      Create Testimonial
-                    </h5>
+                    <h5 className="card-header">Edit Traction</h5>
                     <div className="card-body">
                       <form>
                         <div className="form-group">
@@ -98,50 +105,28 @@ const CreateTestimonial = () => {
                             htmlFor="inputText3"
                             className="col-form-label"
                           >
-                            Name
+                            Traction Name
                           </label>
                           <input
-                            id="inputText3"
                             name="name"
                             type="text"
                             className="form-control"
                             onChange={handleChange}
                           />
-                          {formErrors.name && (
+                          {formErrors.question && (
                             <p className="text-danger">{formErrors.name}</p>
                           )}
                         </div>
                         <div className="form-group">
-                          <label
-                            htmlFor="inputText3"
-                            className="col-form-label"
-                          >
-                            Company
-                          </label>
+                          <label htmlFor="count">Traction Count</label>
                           <input
-                            id="inputText3"
-                            name="company"
-                            type="text"
                             className="form-control"
+                            type="number"
+                            name="count"
                             onChange={handleChange}
                           />
-                          {formErrors.company && (
-                            <p className="text-danger">{formErrors.company}</p>
-                          )}
-                        </div>
-                        <div className="form-group">
-                          <label htmlFor="exampleFormControlTextarea1">
-                            Message
-                          </label>
-                          <textarea
-                            className="form-control"
-                            name="message"
-                            id="exampleFormControlTextarea1"
-                            rows="3"
-                            onChange={handleChange}
-                          />
-                          {formErrors.message && (
-                            <p className="text-danger">{formErrors.message}</p>
+                          {formErrors.answer && (
+                            <p className="text-danger">{formErrors.count}</p>
                           )}
                         </div>
                         <div className="form-group">
@@ -150,7 +135,7 @@ const CreateTestimonial = () => {
                             className="btn btn-dark"
                             onClick={handleSubmit}
                           >
-                            Save Testimonial
+                            Save Traction
                           </a>
                         </div>
                       </form>
@@ -160,10 +145,12 @@ const CreateTestimonial = () => {
               </div>
             </div>
           </div>
+          {/* <!-- end main wrapper --> */}
         </div>
+        {/* <!-- end main wrapper --> */}
       </>
     </div>
   );
 };
 
-export default CreateTestimonial;
+export default CreateTraction;

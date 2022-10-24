@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./sidebar.css";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
+  const [openWeb, setOpenWeb] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isWebOpen, setIsWebOpen] = useState(false);
   const [tofa, setTofa] = useState(false);
+  const [tofaBg, setTofaBg] = useState(false);
   const [supplier, setSupplier] = useState(false);
+  const [supplierBg, setSupplierBg] = useState(false);
+
+  const [toggleLogout, setToggleLogout] = useState(false);
+
+  const toggleRef = useRef();
+
   return (
     <>
       <div className="nav-left-sidebar sidebar-light">
@@ -22,9 +31,11 @@ const Sidebar = () => {
               aria-controls="navbarNav"
               aria-expanded="false"
               aria-label="Toggle navigation"
+              onClick={() => setToggleLogout(!toggleLogout)}
             >
               <span className="navbar-toggler-icon"></span>
             </button>
+
             <div className="collapse navbar-collapse" id="navbarNav">
               <ul className="navbar-nav flex-column">
                 <li className="nav-divider">Dashboard Main Menu</li>
@@ -51,6 +62,7 @@ const Sidebar = () => {
                       onClick={() => setOpen(!open)}
                     ></i>
                   </div>
+
                   <div className="sidebar-content">
                     <ul
                       className="nav flex-column"
@@ -231,6 +243,188 @@ const Sidebar = () => {
               </ul>
             </div>
           </nav>
+        </div>
+      </div>
+
+      <div className="sidebar">
+        <div
+          className={toggleLogout ? "sub-menu-wrap-two" : "sub-menu-wrap"}
+          id="subMenu"
+          ref={toggleRef}
+        >
+          <div className="sidebar-bg">
+            <div className={openWeb ? "sidebar-item open" : "sidebar-item"}>
+              <div className="sidebar-title-two">
+                <span className="headings" onClick={() => setOpenWeb(!openWeb)}>
+                  <i
+                    className="icon-globe"
+                    onClick={() => setOpenWeb(!openWeb)}
+                  ></i>
+                  Website Settings
+                </span>
+                <i className="bi bi-caret-right-fill toggle-btn"></i>
+              </div>
+
+              <div className="sidebar-content">
+                <ul className="nav flex-column">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/commodityinsight">
+                      Commodity Insight
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link active" href="/faq">
+                      FAQ's
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/traction">
+                      Traction
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/testimonial">
+                      Testimonials
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="/banners">
+                      Banners
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className={isWebOpen ? "sidebar-item open" : "sidebar-item"}>
+              <div className="sidebar-title-three">
+                <span
+                  className="headings-two"
+                  onClick={() => setIsWebOpen(!isWebOpen)}
+                >
+                  <i className="icon-bag"></i>
+                  Buyer's Hub
+                </span>
+                <i className="bi bi-caret-right-fill toggle-btn"></i>
+              </div>
+              <div className="sidebar-content">
+                <ul className="nav flex-column">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/orders">
+                      Orders
+                    </a>
+                  </li>
+                  <li className="nav-item-two">
+                    <a className="nav-link" href="/products">
+                      Products
+                    </a>
+                  </li>
+                  <li className="nav-item-two">
+                    <a className="nav-link" href="/message">
+                      Message Center
+                    </a>
+                  </li>
+                  <li className="nav-item-two">
+                    <a className="nav-link" href="/inquiry">
+                      Inquiries
+                    </a>
+                  </li>
+                  <li className="nav-item-two">
+                    <a className="nav-link" href="/disputes">
+                      Disputes
+                    </a>
+                  </li>
+                  <li className="nav-item-two">
+                    <a className="nav-link" href="/buyers">
+                      Buyers
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className={tofaBg ? "sidebar-item open" : "sidebar-item"}>
+              <div className="sidebar-title-two">
+                <span onClick={() => setTofaBg(!tofaBg)} className="headings">
+                  <i className="icon-graduation"></i>
+                  TOFA Academy
+                </span>
+                <i
+                  className="bi bi-caret-right-fill toggle-btn"
+                  onClick={() => setTofaBg(!tofaBg)}
+                ></i>
+              </div>
+              <div className="sidebar-content">
+                <ul className="nav flex-column">
+                  <li className="nav-item">
+                    <a className="nav-link" href="/applicants">
+                      Applicants
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className={supplierBg ? "sidebar-item open" : "sidebar-item"}>
+              <div className="sidebar-title-two">
+                <span
+                  className="headings"
+                  onClick={() => setSupplierBg(!supplierBg)}
+                >
+                  <i className="icon-grid"></i>Suppliers Marketplace
+                </span>
+                <i
+                  className="bi bi-caret-right-fill toggle-btn"
+                  onClick={() => setSupplierBg(!supplierBg)}
+                ></i>
+              </div>
+              <div className="sidebar-content">
+                <ul className="nav flex-column">
+                  <li className="nav-item">
+                    <a className="nav-link" href="general-table.html">
+                      Orders
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="data-tables.html">
+                      RFQ's
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="data-tables.html">
+                      Product Listing
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="data-tables.html">
+                      Suppliers
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="data-tables.html">
+                      Subscriptions
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="data-tables.html">
+                      Adverts
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {/* <li className="nav-item">
+          <a
+            className="nav-link"
+            href="/users"
+            aria-expanded="false"
+            data-target="#submenu-6"
+            aria-controls="submenu-6"
+          >
+            <i className="icon-user"></i>Users
+          </a>
+        </li> */}
         </div>
       </div>
     </>

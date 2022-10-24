@@ -3,6 +3,12 @@ import { axios } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
+import "datatables.net-dt/js/dataTables.dataTables";
+import "datatables.net-dt/css/jquery.dataTables.min.css";
+import $ from "jquery";
+import "jquery/dist/jquery.min.js";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const Testimonial = () => {
   const [testimonial, setTestimonial] = useState([]);
@@ -13,7 +19,6 @@ const Testimonial = () => {
   const getData = async () => {
     try {
       axios.get("/testimonial").then((response) => {
-        console.log(response.data.data);
         setTestimonial(response.data.data);
         setLoading(true);
       });
@@ -26,11 +31,37 @@ const Testimonial = () => {
     getData();
   }, []);
 
-  // const handleDelete = (testimonialID) => {
-  //   axios.delete(`/testimonial/${testimonialID}`).then(() => {
-  //     getData();
-  //   });
-  // };
+  const handleDelete = (testimonialID) => {
+    axios.delete(`/testimonial/${testimonialID}`).then(() => {
+      getData();
+    });
+  };
+
+  useEffect(() => {
+    //initialize datatable
+    $(document).ready(function() {
+      setTimeout(function() {
+        $("#example").DataTable();
+      }, 1500);
+    });
+  }, []);
+
+  const submit = (testimonialID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(testimonialID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
 
   const showDetails = (testimonialID) => {
     setViewLoader(true);
@@ -99,133 +130,171 @@ const Testimonial = () => {
                     All Testimonial
                   </h5>
                   <div className="card-body">
-                    <table className="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Name</th>
-                          <th scope="col">Company</th>
-                          <th scope="col">Message</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {testimonial.map((item, index) => {
-                          return (
-                            <tr key={item.id}>
-                              <td>{index + 1}</td>
-                              <td>{item.name}</td>
-                              <td>{item.company}</td>
-                              <td>{item.message}</td>
-                              <td className="text-center d-flex">
-                                {/* <button className="btn btn-danger mx-2" onClick={(e) => handleDelete(item.id)}>
-                                  Delete
-                                </button> */}
-
-                                <div className="text-center mx-2">
-                                  <Link to={`/edittestimonial/${item.id}`}>
-                                    <button
-                                      type="button"
-                                      className="btn btn-success"
-                                      data-dismiss="modal"
-                                    >
-                                      Edit
-                                    </button>
-                                  </Link>
-                                </div>
-                                <button
-                                  onClick={() => showDetails(item.id)}
-                                  type="button"
-                                  className="btn btn-primary"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  View
-                                </button>
-
-                                <div
-                                  className="modal fade"
-                                  id="exampleModal"
-                                  tabIndex="-1"
-                                  aria-labelledby="exampleModalLabel"
-                                  aria-hidden="true"
-                                >
-                                  {viewLoader ? (
-                                    <div
-                                      className="spinner mx-auto"
-                                      align="center"
-                                      id="spinner"
-                                      style={{
-                                        position: "absolute",
-                                        top: "calc(50% - 60px)",
-                                        left: "calc(50% - 60px)",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        textAlign: "center",
-                                        margin: "auto",
-                                      }}
-                                    ></div>
-                                  ) : (
-                                    <div className="modal-dialog">
-                                      <div className="modal-content">
-                                        <div className="modal-header">
-                                          <h5
-                                            className="modal-title"
-                                            id="exampleModalLabel"
-                                          >
-                                            TESTIMONIAL
-                                          </h5>
-                                        </div>
-                                        <div className="modal-body">
-                                          <p>{viewTestimonial.name}</p>
-                                          <p>{viewTestimonial.company}</p>
-                                          <p>{viewTestimonial.message}</p>
-                                        </div>
-                                        <div className="modal-footer">
-                                          <button
-                                            type="button"
-                                            className="btn btn-secondary"
-                                            data-bs-dismiss="modal"
-                                          >
-                                            Close
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              </td>
+                    <div className="table-responsive">
+                      <div className="container">
+                        <table
+                          id="example"
+                          className="table table-hover table-bordered"
+                          style={{ width: "100%", textAlign: "left" }}
+                        >
+                          <thead>
+                            <tr>
+                              <th>ID</th>
+                              <th>Name</th>
+                              <th>Company</th>
+                              <th>Message</th>
+                              <th>Action</th>
                             </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
+                          </thead>
+                          <tbody>
+                            {testimonial.map((item, index) => {
+                              return (
+                                <tr key={item.id}>
+                                  <td>{index + 1}</td>
+                                  <td>{item.name}</td>
+                                  <td>{item.company}</td>
+                                  <td>{item.message}</td>
+
+                                  <td className="action-table">
+                                    <div className="nav-item dropdown">
+                                      <Link
+                                        className="nav-link main-nav-link position-absolute"
+                                        align="right"
+                                        to="#"
+                                        id="navbarDropdown"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        style={{
+                                          right: "-15px",
+                                          top: "-10px",
+                                          color: "black",
+                                        }}
+                                      >
+                                        <i
+                                          className="fa fa-chevron-down"
+                                          align="right"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </Link>
+                                      <ul
+                                        className="dropdown-menu animate slideIn"
+                                        aria-labelledby="navbarDropdown"
+                                        style={{ width: "100px !important" }}
+                                      >
+                                        <li>
+                                          <div
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                              showDetails(item.id)
+                                            }
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                          >
+                                            View
+                                          </div>
+                                        </li>
+                                        <li>
+                                          <Link
+                                            to={`/edittestimonial/${item.id}`}
+                                          >
+                                            <div className="dropdown-item">
+                                              Edit
+                                            </div>
+                                          </Link>
+                                        </li>
+                                        <li>
+                                          <div
+                                            className="dropdown-item text-danger"
+                                            onClick={(e) => submit(item.id)}
+                                          >
+                                            Delete
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+
+                                    <div
+                                      className="modal fade p-relative"
+                                      id="exampleModal"
+                                      tabIndex="-1"
+                                      aria-labelledby="exampleModalLabel"
+                                      aria-hidden="true"
+                                    >
+                                      {viewLoader ? (
+                                        <div
+                                          className="spinner mx-auto"
+                                          align="center"
+                                          id="spinner"
+                                          style={{
+                                            position: "absolute",
+                                            top: "calc(50% - 60px)",
+                                            left: "calc(50% - 60px)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            margin: "auto",
+                                          }}
+                                        ></div>
+                                      ) : (
+                                        <div className="modal-dialog">
+                                          <div className="modal-content">
+                                            <div className="modal-header">
+                                              <h5
+                                                className="modal-title"
+                                                id="exampleModalLabel"
+                                              >
+                                                TESTIMONIAL
+                                              </h5>
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                              ></button>
+                                            </div>
+
+                                            <div className="modal-body">
+                                              <p>
+                                                Name: {viewTestimonial.name}
+                                              </p>
+                                              <p>
+                                                Company:{" "}
+                                                {viewTestimonial.company}
+                                              </p>
+                                              <p>
+                                                Message:{" "}
+                                                {viewTestimonial.message}
+                                              </p>
+                                            </div>
+
+                                            <div className="modal-footer">
+                                              <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                data-bs-dismiss="modal"
+                                              >
+                                                Close
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* <!-- footer --> */}
-          {/* <div className="footer">
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                            Copyright © 2018 Concept. All rights reserved. Dashboard by <a href="https://colorlib.com/wp/">Colorlib</a>.
-                        </div>
-                        <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                            <div className="text-md-right footer-links d-none d-sm-block">
-                                <a href="javascript: void(0);">About</a>
-                                <a href="javascript: void(0);">Support</a>
-                                <a href="javascript: void(0);">Contact Us</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>  */}
-          {/* <!-- end footer --> */}
         </div>
-        {/* <!-- end main wrapper --> */}
       </div>
     </>
   );

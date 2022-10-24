@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-// import { useFetch } from "../../../useFetch";
 import { axios } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./products.css";
-
-// import {datatabless} from '../../website-settings/commodityInsight/DummyData';
-
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import "jquery/dist/jquery.min.js";
-
 //Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -37,11 +34,28 @@ const Products = () => {
     getData();
   }, []);
 
-  // const handleDelete = (productID) => {
-  //   axios.delete(`/product/${productID}`).then((response) => {
-  //     setViewProduct(response.data.data)
-  //   });
-  // };
+  const submit = (productID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(productID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
+
+  const handleDelete = (productID) => {
+    axios.delete(`/product/${productID}`).then((response) => {
+      setViewProduct(response.data.data);
+    });
+  };
 
   const showDetails = (productID) => {
     setViewLoader(true);
@@ -158,31 +172,62 @@ const Products = () => {
                                   <td>{item.minDuration}</td>
                                   <td>{item.maxDuration}</td>
 
-                                  <td className="d-flex">
-                                    <Link to={`/editproduct/${item.id}`}>
-                                      <button className="btn btn-success mx-2">
-                                        Edit
-                                      </button>
-                                    </Link>
-
-                                    {/* <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      data-dismiss="modal"
-                                      onClick={() => handleDelete(item.id)}
-                                    >
-                                      delete
-                                    </button> */}
-
-                                    <button
-                                      onClick={(e) => showDetails(item.id)}
-                                      type="button"
-                                      className="btn btn-primary mx-2"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#exampleModal"
-                                    >
-                                      view
-                                    </button>
+                                  <td className="action-table">
+                                    <div className="nav-item dropdown">
+                                      <Link
+                                        className="nav-link main-nav-link position-absolute"
+                                        align="right"
+                                        to="#"
+                                        id="navbarDropdown"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        style={{
+                                          right: "-15px",
+                                          top: "-10px",
+                                          color: "black",
+                                        }}
+                                      >
+                                        <i
+                                          className="fa fa-chevron-down"
+                                          align="right"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </Link>
+                                      <ul
+                                        className="dropdown-menu animate slideIn"
+                                        aria-labelledby="navbarDropdown"
+                                        style={{ width: "100px !important" }}
+                                      >
+                                        <li>
+                                          <div
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                              showDetails(item.id)
+                                            }
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                          >
+                                            View
+                                          </div>
+                                        </li>
+                                        <li>
+                                          <Link to={`/editproduct/${item.id}`}>
+                                            <div className="dropdown-item">
+                                              Edit
+                                            </div>
+                                          </Link>
+                                        </li>
+                                        <li>
+                                          <div
+                                            className="dropdown-item text-danger"
+                                            onClick={(e) => submit(item.id)}
+                                          >
+                                            Delete
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
 
                                     <div
                                       className="modal fade"

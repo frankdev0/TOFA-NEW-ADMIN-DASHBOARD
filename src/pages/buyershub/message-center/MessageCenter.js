@@ -5,6 +5,7 @@ import avatar1 from "../../../assets/avatar-1.jpg";
 import { AppContext } from "../../../utils/contexts/AppState";
 import dayjs from "dayjs";
 import "./message.css";
+import { NewOrderModal } from "./NewOrder";
 
 const MessageCenter = () => {
   const [messageList, setMessageList] = useState([]);
@@ -143,16 +144,25 @@ const MessageCenter = () => {
                   </div>
                   <div className="chat-module-bottom">
                     <div align="right">
-                      <a
+                      {/* <a
                         href="comingsoon"
                         className="btn btn-rounded btn-outline-dark mb-3 chat-btn"
                         data-toggle="modal"
                         data-target="#exampleModal"
                       >
                         Start Order
-                      </a>
+                      </a> */}
+                      <button
+                        data-bs-toggle="modal"
+                        data-bs-target="#orderModal"
+                        className="msg-center-btn btn-primary me-2"
+                        align="right"
+                      >
+                        Start Order
+                      </button>
                     </div>
                     {/* <!-- Modal --> */}
+                    <NewOrderModal />
                     <div
                       className="modal fade"
                       id="exampleModal"

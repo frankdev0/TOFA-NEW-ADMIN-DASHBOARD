@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import  { useReactToPrint } from 'react-to-print';
-// import { useFetch } from "../../../useFetch";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
-// import { datatabless } from "./DummyData";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
+
 import { Link } from "react-router-dom";
-// import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
 import "jquery/dist/jquery.min.js";
 import "./editor.css";
@@ -16,6 +14,8 @@ import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import { axios } from "../../components/baseUrl";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const CommodityInsight = () => {
   const [commodity, setCommodity] = useState([]);
@@ -26,8 +26,8 @@ const CommodityInsight = () => {
   const getData = async () => {
     try {
       axios.get("/commodity").then((response) => {
-        console.log(response.data.data);
         setCommodity(response.data.data);
+        console.log(response.data.data);
         setLoading(true);
       });
     } catch (error) {
@@ -39,11 +39,28 @@ const CommodityInsight = () => {
     getData();
   }, []);
 
-  // const handleDelete = (commodityID) => {
-  //   axios.delete(`/commodity/${commodityID}`).then((response) => {
-  //     getData();
-  //   });
-  // };
+  const handleDelete = (commodityID) => {
+    axios.delete(`/commodity/${commodityID}`).then((response) => {
+      getData();
+    });
+  };
+
+  const submit = (commodityID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(commodityID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
 
   const showDetails = (commodityID) => {
     setViewLoader(true);
@@ -62,7 +79,7 @@ const CommodityInsight = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1500);
+      }, 2000);
     });
   }, []);
 
@@ -134,81 +151,98 @@ const CommodityInsight = () => {
               <div className="row">
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div className="card">
-                    <div className="card-header" style={{ textAlign: "left" }}>
-                      <h5 className="mb-0">
-                        Data Tables - Print, Excel, CSV, PDF Buttons
-                      </h5>
-                      <p>
-                        This example shows DataTables and the Buttons extension
-                        being used with the Bootstrap 4 framework providing the
-                        styling.
-                      </p>
-                    </div>
-                    <div className="d-flex mx-2">
-                      {/* <button className="mx-2">Excel</button> */}
-                      <button>Copy</button>
-                      <button className="mx-2">PDF</button>
-                      <ReactHTMLTableToExcel
-                        id="test-table-xls-button"
-                        className="download-table-xls-button"
-                        table="table-to-xls"
-                        filename="tablexls"
-                        sheet="tablexls"
-                        buttonText="Excel"
-                      />
-                    </div>
                     <div className="card-body">
                       <div className="table-responsive">
-                        <div className="container">
+                        <div className="container px-5">
                           <table
                             id="example"
-                            className="table table-hover table-bordered"
-                            style={{ width: "100%", textAlign: "left" }}
+                            className="table table-hover table-bordered tableWidth"
+                            style={{ textAlign: "left" }}
                           >
                             <thead>
                               <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>briefHistory</th>
-                                <th>Action</th>
+                                <th className="id">ID</th>
+                                <th className="name">Name</th>
+                                <th>BriefHistory</th>
+                                <th className="action">Action</th>
                               </tr>
                             </thead>
                             <tbody>
                               {commodity.map((item, index) => {
                                 return (
                                   <tr key={item.id}>
-                                    <td>{index + 1}</td>
+                                    <td className="indexWith">{index + 1}</td>
                                     <td>{item.name}</td>
-                                    <td>{item.briefHistory}</td>
+                                    <td>
+                                      <div
+                                        className="briefHistory"
+                                        dangerouslySetInnerHTML={{
+                                          __html: item.briefHistory
+                                            .split("&lt;")
+                                            .join("<"),
+                                        }}
+                                      ></div>
+                                    </td>
 
-                                    <td width={100}>
-                                      <Link to={`/editcommodity/${item.id}`}>
-                                        <button
-                                          type="button"
-                                          className="btn btn-success"
-                                          data-dismiss="modal"
+                                    <td className="action-table">
+                                      <div className="nav-item dropdown">
+                                        <Link
+                                          className="nav-link main-nav-link position-absolute"
+                                          align="right"
+                                          to="#"
+                                          id="navbarDropdown"
+                                          role="button"
+                                          data-bs-toggle="dropdown"
+                                          aria-expanded="false"
+                                          style={{
+                                            right: "-15px",
+                                            top: "-10px",
+                                            color: "black",
+                                          }}
                                         >
-                                          Edit
-                                        </button>
-                                      </Link>
-                                      {/* <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        data-dismiss="modal"
-                                        onClick={() => handleDelete(item.id)}
-                                      >
-                                        delete
-                                      </button> */}
-                                      |
-                                      <button
-                                        onClick={(e) => showDetails(item.id)}
-                                        type="button"
-                                        className="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                      >
-                                        view{" "}
-                                      </button>
+                                          <i
+                                            className="fa fa-chevron-down"
+                                            align="right"
+                                            aria-hidden="true"
+                                          ></i>
+                                        </Link>
+                                        <ul
+                                          className="dropdown-menu animate slideIn"
+                                          aria-labelledby="navbarDropdown"
+                                          style={{ width: "100px !important" }}
+                                        >
+                                          <li>
+                                            <div
+                                              className="dropdown-item"
+                                              onClick={(e) =>
+                                                showDetails(item.id)
+                                              }
+                                              data-bs-toggle="modal"
+                                              data-bs-target="#exampleModal"
+                                            >
+                                              View
+                                            </div>
+                                          </li>
+                                          <li>
+                                            <Link
+                                              to={`/editcommodity/${item.id}`}
+                                            >
+                                              <div className="dropdown-item">
+                                                Edit
+                                              </div>
+                                            </Link>
+                                          </li>
+                                          <li>
+                                            <div
+                                              className="dropdown-item text-danger"
+                                              onClick={(e) => submit(item.id)}
+                                            >
+                                              Delete
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+
                                       <div
                                         className="modal fade p-relative"
                                         id="exampleModal"
@@ -232,7 +266,7 @@ const CommodityInsight = () => {
                                             }}
                                           ></div>
                                         ) : (
-                                          <div className="modal-dialog">
+                                          <div className="modal-dialog modal-lg">
                                             <div className="modal-content">
                                               <div className="modal-header">
                                                 <h5
@@ -250,38 +284,58 @@ const CommodityInsight = () => {
                                               </div>
                                               <div align="right"></div>
                                               <div className="d-flex ">
-                                                <div className="modal-body">
-                                                  Commodity Name:{" "}
-                                                  {viewCommodity.name}
+                                                <div className="modal-body d-flex">
+                                                  <span className="mx-1">
+                                                    Commodity Name:
+                                                  </span>{" "}
+                                                  <h5>{viewCommodity.name}</h5>
                                                 </div>
-                                                <div className="modal-body">
-                                                  Country Trade:{" "}
-                                                  {viewCommodity.countriesTraded &&
-                                                    viewCommodity.countriesTraded.map(
-                                                      (country, id) => {
-                                                        return (
-                                                          <div key={id}>
-                                                            {
-                                                              country.countryName
-                                                            }{" "}
-                                                            {country.shortName}
-                                                          </div>
-                                                        );
-                                                      }
-                                                    )}
+                                                <div className="modal-body d-flex">
+                                                  Country Traded:
+                                                  <span className="mx-2">
+                                                    {" "}
+                                                    {viewCommodity.countriesTraded &&
+                                                      viewCommodity.countriesTraded.map(
+                                                        (country, id) => {
+                                                          return (
+                                                            <div key={id}>
+                                                              <div className="my-2">
+                                                                <h5 className="country-name">
+                                                                  {
+                                                                    country.countryName
+                                                                  }
+                                                                </h5>
+                                                              </div>
+                                                            </div>
+                                                          );
+                                                        }
+                                                      )}
+                                                  </span>
                                                 </div>
                                               </div>
                                               <div className="d-flex">
-                                                <div className="modal-body">
-                                                  brief History:{" "}
-                                                  {viewCommodity.briefHistory}
+                                                <div
+                                                  className="modal-body"
+                                                  dangerouslySetInnerHTML={{
+                                                    __html:
+                                                      viewCommodity.briefHistory &&
+                                                      viewCommodity.briefHistory
+                                                        .split("&lt;")
+                                                        .join("<"),
+                                                  }}
+                                                >
+                                                  {/* Brief History:{" "}
+                                                  {viewCommodity.briefHistory &&
+                                                    renderHTML(
+                                                      viewCommodity.briefHistory
+                                                    )} */}
                                                 </div>
                                               </div>
 
                                               <div className="modal-footer">
                                                 <button
                                                   type="button"
-                                                  className="btn btn-secondary"
+                                                  className="btn btn-dark"
                                                   data-bs-dismiss="modal"
                                                 >
                                                   Close
@@ -310,7 +364,7 @@ const CommodityInsight = () => {
               <div className="container-fluid">
                 <div className="row">
                   <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                    Copyright © 2018 Concept. All rights reserved. Dashboard by{" "}
+                    Copyright © 2018 Concept. All rights reserved. Dashboard by
                     <a href="https://colorlib.com/wp/">Colorlib</a>.
                   </div>
                   <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">

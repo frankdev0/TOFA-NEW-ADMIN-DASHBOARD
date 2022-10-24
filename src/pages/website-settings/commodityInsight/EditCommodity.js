@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -7,21 +7,19 @@ import { axios } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
+import JoditEditor from "jodit-react";
 
 const EditCommodity = () => {
-  const editorRef = useRef();
-
-  // const editorRef = useRef();
-
-  const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [briefHistory, setBriefHistory] = useState("");
   const [countries, setCountries] = useState([{ countryName: "" }]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleEditor = () => {
-    setBriefHistory(editorRef.current.getContent());
-  };
+  const editorRef = useRef(null);
+
+  // const handleEditor = () => {
+  //   setBriefHistory(editorRef.current.getContent());
+  // };
 
   const handleCountryInput = (index, e) => {
     const values = [...countries];
@@ -36,9 +34,9 @@ const EditCommodity = () => {
   const getInfo = async () => {
     try {
       const response = await axios.get(`/commodity/${commodityId}`);
-      setId(response.data.data.id);
       setName(response.data.data.name);
       setBriefHistory(response.data.data.briefHistory);
+      console.log(response.data.data.briefHistory);
       setCountries(response.data.data.countriesTraded);
       console.log(
         "these are the countries",
@@ -72,24 +70,29 @@ const EditCommodity = () => {
   const handleUpdate = async (e) => {
     try {
       e.preventDefault();
+      console.log("Breif history from Edit", briefHistory);
       const jsonData = {
         name: name,
         countries: getCountry(),
-        briefHistory: briefHistory,
+        briefHistory,
         commodityID: commodityId,
       };
+      console.log("EditCommodity", briefHistory);
       const formData = new FormData();
       for (const property in jsonData) {
         formData.append(`${property}`, jsonData[property]);
       }
       formData.append("image", e.target.image.files[0]);
-      console.log("target files", e.target.image.files[0]);
-      console.log("my jsonData", jsonData);
+      console.log("this is json", jsonData);
+      // console.log("target files", e.target.image.files[0]);
       const { data } = await axios.patch("/commodity", jsonData);
       console.log(data);
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
       toast.success("EDITED SUCCESSFULLY", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         pauseHover: true,
         draggable: true,
       });
@@ -180,7 +183,7 @@ const EditCommodity = () => {
                   <label className="form-label">Country</label>
                   {countries &&
                     countries.map((country, index) => (
-                      <div className="root my-2">
+                      <div className="root my-2" key={country.id}>
                         <select
                           key={country.id}
                           defaultValue={country.countryName}
@@ -211,7 +214,7 @@ const EditCommodity = () => {
                           ></i>
                           <i
                             className="fa-solid fa-minus mx-1"
-                            // onClick={() => handleRemoveCountry(index)}
+                            onClick={() => handleRemoveCountry(index)}
                           ></i>
                         </div>
                       </div>
@@ -219,15 +222,25 @@ const EditCommodity = () => {
                 </div>
               </div>
 
-              <div>
+              <div style={{ textAlign: "left" }}>
                 <h4>Commodity Information</h4>
-                <Editor
+                {/* <Editor
                   id="mytextarea"
                   name="briefHistory"
-                  value={briefHistory}
+                  initialValue={briefHistory}
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onChange={handleEditor}
-                  init={{ forced_root_block: " " }}
+                  init={{
+                    forced_root_block: " ",
+                  }}
+                /> */}
+
+                <JoditEditor
+                  name="briefHistory"
+                  ref={editorRef}
+                  value={briefHistory.split("&lt;").join("<")}
+                  tabIndex={1}
+                  onChange={(newContent) => setBriefHistory(newContent)}
                 />
               </div>
 
@@ -243,7 +256,9 @@ const EditCommodity = () => {
                     </div>
                   )
                 } */}
-                <label className="form-label mx-2">Upload Product</label>
+                <label className="form-label mx-2">
+                  Upload Commodity Image
+                </label>
                 <input type="file" id="image" name="image" accept="image/*" />
               </div>
 

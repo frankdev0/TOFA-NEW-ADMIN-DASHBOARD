@@ -10,12 +10,26 @@ export const AppContext = createContext();
 const AppState = ({ children }) => {
   const [user, setUser] = useState("");
   const [userLoading, setUserLoading] = useState(true);
+  const [metrics, setMetrics] = useState("");
 
   useEffect(() => {
     axios
       .get("/auth/current-user")
       .then((response) => {
         setUser(response.data.currentUser);
+        setUserLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setUserLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get("/admin/dashboard-metrics")
+      .then((response) => {
+        setMetrics(response.data.data);
         setUserLoading(false);
       })
       .catch((error) => {
@@ -43,7 +57,7 @@ const AppState = ({ children }) => {
   //     ></div>
   //   );
   // }
-  const value = { user, userLoading };
+  const value = { user, userLoading, metrics };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 

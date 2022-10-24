@@ -41,6 +41,9 @@ const CreateFaq = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setTimeout(() => {
+        navigate(-1);
+      }, 3000);
       toast.success("SUCCESSFULLY CREATED FAQ", {
         position: "top-right",
         autoClose: 4000,

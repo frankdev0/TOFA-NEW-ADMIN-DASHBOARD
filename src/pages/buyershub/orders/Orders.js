@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 // import { useFetch } from '../../../useFetch'
 // import { axios } from '../../components/baseUrl'
 import Navbar from "../../components/navbar/Navbar";
@@ -15,6 +15,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import { axios } from "../../components/baseUrl";
 import dayjs from "dayjs";
+import { AppContext } from "../../../utils/contexts/AppState";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -40,7 +41,7 @@ const Orders = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1500);
+      }, 2000);
     });
   }, []);
 
@@ -56,6 +57,12 @@ const Orders = () => {
     }
   };
 
+  const { metrics } = useContext(AppContext);
+
+  // const handleCancel = () => {
+  //   axios.patch("/order/cancel/{{orderID}}").then(() => {});
+  // };
+
   useEffect(() => {}, [order]);
 
   const handleStatusChange = (e) => {
@@ -65,12 +72,6 @@ const Orders = () => {
   useEffect(() => {
     getOrders();
   }, []);
-
-  // const handleDelete = (orderID) => {
-  //   axios.delete(`/order/${orderID}`).then((response) => {
-  //     setViewOrder(response.data.data)
-  //   });
-  // };
 
   const showDetails = (orderID) => {
     setViewLoader(true);
@@ -136,7 +137,7 @@ const Orders = () => {
                       <div className="card-body">
                         <div className="d-inline-block">
                           <h5 className="text-muted">Total Orders</h5>
-                          <h2 className="mb-0"> 10,28,056</h2>
+                          <h2 className="mb-0"> {metrics.totalOrders}</h2>
                         </div>
                         <div
                           className="float-right icon-circle-medium  icon-box-lg  bg-info-light mb-2"
@@ -152,7 +153,10 @@ const Orders = () => {
                       <div className="card-body">
                         <div className="d-inline-block">
                           <h5 className="text-muted">Total Transactions</h5>
-                          <h2 className="mb-0"> $149.00</h2>
+                          <h2 className="mb-0">
+                            {" "}
+                            ${metrics.totalTransactions}
+                          </h2>
                         </div>
                         <div
                           className="float-right icon-circle-medium  icon-box-lg  bg-brand-light mb-2"
@@ -168,7 +172,7 @@ const Orders = () => {
                       <div className="card-body">
                         <div className="d-inline-block">
                           <h5 className="text-muted">Total Buyers</h5>
-                          <h2 className="mb-0"> 24,763</h2>
+                          <h2 className="mb-0"> {metrics.totalBuyers}</h2>
                         </div>
                         <div
                           className="float-right icon-circle-medium  icon-box-lg  bg-primary-light mb-2"
@@ -229,7 +233,7 @@ const Orders = () => {
                               <th>paymentTerm</th>
                               <th>ShippingType</th>
                               <th>Order Status</th>
-                              <th>Payment Status</th>
+                              {/* <th>Payment Status</th> */}
                               <th>Action</th>
                             </tr>
                           </thead>
@@ -265,8 +269,13 @@ const Orders = () => {
                                         DELIVERED
                                       </div>
                                     )}
+                                    {item.status === "CANCELLED" && (
+                                      <div className="text-gray rounded-pill text-center">
+                                        CANCELLED
+                                      </div>
+                                    )}
                                   </td>
-                                  <td>
+                                  {/* <td>
                                     {item.status === "PENDING" ? (
                                       <div className="text-warning rounded-pill text-center mx-2">
                                         PENDING
@@ -276,18 +285,9 @@ const Orders = () => {
                                         PAID
                                       </div>
                                     )}
-                                  </td>
+                                  </td> */}
 
                                   <td>
-                                    {/* <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      data-dismiss="modal"
-                                      onClick={() => handleDelete(item.id)}
-                                    >
-                                      delete
-                                    </button>{" "}
-                                    |{" "} */}
                                     <button
                                       onClick={(e) => showDetails(item.id)}
                                       type="button"
@@ -403,7 +403,7 @@ const Orders = () => {
                                                   </h6>
                                                   <select
                                                     style={{ width: "150px" }}
-                                                    className="form-control"
+                                                    className="form-control my-3"
                                                     onChange={
                                                       handleStatusChange
                                                     }
@@ -430,9 +430,13 @@ const Orders = () => {
                                                     <option value="DELIVERED">
                                                       DELIVERED
                                                     </option>
+                                                    <option value="CANCELLED">
+                                                      CANCEL
+                                                    </option>
                                                   </select>
                                                 </div>
                                               </div>
+
                                               <div
                                                 className="modal-body middle-ctn d-flex"
                                                 style={{ width: "100%" }}
@@ -520,13 +524,34 @@ const Orders = () => {
                                                       style={{ width: "100px" }}
                                                     >
                                                       {order.status ===
-                                                      "PENDING" ? (
+                                                        "PENDING" && (
                                                         <div className="bg-warning rounded-pill text-center mx-2">
                                                           PENDING
                                                         </div>
-                                                      ) : (
+                                                      )}
+                                                      {order.status ===
+                                                        "PROCESSING" && (
                                                         <div className="bg-success rounded-pill text-center mx-2">
                                                           PAID
+                                                        </div>
+                                                      )}
+                                                      {order.status ===
+                                                        "SHIPPED" && (
+                                                        <div className="bg-success rounded-pill text-center mx-2">
+                                                          PAID
+                                                        </div>
+                                                      )}
+                                                      {order.status ===
+                                                        "DELIVERED" && (
+                                                        <div className="bg-success rounded-pill text-center mx-2">
+                                                          PAID
+                                                        </div>
+                                                      )}
+
+                                                      {order.status ===
+                                                        "CANCELLED" && (
+                                                        <div className="bg-secondary rounded-pill text-center mx-2">
+                                                          CANCELLED
                                                         </div>
                                                       )}
                                                     </div>
@@ -573,12 +598,12 @@ const Orders = () => {
                                                           "rgba(0, 0, 0, 0.62)",
                                                       }}
                                                     >
-                                                      {" "}
-                                                      Email:
+                                                      Email:{" "}
+                                                    </h6>
+                                                    <p>
                                                       {order.buyer &&
                                                         order.buyer.email}
-                                                    </h6>
-                                                    <p>{order.email}</p>
+                                                    </p>
                                                   </div>
                                                   <div className="modal-body">
                                                     <h6
@@ -632,15 +657,16 @@ const Orders = () => {
 
                                             <div className="modal-footer">
                                               <button
+                                                className="btn btn-primary"
                                                 onClick={() =>
                                                   updateOrder(order.id)
                                                 }
                                               >
-                                                Update Order
+                                                Update
                                               </button>
                                               <button
                                                 type="button"
-                                                className="btn btn-secondary"
+                                                className="btn btn-secondary mx-3"
                                                 data-bs-dismiss="modal"
                                               >
                                                 Close

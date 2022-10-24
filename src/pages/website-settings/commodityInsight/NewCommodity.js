@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Editor } from "@tinymce/tinymce-react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { axios } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import JoditEditor from "jodit-react";
 
 const NewCommodity = () => {
   const editorRef = useRef();
@@ -17,9 +18,11 @@ const NewCommodity = () => {
   const [customError, setCustomError] = useState("");
   const [country, setCountry] = useState([{ countryName: "" }]);
 
-  const handleEditor = () => {
-    setBriefHistory(editorRef.current.getContent());
-  };
+  // const handleEditor = () => {
+  //   setBriefHistory(editorRef.current.getContent());
+  // };
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCommodity({ ...commodity, [e.target.name]: e.target.value });
@@ -39,14 +42,12 @@ const NewCommodity = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const newString = briefHistory
-        .replace(/^\<p\>/, "")
-        .replace(/\<\/p\>$/, "");
       const jsonData = {
         name: commodity.name,
         countries: getCountry(),
-        briefHistory: newString,
+        briefHistory: briefHistory,
       };
+      console.log("NewCommodity", briefHistory);
       const formData = new FormData();
       for (const property in jsonData) {
         formData.append(`${property}`, jsonData[property]);
@@ -58,9 +59,12 @@ const NewCommodity = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
       toast.success("SUCCESSFULLY CREATED NEW COMMODITY", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 2000,
         pauseHover: true,
         draggable: true,
       });
@@ -88,8 +92,10 @@ const NewCommodity = () => {
 
   const handleRemoveCountry = (index) => {
     const countryValues = [...country];
-    countryValues.splice(index, 1);
-    setCountry(countryValues);
+    if (countryValues.length > 1) {
+      countryValues.splice(index, 1);
+      setCountry(countryValues);
+    }
   };
 
   return (
@@ -180,11 +186,22 @@ const NewCommodity = () => {
               </div>
               <div style={{ textAlign: "left" }}>
                 <h4>Commodity Information</h4>
-                <Editor
+                {/* <Editor
                   id="mytextarea"
                   name="briefHistory"
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onChange={handleEditor}
+                  init={{
+                    forced_root_block: " ",
+                  }}
+                /> */}
+
+                <JoditEditor
+                  name="briefHistory"
+                  ref={editorRef}
+                  value={briefHistory}
+                  tabIndex={1}
+                  onChange={(newContent) => setBriefHistory(newContent)}
                 />
                 {formErrors.briefHistory && (
                   <p className="text-danger">{formErrors.briefHistory}</p>
@@ -197,12 +214,24 @@ const NewCommodity = () => {
             <img alt="not found" width={"250px"} src={URL.createObjectURL(file)} />
             </div>
           } */}
-                <label className="form-label mx-2">Upload Product</label>
-                <input type="file" id="image" name="image" accept="image/*" />
+                <label className="form-label mx-2 my-2" htmlFor="firstimg">
+                  <i
+                    className="fa fa-cloud-upload img-upload"
+                    aria-hidden="true"
+                    style={{ fontSize: "35px", cursor: "pointer" }}
+                  ></i>
+                </label>
+                <input
+                  type="file"
+                  id="firstimg"
+                  name="image"
+                  accept="image/*"
+                  style={{ display: "none", vsisibility: "none" }}
+                />
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark">Submit</button>
+                <button className="btn btn-dark px-4 py-1">Submit</button>
               </div>
             </form>
           </div>
