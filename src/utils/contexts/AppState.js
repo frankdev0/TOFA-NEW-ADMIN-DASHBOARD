@@ -25,18 +25,18 @@ const AppState = ({ children }) => {
       });
   }, []);
 
-  useEffect(() => {
-    axios
-      .get("/admin/dashboard-metrics")
-      .then((response) => {
-        setMetrics(response.data.data);
-        setUserLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setUserLoading(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("/admin/dashboard-metrics")
+  //     .then((response) => {
+  //       setMetrics(response.data.data);
+  //       setUserLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setUserLoading(false);
+  //     });
+  // }, []);
 
   // const value = user;
   // if (!loading) {

@@ -1,53 +1,88 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import avatar1 from "../../../assets/avatar-1.jpg";
 import { AppContext } from "../../../utils/contexts/AppState";
 import dayjs from "dayjs";
+import io from "socket.io-client";
 import "./message.css";
 import { NewOrderModal } from "./NewOrder";
+import ChatInput from "./ChatInput";
+import { axios } from "../../components/baseUrl";
 
 const MessageCenter = () => {
-  const [messageList, setMessageList] = useState([]);
-  const [currentMessage, setCurrentMessage] = useState("");
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const scrollRef = useRef();
+  const socket = useRef();
+  const { user } = useContext(AppContext);
 
-  const handleChange = (e) => {
-    setCurrentMessage(e.target.value);
+  const socketEvents = {
+    connection: "connection",
+    addUser: "add-user",
+    sendMessage: "send-message",
+    receiveMessage: "receive-message",
+    disconnect: "disconnect",
   };
 
-  const dataResponse = useContext(AppContext);
+  useEffect(() => {
+    if (user) {
+      socket.current = io("http://localhost:8081");
+      socket.current.emit(socketEvents.addUser, user.id, user.type);
+      socket.current.on(socketEvents.receiveMessage, (msg) => {
+        setArrivalMessage({ fromSelf: false, message: msg });
+      });
+    }
+  }, [user]);
 
-  const selectImageHandler = (event) => {
-    const selectedFiles = event.target.files;
-    const selectedFilesArray = Array.from(selectedFiles);
+  useEffect(() => {
+    (async () => {
+      try {
+        const {
+          data: { data },
+        } = await axios.get(
+          `/message/receive-message/4419e026-33e3-404a-9ecb-5b47d79943a1`
+        );
+        console.log(data);
+        setMessages(data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
-    const imagesArray = selectedFilesArray.map((file) => {
-      return URL.createObjectURL(file);
-    });
-    setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
 
-    // console.log(imagesArray);
+  useEffect(() => {
+    if (scrollRef.current)
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMsg = (msg) => {
+    try {
+      const payload = {
+        to: "4419e026-33e3-404a-9ecb-5b47d79943a1",
+        from: user.id,
+        message: msg,
+        messageType: "MESSAGE",
+        sender: user.type,
+      };
+
+      console.log(payload);
+
+      socket.current.emit(socketEvents.sendMessage, payload);
+      axios.post("/message/send-message", payload);
+
+      const msgs = [...messages];
+      msgs.push({ fromSelf: true, message: msg });
+      setMessages(msgs);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!currentMessage && selectedImages.length === 0) return;
-
-    const obj = {
-      id: Math.random(),
-      own: true,
-      email: dataResponse.email,
-      time: new Date(),
-      message: currentMessage,
-      imgs: selectedImages,
-    };
-    // console.log(selectedImages);
-    setMessageList((prevState) => [...prevState, obj]);
-    setCurrentMessage("");
-    setSelectedImages([]);
-  };
   return (
     <div>
       {/* <!-- main wrapper --> */}
@@ -113,32 +148,22 @@ const MessageCenter = () => {
                           src={avatar1}
                           className="rounded-circle user-avatar-lg"
                         />
-                        {messageList.map((msg, index) => {
+                        {messages.map((msg, index) => {
                           return (
-                            <div className="media-body" key={index}>
+                            <div
+                              className="media-body"
+                              ref={scrollRef}
+                              key={index}
+                            >
                               <div className="chat-item-body">
-                                {msg && msg.message}
-                                <div className="mt-2">
-                                  {msg.imgs.length > 0 &&
-                                    msg.imgs.map((img, i) => (
-                                      <img
-                                        key={`image-${i}`}
-                                        width={100}
-                                        height={100}
-                                        src={img}
-                                      />
-                                    ))}
-                                </div>
+                                {msg.message}
                               </div>
-                              <div>{msg && msg.email}</div>
                               <span>
                                 {dayjs(msg.time).format("D MMMM YYYY")}
                               </span>
                             </div>
                           );
                         })}
-
-                        <div> {}</div>
                       </div>
                     </div>
                   </div>
@@ -209,39 +234,7 @@ const MessageCenter = () => {
                         </div>
                       </div>
                     </div>
-                    <form className="chat-form" onSubmit={handleSubmit}>
-                      <textarea
-                        className="form-control"
-                        placeholder="Type message"
-                        rows="1"
-                        value={currentMessage}
-                        onChange={handleChange}
-                      />
-                      <div className="chat-form-buttons">
-                        <button type="button" className="btn btn-link">
-                          <i className="far fa-smile"></i>
-                        </button>
-                        <div className="send">
-                          <input
-                            multiple={true}
-                            type="file"
-                            className="custom-file-input"
-                            id="customFile"
-                            onChange={selectImageHandler}
-                            style={{ display: "none" }}
-                          />
-                          <label
-                            className="custom-file-label"
-                            htmlFor="customFile"
-                          >
-                            <i className="fas fa-paperclip"></i>
-                          </label>
-                          <button className="btn btn-dark" type="submit">
-                            Send
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                    <ChatInput handleSendMsg={handleSendMsg} />
                   </div>
                 </div>
               </div>
