@@ -218,7 +218,7 @@ const NewCommodity = () => {
                   <i
                     className="fa fa-cloud-upload img-upload"
                     aria-hidden="true"
-                    style={{ fontSize: "35px", cursor: "pointer" }}
+                    style={{ fontSize: "55px", cursor: "pointer" }}
                   ></i>
                 </label>
                 <input
@@ -231,7 +231,7 @@ const NewCommodity = () => {
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark px-4 py-1">Submit</button>
+                <button className="btn btn-dark px-5 py-2">Submit</button>
               </div>
             </form>
           </div>

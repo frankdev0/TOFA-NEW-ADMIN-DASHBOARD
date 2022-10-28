@@ -39,6 +39,7 @@ import Tractions from "./pages/website-settings/traction/Traction";
 import CreateTraction from "./pages/website-settings/traction/CreateTraction";
 import EditTraction from "./pages/website-settings/traction/EditTraction";
 import Bar from "./pages/components/sidebar/Bar";
+import ForgotPassword from "./pages/login/ForgotPassword";
 // import Protected from "./pages/components/Protected";
 
 function App() {
@@ -77,22 +78,13 @@ function App() {
               element={<ConfirmPassword />}
             />
 
-            <Route element={<ProtectedRoutes />}>
-              <Route
-                exact
-                path="/securityquestion"
-                element={<SecurityQuestion />}
-              />
-            </Route>
-            {/* <Route
-              element={
-                !user.type === "SUPER_ADMIN" ? (
-                  <ProtectedRoutes />
-                ) : (
-                  <Unauthorized />
-                )
-              }
-            > */}
+            <Route
+              exact
+              path="/securityquestion"
+              element={<SecurityQuestion />}
+            />
+            <Route exact path="/forgot-password" element={<ForgotPassword />} />
+
             {user && user.type === "SUPER_ADMIN" ? (
               <Route element={<ProtectedRoutes />}>
                 <Route exact path="/newcommodity" element={<NewCommodity />} />
@@ -166,7 +158,7 @@ function App() {
                 />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {user && user.type === "FINANCE" ? (
