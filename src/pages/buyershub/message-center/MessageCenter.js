@@ -27,7 +27,7 @@ const MessageCenter = () => {
 
   useEffect(() => {
     if (user) {
-      socket.current = io("http://localhost:8081");
+      socket.current = io("http://localhost");
       socket.current.emit(socketEvents.addUser, user.id, user.type);
       socket.current.on(socketEvents.receiveMessage, (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });

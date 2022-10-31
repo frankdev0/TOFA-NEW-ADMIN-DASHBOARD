@@ -1,7 +1,7 @@
 {
   "name": "tofa-admin-main",
   "version": "0.1.0",
-  "proxy": "http://localhost:8081/api/v2",
+  "proxy": "http://localhost/api/v2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.0",
