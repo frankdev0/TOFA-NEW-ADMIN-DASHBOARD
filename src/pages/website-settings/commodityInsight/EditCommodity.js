@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from "react";
-import { Editor } from "@tinymce/tinymce-react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -49,8 +48,6 @@ const EditCommodity = () => {
       setIsLoading(false);
     }
   };
-
-  // const newCountry = countries.map((item) => item.countriesTraded);
 
   useEffect(() => {
     getInfo();
@@ -160,7 +157,7 @@ const EditCommodity = () => {
                   className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                   align="right"
                 >
-                  <a href="/commodityInsight" className="btn btn-dark">
+                  <a href="/commodityInsight" className="btn btn-dark px-4">
                     Back
                   </a>
                 </div>
@@ -224,16 +221,6 @@ const EditCommodity = () => {
 
               <div style={{ textAlign: "left" }}>
                 <h4>Commodity Information</h4>
-                {/* <Editor
-                  id="mytextarea"
-                  name="briefHistory"
-                  initialValue={briefHistory}
-                  onInit={(evt, editor) => (editorRef.current = editor)}
-                  onChange={handleEditor}
-                  init={{
-                    forced_root_block: " ",
-                  }}
-                /> */}
 
                 <JoditEditor
                   name="briefHistory"
@@ -245,25 +232,29 @@ const EditCommodity = () => {
               </div>
 
               <div className="mb-3" style={{ textAlign: "left" }}>
-                {/* {(e) =>
-                  e.target.image.files && (
-                    <div>
-                      <img
-                        alt="not found"
-                        width={"250px"}
-                        src={URL.createObjectURL(e.target.image.files)}
-                      />
-                    </div>
-                  )
-                } */}
-                <label className="form-label mx-2">
-                  Upload Commodity Image
+                <label
+                  className="fw-bold form-label mx-2 my-2 text-bold"
+                  htmlFor="firstimg"
+                >
+                  Upload Commodity
+                  <br />
+                  <i
+                    className="my-2 fa fa-cloud-upload img-upload"
+                    aria-hidden="true"
+                    style={{ fontSize: "55px", cursor: "pointer" }}
+                  ></i>
                 </label>
-                <input type="file" id="image" name="image" accept="image/*" />
+                <input
+                  type="file"
+                  id="firstimg"
+                  name="image"
+                  accept="image/*"
+                  style={{ display: "none", vsisibility: "none" }}
+                />
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark" type="submit">
+                <button className="btn btn-dark px-5 py-2" type="submit">
                   Submit
                 </button>
               </div>

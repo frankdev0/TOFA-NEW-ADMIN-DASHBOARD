@@ -3,6 +3,9 @@ import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
 // import { AuthContext } from "../../utils/contexts/AuthContext";
 // import { useFetch } from "../../useFetch";
 
@@ -13,6 +16,9 @@ const Login = () => {
     password: "",
   });
   const [formErrors, setFormErrors] = useState({});
+  const [icon, setIcon] = useState(eye);
+  const [type, setType] = useState("text");
+
   const [customError, setCustomError] = useState("");
 
   // const { currentUser } = useContext(AuthContext);
@@ -26,6 +32,16 @@ const Login = () => {
 
   const handleChange = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+  };
+
+  const handleToggle = () => {
+    if (type === "password") {
+      setType("text");
+      setIcon(eye);
+    } else {
+      setType("password");
+      setIcon(eyeOff);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -79,7 +95,7 @@ const Login = () => {
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="input-field form-group">
                   <input
                     className="form-control form-control-lg"
                     id="username"
@@ -93,15 +109,18 @@ const Login = () => {
                 {formErrors.email && (
                   <p className="text-danger">{formErrors.email}</p>
                 )}
-                <div className="form-group">
+                <div className="input-field form-group">
                   <input
                     className="form-control form-control-lg"
                     id="password"
-                    type="password"
+                    type={type}
                     name="password"
                     placeholder="Password"
                     onChange={handleChange}
                   />
+                  <span>
+                    <Icon onClick={handleToggle} icon={icon} size={15} />{" "}
+                  </span>
                   {formErrors.password && (
                     <p className="text-danger">{formErrors.password}</p>
                   )}

@@ -6,7 +6,7 @@ import { axios } from "../components/baseUrl";
 
 const SecurityQuestion = () => {
   const navigate = useNavigate();
-  const [formErrors, setFormErrors] = useState({});
+  const [formErrors, setFormErrors] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
   const [securityQuestion, setSecurityQuestion] = useState({
     question_one: "",
@@ -27,15 +27,15 @@ const SecurityQuestion = () => {
     if (!values.answer_one) {
       errors.answer_one = "Please answer the security question";
     }
-    if (!values.answer_two) {
-      errors.answer_two = "Please answer the security question";
+    if (values.question_one === values.question_two) {
+      errors.answer_one = "Please select different security questions";
     }
   };
 
-  useEffect(() => {
-    if (Object.keys(formErrors).length === 0 && isSubmit) {
-    }
-  }, [formErrors]);
+  // useEffect(() => {
+  //   if (Object.keys(formErrors).length === 0 && isSubmit) {
+  //   }
+  // }, [formErrors]);
 
   const handleSubmit = async (e) => {
     try {
@@ -56,12 +56,21 @@ const SecurityQuestion = () => {
       const res = await axios.post("/auth/security-questions", {
         securityQuestions: securityQuestions,
       });
+
       console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-    if (isSubmit) {
+      setIsSubmit(true);
+
       navigate("/overview");
+    } catch (err) {
+      if (err) {
+        console.log("error message", err);
+        // setFormErrors(
+        //   err.response.data.errors.reduce(function(obj, err) {
+        //     obj[err.field] = err.message;
+        //     return obj;
+        //   }, {})
+        // );
+      }
     }
   };
   return (
@@ -111,7 +120,7 @@ const SecurityQuestion = () => {
                     placeholder="Answer"
                     onChange={handleChange}
                   />
-                  <p className="text-danger">{formErrors.answer_one}</p>
+                  {/* <p className="text-danger">{formErrors.answer}</p> */}
                 </div>
                 <div className="form-group">
                   <select
@@ -138,7 +147,7 @@ const SecurityQuestion = () => {
                     placeholder="Answer"
                     onChange={handleChange}
                   />
-                  <p className="text-danger">{formErrors.answer_two}</p>
+                  {formErrors && <p className="text-danger">{formErrors}</p>}
                 </div>
 
                 <button type="submit" className="btn btn-dark btn-lg btn-block">

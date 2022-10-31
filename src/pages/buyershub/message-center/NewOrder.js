@@ -1,20 +1,114 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
+import { axios } from "../../components/baseUrl";
 import "./message.css";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 export const NewOrderModal = () => {
   const [country, setCountry] = useState("");
+  const [local, setLocal] = useState("");
+  const [formErrors, setFormErrors] = useState("");
+  const [customError, setCustomError] = useState("");
+  const [orderDetails, setOrderDetails] = useState({
+    quantity: "",
+    country: "",
+    countryOfOrigin: "",
+    shipping: "",
+    paymentTerm: "",
+    cost: "",
+    port: "",
+    address: "",
+    productRequirement: "",
+    specification: "",
+    grade: "",
+  });
   const options = useMemo(() => countryList().getData(), []);
+
+  const navigate = useNavigate();
+
+  const handleOrder = (e) => {
+    setOrderDetails({ ...orderDetails, [e.target.name]: e.target.value });
+  };
+
+  // const totalCost = priceSelected * orderDetails.quantity;
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const localOrderInfo = {
+        quantity: orderDetails.quantity,
+        country: country,
+        countryOfOrigin: orderDetails.countryOfOrigin,
+        shipping: orderDetails.shipping,
+        paymentTerm: orderDetails.paymentTerm,
+        cost: orderDetails.cost,
+        port: orderDetails.port,
+        address: orderDetails.address,
+        productRequirement: orderDetails.productRequirement,
+        specification: orderDetails.productRequirement,
+        grade: orderDetails.port,
+      };
+      if (!orderDetails.address) {
+        console.log("these are values for foreign", localOrderInfo);
+        // const { data: result } = await axios.post("/order/foreign", {
+        //   localOrderInfo,
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // });
+        // console.log(result);
+      } else {
+        console.log("these are values for local", localOrderInfo);
+        // const { data: result } = await axios.post("/order/local", {
+        //   localOrderInfo,
+        //   headers: {
+        //     "Content-Type": "multipart/form-data",
+        //   },
+        // });
+        // console.log(result);
+      }
+
+      // setTimeout(() => {
+      //   navigate(-1);
+      // }, 3000);
+      // toast.success("SUCCESSFULLY CREATED ORDER", {
+      //   position: "top-right",
+      //   autoClose: 4000,
+      //   pauseHover: true,
+      //   draggable: true,
+      // });
+    } catch (err) {
+      if (err.response.data.errors[0].field) {
+        setFormErrors(
+          err.response.data.errors.reduce(function(obj, err) {
+            obj[err.field] = err.message;
+            return obj;
+          }, {})
+        );
+      } else {
+        console.log(err.response.data.errors[0].message);
+        setCustomError(err.response.data.errors[0].message);
+        alert(customError);
+      }
+    }
+  };
+
+  const handleChange = (e) => {
+    setLocal(e.target.value);
+  };
   return (
     <div
       className="modal fade place-order-modal px-5"
       style={{ textAlign: "left" }}
       id="orderModal"
-      tabindex="-1"
+      tabIndex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
+      <ToastContainer />
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
@@ -31,14 +125,16 @@ export const NewOrderModal = () => {
           <div className="modal-body">
             <div className="row">
               <div className="col-lg-12">
-                <form className="w-100">
+                <form className="w-100" onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1">Product Name</label>
                     <select
                       className="form-select selects"
                       aria-label="Default select example"
+                      onChange={handleOrder}
+                      name=""
                     >
-                      <option selected className="options">
+                      <option defaultValue="Select Product" className="options">
                         Select Product
                       </option>
                       <option value="1" className="options">
@@ -53,12 +149,15 @@ export const NewOrderModal = () => {
                     </select>
                   </div>
 
-                  <div class="mb-3">
+                  <div className="mb-3">
                     <label htmlFor="exampleInputEmail1">
                       Product Requirements
                     </label>
                     <textarea
-                      class="form-control"
+                      className="form-control"
+                      style={{ borderRadius: "0.375rem" }}
+                      name="productRequirement"
+                      onChange={handleOrder}
                       id=""
                       rows="3"
                       placeholder="Enter product requirements"
@@ -68,7 +167,10 @@ export const NewOrderModal = () => {
                   <div className="row">
                     <div className="col-lg-6 mb-3">
                       <label htmlFor="exampleInputPassword1">Quantity</label>
-                      <div className="custom-input form-control">
+                      <div
+                        className="custom-input form-control"
+                        style={{ borderRadius: "0.45rem" }}
+                      >
                         <div className="row">
                           <div className="col-lg-7 col">
                             <input
@@ -76,6 +178,8 @@ export const NewOrderModal = () => {
                               className="form-control custom-style"
                               id=""
                               placeholder="Enter quantity"
+                              name="quantity"
+                              onChange={handleOrder}
                             />
                           </div>
                           <div className="col-lg-5 col">
@@ -85,14 +189,17 @@ export const NewOrderModal = () => {
                       </div>
                     </div>
                     <div className="col-lg-6 mb-3">
-                      <label for="exampleInputPassword1">Shipping Terms</label>
+                      <label htmlFor="exampleInputPassword1">
+                        Shipping Terms
+                      </label>
                       <select
                         className="form-select"
                         aria-label="Default select example"
+                        onChange={handleOrder}
+                        name="shipping"
+                        value={orderDetails.shipping}
                       >
-                        <option selected className="form-control">
-                          Select shipping terms
-                        </option>
+                        <option>Select shipping terms</option>
                         <option value="FOB">FOB</option>
                         <option value="CIF">CIF</option>
                         <option value="CFR">CFR</option>
@@ -103,27 +210,40 @@ export const NewOrderModal = () => {
 
                   <div className="row">
                     <div className="col-lg-6 mb-3">
-                      <label for="exampleInputPassword1">Payment Terms</label>
+                      <label htmlFor="exampleInputPassword1">
+                        Payment Terms
+                      </label>
                       <select
                         className="form-select"
                         aria-label="Default select example"
+                        name="paymentTerm"
+                        value={orderDetails.paymentTerm}
+                        onChange={handleOrder}
                       >
-                        <option selected>Select payment terms</option>
+                        <option defaultValue="Select payment terms">
+                          Select payment terms
+                        </option>
                         <option value="LC">LC</option>
                         <option value="DP">DP</option>
                         <option value="CAD">CAD</option>
                         <option value="TT">TT</option>
                       </select>
                     </div>
+
                     <div className="col-lg-6 mb-3">
-                      <label for="exampleInputPassword1">
-                        Destination Country
+                      <label htmlFor="exampleInputPassword1">
+                        Country Of Origin
                       </label>
                       <select
                         className="form-select"
                         aria-label="Default select example"
+                        name="countryOfOrigin"
+                        value={orderDetails.countryOfOrigin}
+                        onChange={handleOrder}
                       >
-                        <option selected>Country of Origin</option>
+                        <option defaultValue="Country of Origin">
+                          Country of Origin
+                        </option>
                         <option value="1">India</option>
                         <option value="2">China</option>
                         <option value="3">Bangladesh</option>
@@ -133,31 +253,63 @@ export const NewOrderModal = () => {
 
                   <div className="row">
                     <div className="col-lg-6 mb-3">
-                      <label for="exampleInputPassword1">
+                      <label htmlFor="exampleInputPassword1">
                         Destination Country
                       </label>
                       <Select
-                        className="form-control custom-style"
+                        className="custom-country-list"
                         options={options}
                         name="country"
                         value={country}
                         onChange={setCountry}
                       />
                     </div>
+                    {orderDetails.shipping === "LOCAL" ? (
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="exampleInputPassword1">Address</label>
+                        <input
+                          type="text"
+                          className="ports form-control"
+                          id=""
+                          placeholder="Enter Address"
+                          name="address"
+                          value={orderDetails.address}
+                          onChange={handleOrder}
+                        />
+                      </div>
+                    ) : (
+                      <div className="col-lg-6 mb-3">
+                        <label htmlFor="exampleInputPassword1">
+                          Destination Port
+                        </label>
+                        <input
+                          type="text"
+                          className="ports form-control"
+                          id=""
+                          placeholder="Enter Destination Port"
+                          name="port"
+                          value={orderDetails.port}
+                          onChange={handleOrder}
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <div className="row">
                     <div className="col-lg-6 mb-3">
-                      <label for="exampleInputPassword1">
-                        Destination Port
-                      </label>
+                      <label htmlFor="exampleInputPassword1">Price</label>
                       <input
-                        type="text"
-                        className="form-control"
+                        type="number"
+                        className="ports form-control"
                         id=""
-                        placeholder="Enter Destination Port"
+                        placeholder="Enter Price"
+                        name="cost"
+                        value={orderDetails.cost}
+                        onChange={handleOrder}
                       />
                     </div>
                   </div>
                   <div>
-                    <button className="btn btn-secondary order-btn">
+                    <button className="btn btn-dark start-btn py-2">
                       Submit Order Request
                     </button>
                   </div>

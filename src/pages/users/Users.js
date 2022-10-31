@@ -7,6 +7,8 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
+import { confirmAlert } from "react-confirm-alert";
+import { Link } from "react-router-dom";
 
 const Users = () => {
   const [buyer, setBuyer] = useState([]);
@@ -24,6 +26,29 @@ const Users = () => {
     } catch (error) {
       console.log(error.response.data.erros);
     }
+  };
+
+  const handleDelete = (faqID) => {
+    axios.delete(`/faq/${faqID}`).then(() => {
+      getData();
+    });
+  };
+
+  const submit = (faqID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => handleDelete(faqID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
   };
 
   const showDetails = (employeeID) => {
@@ -128,7 +153,63 @@ const Users = () => {
                                   <td>{item.email}</td>
 
                                   <td>
-                                    <button
+                                    <div className="nav-item dropdown">
+                                      <Link
+                                        className="nav-link main-nav-link position-absolute"
+                                        align="right"
+                                        to="#"
+                                        id="navbarDropdown"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        style={{
+                                          right: "-15px",
+                                          top: "-10px",
+                                          color: "black",
+                                        }}
+                                      >
+                                        <i
+                                          className="fa fa-chevron-down"
+                                          align="right"
+                                          aria-hidden="true"
+                                        ></i>
+                                      </Link>
+                                      <ul
+                                        className="dropdown-menu animate slideIn"
+                                        aria-labelledby="navbarDropdown"
+                                        style={{ width: "100px !important" }}
+                                      >
+                                        <li>
+                                          <div
+                                            className="dropdown-item"
+                                            onClick={(e) =>
+                                              showDetails(item.id)
+                                            }
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                          >
+                                            View
+                                          </div>
+                                        </li>
+                                        <li>
+                                          {/* <Link to={`/editfaq/${item.id}`}>
+                                            <div className="dropdown-item">
+                                              Edit
+                                            </div>
+                                          </Link> */}
+                                        </li>
+                                        <li>
+                                          <div
+                                            className="dropdown-item text-danger"
+                                            onClick={(e) => submit(item.id)}
+                                          >
+                                            Delete
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+
+                                    {/* <button
                                       type="button"
                                       className="btn btn-primary"
                                       onClick={(e) => showDetails(item.id)}
@@ -136,9 +217,9 @@ const Users = () => {
                                       data-bs-target="#exampleModal"
                                     >
                                       view
-                                    </button>
+                                    </button> */}
 
-                                    <div
+                                    {/* <div
                                       className="modal fade"
                                       id="exampleModal"
                                       tabIndex="-1"
@@ -152,7 +233,7 @@ const Users = () => {
                                               className="modal-title"
                                               id="exampleModalLabel"
                                             >
-                                              Buyers Information
+                                              Users Information
                                             </h5>
                                             <button
                                               type="button"
@@ -161,11 +242,16 @@ const Users = () => {
                                               aria-label="Close"
                                             ></button>
                                           </div>
-                                          <div className="modal-body">
-                                            {viewBuyer.fullName}
+                                          <div className="d-flex">
+                                            <div className="modal-body">
+                                              Name: {viewBuyer.fullName}
+                                            </div>
+                                            <div className="modal-body">
+                                              Email: {viewBuyer.email}
+                                            </div>
                                           </div>
                                           <div className="modal-body">
-                                            {viewBuyer.email}
+                                            Role: {viewBuyer.type}
                                           </div>
                                           <div className="modal-footer">
                                             <button
@@ -184,7 +270,7 @@ const Users = () => {
                                           </div>
                                         </div>
                                       </div>
-                                    </div>
+                                    </div> */}
                                   </td>
                                 </tr>
                               );

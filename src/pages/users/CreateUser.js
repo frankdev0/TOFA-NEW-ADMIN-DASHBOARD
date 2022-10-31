@@ -6,6 +6,8 @@ import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 const CreateUsers = () => {
   const [file, setFile] = useState("");
@@ -33,7 +35,15 @@ const CreateUsers = () => {
         role: user.role,
         phoneNumber: user.phoneNumber,
       });
-      // setInfo(data.data.response);
+      setTimeout(() => {
+        navigate(-1);
+      }, 2000);
+      toast.success("SUCCESSFULLY CREATED FAQ", {
+        position: "top-right",
+        autoClose: 4000,
+        pauseHover: true,
+        draggable: true,
+      });
       console.log(data);
     } catch (err) {
       if (err.response.data.errors[0].field) {
@@ -60,7 +70,7 @@ const CreateUsers = () => {
         <div className="container-fluid dashboard-content">
           <div className="single">
             <div className="row">
-              <div style={{ textAlign: "left" }} className="my-5 col-6">
+              <div style={{ textAlign: "left" }} className="my-3 col-6">
                 <h1>Add Employee</h1>
               </div>
 
@@ -80,7 +90,7 @@ const CreateUsers = () => {
             <form className="" onSubmit={handleSubmit}>
               <div className="row">
                 <div className=" col-6 inputFields">
-                  <div className="my-2">
+                  {/* <div className="my-2">
                     <label className="l" htmlFor="file">
                       Image: <DriveFolderUploadIcon className="icon" />
                     </label>
@@ -91,7 +101,7 @@ const CreateUsers = () => {
                       style={{ display: "none" }}
                       onChange={(e) => setFile(e.target.files[0])}
                     />
-                  </div>
+                  </div> */}
                   <label className="l">Full Name</label>
                   <input
                     className="form-control"
@@ -149,14 +159,18 @@ const CreateUsers = () => {
                 </div>
 
                 <div className="col-6">
-                  <img
+                  {/* <img
                     src={file && URL.createObjectURL(file)}
                     alt="product pic"
                     className="left"
-                  />
+                  /> */}
                 </div>
 
-                <button className=" mx-3 my-5 btn btn-dark " type="submit">
+                <button
+                  className=" mx-3 my-5 btn btn-dark "
+                  type="submit"
+                  style={{ maxWidth: "150px" }}
+                >
                   Submit
                 </button>
               </div>

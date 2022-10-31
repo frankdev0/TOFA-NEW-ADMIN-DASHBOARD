@@ -67,9 +67,9 @@ h5 {
   line-height: 6px !important;
 }
 
-.img-upload {
+ .img-upload {
 
-
-box-shadow: 0 0 0 0.2rem rgba(214, 214, 255, .75);
+padding: 1.5rem;
+border: 2px dotted gray;
  
-}
+} 

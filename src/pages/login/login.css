@@ -6,3 +6,21 @@ section {
     padding-top: 40px;
     padding-bottom: 40px;
 }
+
+.input-field {
+    width: 340px;
+    height: 45px;
+    background-color: #fff;
+
+    border: 0.5px solid gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.input-field input {
+    outline: none;
+    border: hidden;
+    background-color: transparent ;
+}

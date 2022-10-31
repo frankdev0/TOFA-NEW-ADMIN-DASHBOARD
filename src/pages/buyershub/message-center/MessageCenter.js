@@ -25,6 +25,9 @@ const MessageCenter = () => {
     disconnect: "disconnect",
   };
 
+  const dataResponse = useContext(AppContext);
+  const employee = dataResponse.user.fullName;
+
   useEffect(() => {
     if (user) {
       socket.current = io("http://localhost");
@@ -136,7 +139,7 @@ const MessageCenter = () => {
 
             <div className="main-content container-fluid p-0">
               <div className="chat-header bg-white border-bottom">
-                <h2 className="active-user-chat">John Abraham </h2>
+                <h2 className="active-user-chat">{employee}</h2>
               </div>
               <div className="content-container">
                 <div className="chat-module">
@@ -167,8 +170,9 @@ const MessageCenter = () => {
                       </div>
                     </div>
                   </div>
+
                   <div className="chat-module-bottom">
-                    <div align="right">
+                    <div align="right" className="my-3">
                       {/* <a
                         href="comingsoon"
                         className="btn btn-rounded btn-outline-dark mb-3 chat-btn"
@@ -180,7 +184,7 @@ const MessageCenter = () => {
                       <button
                         data-bs-toggle="modal"
                         data-bs-target="#orderModal"
-                        className="msg-center-btn btn-primary me-2"
+                        className="start-btn btn btn-dark me-2"
                         align="right"
                       >
                         Start Order
@@ -188,52 +192,7 @@ const MessageCenter = () => {
                     </div>
                     {/* <!-- Modal --> */}
                     <NewOrderModal />
-                    <div
-                      className="modal fade"
-                      id="exampleModal"
-                      tabIndex="-1"
-                      role="dialog"
-                      aria-labelledby="exampleModalLabel"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog modal-lg" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">
-                              Place New Order
-                            </h5>
-                            <a
-                              href="comingsoon"
-                              className="close"
-                              data-dismiss="modal"
-                              aria-label="Close"
-                            >
-                              <span aria-hidden="true">&times;</span>
-                            </a>
-                          </div>
-                          <div className="modal-body">
-                            <p>
-                              Woohoo, You are readng this text in a modal! Use
-                              Bootstrap’s JavaScript modal plugin to add dialogs
-                              to your site for lightboxes, user notifications,
-                              or completely custom content.
-                            </p>
-                          </div>
-                          <div className="modal-footer">
-                            <a
-                              href="comingsoon"
-                              className="btn btn-secondary"
-                              data-dismiss="modal"
-                            >
-                              Close
-                            </a>
-                            <a href="comingsoon" className="btn btn-primary">
-                              Save changes
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
                     <ChatInput handleSendMsg={handleSendMsg} />
                   </div>
                 </div>

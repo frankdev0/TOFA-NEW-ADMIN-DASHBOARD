@@ -3,6 +3,11 @@ import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { axios } from "../components/baseUrl";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
 
 const ConfirmPassword = () => {
   const navigate = useNavigate();
@@ -13,11 +18,24 @@ const ConfirmPassword = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
+  const [tokenError, setTokenError] = useState("");
+  const [icon, setIcon] = useState(eye);
+  const [type, setType] = useState("text");
 
   const { userId, setPasswordToken } = useParams();
 
   const handleChange = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
+  };
+
+  const handleToggle = () => {
+    if (type === "password") {
+      setType("text");
+      setIcon(eye);
+    } else {
+      setType("password");
+      setIcon(eyeOff);
+    }
   };
 
   const validate = (values) => {
@@ -53,19 +71,40 @@ const ConfirmPassword = () => {
         token: setPasswordToken,
         employeeID: userId,
       });
-      setPopupMsg("password has been set for this User!");
+      setIsSubmit(true);
+      setTimeout(() => {
+        navigate("/securityquestion");
+      }, 2000);
+      toast.success("PASSWORD HAS BEEN SET FOR THIS USER", {
+        position: "top-right",
+        autoClose: 2000,
+        pauseHover: true,
+        draggable: true,
+      });
     } catch (err) {
-      console.log(err);
-    }
-    if (isSubmit) {
-      navigate("/securityquestion");
+      if (err.response.status === 400) {
+        setTokenError("Invalid token");
+        console.log("error message", err.response);
+      }
+
+      if (err.response.status === 400) {
+        toast.error("FAILED TRY AGAIN", {
+          position: "top-right",
+          autoClose: 4000,
+          pauseHover: true,
+          draggable: true,
+        });
+      }
     }
   };
   return (
     <div>
       <section>
+        <ToastContainer />
         <div className="splash-container">
-          <div className="bg-success text-light mx-auto">{popupMsg}</div>
+          <div className="bg-success text-light mx-auto my-4 px-5">
+            {popupMsg}
+          </div>
           <div className="card ">
             <div className="card-header text-center">
               <div>
@@ -82,18 +121,21 @@ const ConfirmPassword = () => {
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="input-field form-group">
                   <input
                     className="form-control form-control-lg"
-                    type="text"
+                    type={type}
                     name="password"
                     placeholder="password"
                     autoComplete="off"
                     onChange={handleChange}
                   />
+                  <span>
+                    <Icon onClick={handleToggle} icon={icon} size={15} />{" "}
+                  </span>
                 </div>
 
-                <div className="form-group">
+                <div className="input-field form-group">
                   <input
                     className="form-control form-control-lg"
                     id="password"
@@ -104,6 +146,7 @@ const ConfirmPassword = () => {
                   />
                   <p className="text-danger">{formErrors.password}</p>
                 </div>
+                <p className="text-danger">{tokenError}</p>
                 {/* {formErrors.pass} */}
                 <button type="submit" className="btn btn-dark">
                   Set Password

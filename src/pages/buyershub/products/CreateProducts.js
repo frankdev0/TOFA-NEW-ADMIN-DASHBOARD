@@ -487,6 +487,20 @@ const CreateProducts = () => {
                 </div> */}
               </div>
 
+              <div className="row" style={{ textAlign: "left" }}>
+                <div className="col-4">
+                  <label className="form-label">Commodity Tag</label>
+                  <select className="form-control">
+                    <option>select commodity tag</option>
+                    <option>Cashew Nuts</option>
+                    <option>Sesame seeds</option>
+                    <option>Soyabeans</option>
+                    <option>Ginger</option>
+                    <options>Groundnuts</options>
+                  </select>
+                </div>
+              </div>
+
               <div className="mb-3" style={{ textAlign: "left" }}>
                 <label className="form-label">Description</label>
                 <textarea
