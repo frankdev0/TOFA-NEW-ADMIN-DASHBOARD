@@ -38,7 +38,7 @@ const Faqs = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 2000);
+      }, 2500);
     });
   }, []);
 

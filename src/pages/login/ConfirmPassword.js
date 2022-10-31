@@ -19,8 +19,8 @@ const ConfirmPassword = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [popupMsg, setPopupMsg] = useState("");
   const [tokenError, setTokenError] = useState("");
-  const [icon, setIcon] = useState(eye);
-  const [type, setType] = useState("text");
+  const [icon, setIcon] = useState(eyeOff);
+  const [type, setType] = useState("password");
 
   const { userId, setPasswordToken } = useParams();
 
@@ -29,12 +29,12 @@ const ConfirmPassword = () => {
   };
 
   const handleToggle = () => {
-    if (type === "password") {
-      setType("text");
-      setIcon(eye);
-    } else {
+    if (type === "text") {
       setType("password");
       setIcon(eyeOff);
+    } else {
+      setType("text");
+      setIcon(eye);
     }
   };
 
@@ -65,22 +65,24 @@ const ConfirmPassword = () => {
     try {
       e.preventDefault();
       setFormErrors(validate(userInfo));
-      setIsSubmit(true);
-      await axios.post("/auth/set-employee-password", {
+      setIsSubmit(false);
+      const result = await axios.post("/auth/set-employee-password", {
         password: userInfo.password,
         token: setPasswordToken,
         employeeID: userId,
       });
       setIsSubmit(true);
-      setTimeout(() => {
-        navigate("/securityquestion");
-      }, 2000);
-      toast.success("PASSWORD HAS BEEN SET FOR THIS USER", {
-        position: "top-right",
-        autoClose: 2000,
-        pauseHover: true,
-        draggable: true,
-      });
+      if (result.status === 201) {
+        toast.success("PASSWORD HAS BEEN SET FOR THIS USER", {
+          position: "top-right",
+          autoClose: 2000,
+          pauseHover: true,
+          draggable: true,
+        });
+        setTimeout(() => {
+          navigate("/securityquestion");
+        }, 3000);
+      }
     } catch (err) {
       if (err.response.status === 400) {
         setTokenError("Invalid token");
@@ -144,8 +146,8 @@ const ConfirmPassword = () => {
                     placeholder="Confirm Password"
                     onChange={handleChange}
                   />
-                  <p className="text-danger">{formErrors.password}</p>
                 </div>
+                <p className="text-danger">{formErrors.password}</p>
                 <p className="text-danger">{tokenError}</p>
                 {/* {formErrors.pass} */}
                 <button type="submit" className="btn btn-dark">

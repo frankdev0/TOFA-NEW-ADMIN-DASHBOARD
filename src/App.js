@@ -48,6 +48,7 @@ function App() {
   const { user, userLoading } = useContext(AppContext);
 
   if (userLoading) {
+    setTimeout(() => {}, 3000);
     return (
       <div
         className="spinner mx-auto"
@@ -172,7 +173,7 @@ function App() {
                 <Route exact path="/message" element={<MessageCenter />} />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {user && user.type === "SOURCE_PRO_ADMIN" ? (
@@ -206,7 +207,7 @@ function App() {
                 <Route exact path="/buyers" element={<Buyers />} />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {user && user.type === "SOURCE_PRO_AGENT" ? (
@@ -238,7 +239,7 @@ function App() {
                 />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {user && user.type === "MARKETPLACE_ADMINN" ? (
@@ -248,7 +249,7 @@ function App() {
                 <Route exact path="/message" element={<MessageCenter />} />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {user && user.type === "WEBSITE_ADMIN" ? (
@@ -298,7 +299,7 @@ function App() {
                 <Route exact path="/overview" element={<Overview />} />
               </Route>
             ) : (
-              <Route exact path="/*" element={<Unauthorized />} />
+              <Route exact path="/unauthorized" element={<Unauthorized />} />
             )}
 
             {/* </Route> */}

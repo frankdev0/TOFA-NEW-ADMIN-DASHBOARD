@@ -28,20 +28,20 @@ const Users = () => {
     }
   };
 
-  const handleDelete = (faqID) => {
-    axios.delete(`/faq/${faqID}`).then(() => {
+  const handleDelete = (employeeID) => {
+    axios.delete(`/auth/employees/${employeeID}`).then(() => {
       getData();
     });
   };
 
-  const submit = (faqID) => {
+  const submit = (employeeID) => {
     confirmAlert({
       title: "Confirm Delete",
       message: "Are you sure to do this.",
       buttons: [
         {
           label: "Yes",
-          onClick: (e) => handleDelete(faqID),
+          onClick: (e) => handleDelete(employeeID),
         },
         {
           label: "No",

@@ -1,10 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import logo from "../../../assets/logo.JPG";
-import avatar3 from "../../../assets/avatar-3.jpg";
-
 import { axios } from "../baseUrl";
 import { useNavigate } from "react-router-dom";
 import "./navbar.css";
+import { AppContext } from "../../../utils/contexts/AppState";
 
 const Navbar = () => {
   const [currentUser, setCurrentUser] = useState();
@@ -12,6 +11,13 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const toggleRef = useRef();
+
+  const dataResponse = useContext(AppContext);
+  const employee = dataResponse.user.fullName;
+
+  const Capitalize = (str) => {
+    return str.charAt(0);
+  };
 
   const handleLogout = () => {
     axios
@@ -56,12 +62,18 @@ const Navbar = () => {
           <ul className="navbar-nav ml-auto navbar-right-top">
             <li className="nav-item">
               <div id="custom-search" className="top-search-bar">
-                <img
-                  src={avatar3}
-                  alt="tobad"
-                  className="user-avatar-md rounded-circle"
+                <div
+                  style={{
+                    backgroundColor: "gray",
+                    padding: "8px",
+                    borderRadius: "50%",
+                    color: "#fff",
+                  }}
                   onClick={() => setToggleLogout(!toggleLogout)}
-                />
+                >
+                  {employee && Capitalize(employee)}
+                </div>
+
                 {/* <input
                   className="form-control"
                   type="text"

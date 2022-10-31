@@ -3,6 +3,7 @@ import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
+import swal from "sweetalert";
 
 const SecurityQuestion = () => {
   const navigate = useNavigate();
@@ -56,11 +57,18 @@ const SecurityQuestion = () => {
       const res = await axios.post("/auth/security-questions", {
         securityQuestions: securityQuestions,
       });
-
-      console.log(res.data);
       setIsSubmit(true);
 
-      navigate("/overview");
+      console.log(res.data);
+      if (res.status === 201) {
+        swal({
+          title: "Account Activated",
+          text: "You've Successfully Set Security Question For this Account",
+          icon: "success",
+          button: "ok",
+        });
+        navigate("/overview");
+      }
     } catch (err) {
       if (err) {
         console.log("error message", err);

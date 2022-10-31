@@ -16,10 +16,11 @@ const Login = () => {
     password: "",
   });
   const [formErrors, setFormErrors] = useState({});
-  const [icon, setIcon] = useState(eye);
-  const [type, setType] = useState("text");
+  const [icon, setIcon] = useState(eyeOff);
+  const [type, setType] = useState("password");
 
   const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // const { currentUser } = useContext(AuthContext);
   // console.log("This is the currently signed in user", currentUser);
@@ -35,12 +36,12 @@ const Login = () => {
   };
 
   const handleToggle = () => {
-    if (type === "password") {
-      setType("text");
-      setIcon(eye);
-    } else {
+    if (type === "text") {
       setType("password");
       setIcon(eyeOff);
+    } else {
+      setType("text");
+      setIcon(eye);
     }
   };
 
@@ -48,10 +49,19 @@ const Login = () => {
     try {
       e.preventDefault();
       console.log({ userInfo });
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+      setLoading(true);
       const { data } = await axios.post("/auth/signin-employee", {
         email: userInfo.email,
         password: userInfo.password,
       });
+      setLoading(true);
+
+      if (data) {
+        navigate("/overview");
+      }
       // dispatch({ type: "LOGIN", payload: data });
       console.log(data);
     } catch (err) {
@@ -126,7 +136,12 @@ const Login = () => {
                   )}
                 </div>
                 {/* {formErrors.pass} */}
-                <button type="submit" className="btn btn-dark btn-lg btn-block">
+                <button
+                  type="submit"
+                  className="btn btn-dark btn-lg btn-block"
+                  disabled={loading}
+                >
+                  {loading && <i class="fa fa-spinner" aria-hidden="true"></i>}
                   Sign in
                 </button>
               </form>

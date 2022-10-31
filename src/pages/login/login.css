@@ -10,7 +10,7 @@ section {
 .input-field {
     width: 340px;
     height: 45px;
-    background-color: #fff;
+
 
     border: 0.5px solid gray;
     display: flex;
@@ -24,3 +24,16 @@ section {
     border: hidden;
     background-color: transparent ;
 }
+
+.pin {
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #333;
+    border-radius: 50%;
+    width: 10px;
+    height: 120px;
+    animation: spin 1s linear infinite;
+}
+
+
+
+

@@ -28,9 +28,15 @@ const MessageCenter = () => {
   const dataResponse = useContext(AppContext);
   const employee = dataResponse.user.fullName;
 
+  const Capitalize = (str) => {
+    return str.charAt(0);
+  };
+
   useEffect(() => {
     if (user) {
-      socket.current = io("http://localhost:8081");
+      socket.current = io(
+        "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com"
+      );
       socket.current.emit(socketEvents.addUser, user.id, user.type);
       socket.current.on(socketEvents.receiveMessage, (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
@@ -97,7 +103,7 @@ const MessageCenter = () => {
         <Sidebar />
 
         {/* <!-- wrapper  --> */}
-        <div className="dashboard-wrapper">
+        <div className="dashboard-wrap">
           <div className="container-fluid pr-0">
             <div className="page-aside">
               <div className="aside-content">
@@ -139,7 +145,9 @@ const MessageCenter = () => {
 
             <div className="main-content container-fluid p-0">
               <div className="chat-header bg-white border-bottom">
-                <h2 className="active-user-chat">{employee}</h2>
+                <h2 className="active-user-chat">
+                  {employee && Capitalize(employee)}
+                </h2>
               </div>
               <div className="content-container">
                 <div className="chat-module">

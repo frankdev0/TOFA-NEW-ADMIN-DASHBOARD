@@ -496,7 +496,7 @@ const CreateProducts = () => {
                     <option>Sesame seeds</option>
                     <option>Soyabeans</option>
                     <option>Ginger</option>
-                    <options>Groundnuts</options>
+                    <option>Groundnuts</option>
                   </select>
                 </div>
               </div>

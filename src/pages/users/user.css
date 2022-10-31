@@ -17,3 +17,15 @@
   justify-content: center;
   text-align: left;
 }
+
+.user-input{
+  padding: 1rem !important;
+  border-radius: 0.5rem !important;
+  height: 55px !important;
+}
+
+.user-submit{
+  width: 100% !important;
+  height: 55px !important;
+  border-radius: 0.5rem !important;
+}

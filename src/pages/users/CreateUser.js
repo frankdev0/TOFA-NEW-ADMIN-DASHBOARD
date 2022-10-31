@@ -12,7 +12,7 @@ import { toast, ToastContainer } from "react-toastify";
 const CreateUsers = () => {
   const [file, setFile] = useState("");
   const [formErrors, setFormErrors] = useState({});
-  const [customError, setCustomError] = useState({});
+  const [customError, setCustomError] = useState([]);
   // const [info, setInfo] = useState("");
   const [user, setUser] = useState({
     fullName: "",
@@ -38,7 +38,7 @@ const CreateUsers = () => {
       setTimeout(() => {
         navigate(-1);
       }, 2000);
-      toast.success("SUCCESSFULLY CREATED FAQ", {
+      toast.success("SUCCESSFULLY CREATED EMPLOYEE", {
         position: "top-right",
         autoClose: 4000,
         pauseHover: true,
@@ -56,8 +56,15 @@ const CreateUsers = () => {
         );
       } else {
         console.log(err.response.data.errors[0].message);
-        setCustomError();
-        alert(customError);
+        setCustomError(err.response.data.errors[0].message);
+        if (err.response.data.errors[0].message) {
+          toast.error("EMPLOYEE EMAIL ALREADY EXIST", {
+            position: "top-right",
+            autoClose: 4000,
+            pauseHover: true,
+            draggable: true,
+          });
+        }
       }
     }
   };
@@ -67,6 +74,7 @@ const CreateUsers = () => {
       <Navbar />
       <Sidebar />
       <div className="dashboard-wrapper">
+        <ToastContainer />
         <div className="container-fluid dashboard-content">
           <div className="single">
             <div className="row">
@@ -78,12 +86,12 @@ const CreateUsers = () => {
                 className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                 align="right"
               >
-                <button
-                  className="btn btn-dark px-4"
+                <i
+                  className="fa fa-arrow-left"
+                  style={{ fontSize: "1.25rem" }}
+                  aria-hidden="true"
                   onClick={() => navigate(-1)}
-                >
-                  Back
-                </button>
+                ></i>
               </div>
             </div>
 
@@ -102,11 +110,11 @@ const CreateUsers = () => {
                       onChange={(e) => setFile(e.target.files[0])}
                     />
                   </div> */}
-                  <label className="l">Full Name</label>
+                  {/* <label className="l">Full Name</label> */}
                   <input
-                    className="form-control"
+                    className="form-control user-input"
                     type="text"
-                    placeholder=""
+                    placeholder="Full Name"
                     name="fullName"
                     onChange={handleChange}
                   />
@@ -114,22 +122,24 @@ const CreateUsers = () => {
                     <p className="text-danger">{formErrors.fullName}</p>
                   )}
 
-                  <label className="la">Email</label>
-                  <input
-                    className="form-control"
-                    type="email"
-                    placeholder=""
-                    name="email"
-                    onChange={handleChange}
-                  />
+                  {/* <label className="la">Email</label> */}
+                  <div className="my-3">
+                    <input
+                      className="form-control user-input"
+                      placeholder="Email"
+                      type="email"
+                      name="email"
+                      onChange={handleChange}
+                    />
+                  </div>
 
                   {formErrors.email && (
                     <p className="text-danger">{formErrors.email}</p>
                   )}
 
-                  <label className="lab">Phone Number</label>
+                  {/* <label className="lab">Phone Number</label> */}
                   <input
-                    className="form-control"
+                    className="form-control user-input"
                     type="number"
                     placeholder="Phone Number"
                     name="phoneNumber"
@@ -138,24 +148,28 @@ const CreateUsers = () => {
                   {formErrors.phoneNumber && (
                     <p className="text-danger">{formErrors.phoneNumber}</p>
                   )}
-                  <label className="la">Role</label>
-                  <select
-                    className="form-control bg-light"
-                    onChange={handleChange}
-                    name="role"
-                  >
-                    {" "}
-                    <option>....Please Select a Role</option>
-                    <option>SUPER_ADMIN</option>
-                    <option>SOURCE_PRO_ADMIN</option>
-                    <option>MARKETPLACE_ADMINN</option>
-                    <option>FINANCE</option>
-                    <option>WEBSITE_ADMIN</option>
-                    <option>SOURCE_PRO_AGENT</option>
-                  </select>
-                  {formErrors.role && (
-                    <p className="text-danger">{formErrors.role}</p>
-                  )}
+                  <div className="my-3">
+                    <select
+                      className="form-control bg-light user-input"
+                      onChange={handleChange}
+                      name="role"
+                    >
+                      {" "}
+                      <option>....Please Select a Role</option>
+                      <option>SUPER_ADMIN</option>
+                      <option>SOURCE_PRO_ADMIN</option>
+                      <option>MARKETPLACE_ADMINN</option>
+                      <option>FINANCE</option>
+                      <option>WEBSITE_ADMIN</option>
+                      <option>SOURCE_PRO_AGENT</option>
+                    </select>
+                    {formErrors.role && (
+                      <p className="text-danger">{formErrors.role}</p>
+                    )}
+                    {customError && (
+                      <span className="text-danger my-3">{customError}</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="col-6">
@@ -167,7 +181,7 @@ const CreateUsers = () => {
                 </div>
 
                 <button
-                  className=" mx-3 my-5 btn btn-dark "
+                  className=" mx-3 my-3 btn btn-dark user-submit"
                   type="submit"
                   style={{ maxWidth: "150px" }}
                 >
