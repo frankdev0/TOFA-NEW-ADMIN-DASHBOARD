@@ -38,6 +38,9 @@ function ChatInput({ handleSendMsg }) {
         rows="1"
         onChange={handleSetMessage}
         value={msg}
+        onKeyDown={(event) => {
+          event.key === "Enter" && handleSendMessage(event);
+        }}
       />
       <div className="chat-form-buttons">
         <button type="button" className="btn btn-link">

@@ -20,6 +20,7 @@ const Buyers = () => {
         console.log(response.data);
         setBuyer(response.data.data);
         setLoading(true);
+        console.log(response.data.data);
       });
     } catch (error) {
       console.log(error.response.data.erros);

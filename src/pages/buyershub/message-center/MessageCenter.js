@@ -28,9 +28,9 @@ const MessageCenter = () => {
   const dataResponse = useContext(AppContext);
   const employee = dataResponse.user.fullName;
 
-  const Capitalize = (str) => {
-    return str.charAt(0);
-  };
+  // const Capitalize = (str) => {
+  //   return str.charAt(0);
+  // };
 
   useEffect(() => {
     if (user) {
@@ -39,6 +39,7 @@ const MessageCenter = () => {
       );
       socket.current.emit(socketEvents.addUser, user.id, user.type);
       socket.current.on(socketEvents.receiveMessage, (msg) => {
+        console.log("this ran");
         setArrivalMessage({ fromSelf: false, message: msg });
       });
     }
@@ -50,7 +51,7 @@ const MessageCenter = () => {
         const {
           data: { data },
         } = await axios.get(
-          `/message/receive-message/4419e026-33e3-404a-9ecb-5b47d79943a1`
+          `/message/receive-message/b93998b2-d1c8-460a-97e5-46fa3cd1541f`
         );
         console.log(data);
         setMessages(data);
@@ -72,7 +73,7 @@ const MessageCenter = () => {
   const handleSendMsg = (msg) => {
     try {
       const payload = {
-        to: "4419e026-33e3-404a-9ecb-5b47d79943a1",
+        to: "b93998b2-d1c8-460a-97e5-46fa3cd1541f",
         from: user.id,
         message: msg,
         messageType: "MESSAGE",
@@ -84,9 +85,9 @@ const MessageCenter = () => {
       socket.current.emit(socketEvents.sendMessage, payload);
       axios.post("/message/send-message", payload);
 
-      const msgs = [...messages];
-      msgs.push({ fromSelf: true, message: msg });
-      setMessages(msgs);
+      // const msgs = [...messages];
+      // msgs.push({ fromSelf: true, message: msg });
+      // setMessages(msgs);
     } catch (error) {
       console.log(error);
     }
@@ -145,9 +146,7 @@ const MessageCenter = () => {
 
             <div className="main-content container-fluid p-0">
               <div className="chat-header bg-white border-bottom">
-                <h2 className="active-user-chat">
-                  {employee && Capitalize(employee)}
-                </h2>
+                <h2 className="active-user-chat">{employee}</h2>
               </div>
               <div className="content-container">
                 <div className="chat-module">
@@ -162,16 +161,22 @@ const MessageCenter = () => {
                         {messages.map((msg, index) => {
                           return (
                             <div
-                              className="media-body"
+                              className={
+                                msg.fromSelf ? "mediaa-body" : "media-body"
+                              }
                               ref={scrollRef}
                               key={index}
                             >
-                              <div className="chat-item-body">
-                                {msg.message}
+                              <div
+                                className={msg.fromSelf ? "sender" : "receiver"}
+                              >
+                                <div className="chat-item-ody">
+                                  {msg.message}
+                                  <p className="chat-timestamp">
+                                    {dayjs(msg.createdAt).format("hh:mm a")}
+                                  </p>
+                                </div>
                               </div>
-                              <span>
-                                {dayjs(msg.time).format("D MMMM YYYY")}
-                              </span>
                             </div>
                           );
                         })}

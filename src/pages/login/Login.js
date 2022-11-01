@@ -49,9 +49,6 @@ const Login = () => {
     try {
       e.preventDefault();
       console.log({ userInfo });
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
       setLoading(true);
       const { data } = await axios.post("/auth/signin-employee", {
         email: userInfo.email,
