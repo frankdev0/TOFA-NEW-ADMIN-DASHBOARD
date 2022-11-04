@@ -7,6 +7,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Disputes = () => {
   const [disputes, setDisputes] = useState([]);
@@ -304,4 +305,4 @@ const Disputes = () => {
   );
 };
 
-export default Disputes;
+export default Protectedd(Disputes);

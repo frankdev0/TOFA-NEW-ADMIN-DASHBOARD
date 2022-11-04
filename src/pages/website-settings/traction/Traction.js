@@ -13,6 +13,7 @@ import $ from "jquery";
 
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Tractions = () => {
   const [traction, setTraction] = useState([]);
@@ -318,4 +319,4 @@ const Tractions = () => {
   );
 };
 
-export default Tractions;
+export default Protectedd(Tractions, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

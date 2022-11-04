@@ -69,28 +69,35 @@ const Sidebar = () => {
                       style={{ textAlign: "left" }}
                     >
                       <li className="nav-item">
+                        <a className="nav-link" href="/banners">
+                          Banners
+                        </a>
+                      </li>
+                      <li className="nav-item">
                         <a className="nav-link" href="/commodityinsight">
                           Commodity Insight
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link active" href="/faq">
+                        <a className="nav-link " href="/faq">
                           FAQ's
                         </a>
                       </li>
+
                       <li className="nav-item">
-                        <a className="nav-link" href="/traction">
-                          Traction
+                        <a className="nav-link" href="/partnerships">
+                          Partnerships
                         </a>
                       </li>
+
                       <li className="nav-item">
                         <a className="nav-link" href="/testimonial">
                           Testimonials
                         </a>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="/banners">
-                          Banners
+                        <a className="nav-link" href="/traction">
+                          Traction
                         </a>
                       </li>
                     </ul>
@@ -268,6 +275,11 @@ const Sidebar = () => {
               <div className="sidebar-content">
                 <ul className="nav flex-column">
                   <li className="nav-item">
+                    <a className="nav-link" href="/banners">
+                      Banners
+                    </a>
+                  </li>
+                  <li className="nav-item">
                     <a className="nav-link" href="/commodityinsight">
                       Commodity Insight
                     </a>
@@ -278,8 +290,8 @@ const Sidebar = () => {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/traction">
-                      Traction
+                    <a className="nav-link" href="/partnerships">
+                      Partnerships
                     </a>
                   </li>
                   <li className="nav-item">
@@ -288,8 +300,8 @@ const Sidebar = () => {
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link" href="/banners">
-                      Banners
+                    <a className="nav-link" href="/traction">
+                      Traction
                     </a>
                   </li>
                 </ul>

@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { axios } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const EditBanner = () => {
   const editorRef = useRef();
@@ -168,4 +169,4 @@ const EditBanner = () => {
   );
 };
 
-export default EditBanner;
+export default Protectedd(EditBanner, ["SUPER_ADMIN", "WEBSITE_ADMIN"]);

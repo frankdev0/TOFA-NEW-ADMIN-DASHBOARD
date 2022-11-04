@@ -9,9 +9,12 @@ import "./message.css";
 import { NewOrderModal } from "./NewOrder";
 import ChatInput from "./ChatInput";
 import { axios } from "../../components/baseUrl";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const MessageCenter = () => {
   const [messages, setMessages] = useState([]);
+  // const [viewLoader, setViewLoader] = useState([])
+  const [viewMessage, setViewMessage] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
   const socket = useRef();
@@ -60,6 +63,15 @@ const MessageCenter = () => {
       }
     })();
   }, []);
+
+  const showDetails = (messageID) => {
+    //  setViewLoader(true);
+    axios.get(`/message/receive-message/${messageID}`).then((response) => {
+      setViewMessage(response.data);
+      console.log(response.data);
+      //  setViewLoader(false);
+    });
+  };
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -123,21 +135,31 @@ const MessageCenter = () => {
                 </div>
                 <div className="aside-nav collapse aside-body">
                   <div className="chat-list">
-                    <a href="comingsoon" className="btn-account" role="button">
-                      <span className="user-avatar">
+                    {/* <a href="comingsoon" className="btn-account" role="button"> */}
+                    {/* <span className="user-avatar">
                         <img
                           src={avatar1}
                           alt="User Avatar"
                           className="user-avatar-lg rounded-circle"
                         />
-                      </span>
-                      <div className="account-summary">
-                        <h5 className="account-name">John Abraham</h5>
-                        <span className="account-description">
-                          john.ab@gmail.com
-                        </span>
-                      </div>
-                    </a>
+                      </span> */}
+
+                    {messages.map((item, index) => {
+                      return (
+                        <div
+                          key={item.id}
+                          className=" d-flex account-summary my-2"
+                          onClick={(e) => showDetails(item.id)}
+                        >
+                          <h5 className="account-name">{index + 1}</h5>
+
+                          <span className="account-description px-2">
+                            {item && item.fromSelf === false && item.message}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    {/* </a> */}
                     <hr />
                   </div>
                 </div>
@@ -152,35 +174,41 @@ const MessageCenter = () => {
                 <div className="chat-module">
                   <div className="chat-module-top">
                     <div className="chat-module-body border-bottom">
-                      <div>
-                        <img
-                          alt="Kimberly"
-                          src={avatar1}
-                          className="rounded-circle user-avatar-lg"
-                        />
-                        {messages.map((msg, index) => {
-                          return (
-                            <div
-                              className={
-                                msg.fromSelf ? "mediaa-body" : "media-body"
-                              }
-                              ref={scrollRef}
-                              key={index}
-                            >
+                      {viewMessage ? (
+                        <div>...Select A User to Respond to</div>
+                      ) : (
+                        <div>
+                          <img
+                            alt="Kimberly"
+                            src={avatar1}
+                            className="rounded-circle user-avatar-lg"
+                          />
+                          {messages.map((msg, index) => {
+                            return (
                               <div
-                                className={msg.fromSelf ? "sender" : "receiver"}
+                                className={
+                                  msg.fromSelf ? "mediaa-body" : "media-body"
+                                }
+                                ref={scrollRef}
+                                key={index}
                               >
-                                <div className="chat-item-ody">
-                                  {msg.message}
-                                  <p className="chat-timestamp">
-                                    {dayjs(msg.createdAt).format("hh:mm a")}
-                                  </p>
+                                <div
+                                  className={
+                                    msg.fromSelf ? "sender" : "receiver"
+                                  }
+                                >
+                                  <div className="chat-item-ody">
+                                    {msg.message}
+                                    <p className="chat-timestamp">
+                                      {dayjs(msg.createdAt).format("hh:mm a")}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                      </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -219,4 +247,4 @@ const MessageCenter = () => {
   );
 };
 
-export default MessageCenter;
+export default Protectedd(MessageCenter);

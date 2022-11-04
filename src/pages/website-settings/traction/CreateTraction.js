@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { dark } from "@mui/material/styles/createPalette";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const CreateTraction = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -153,4 +154,4 @@ const CreateTraction = () => {
   );
 };
 
-export default CreateTraction;
+export default Protectedd(CreateTraction, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

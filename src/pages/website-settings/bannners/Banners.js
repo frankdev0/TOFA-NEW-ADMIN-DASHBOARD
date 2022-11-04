@@ -6,11 +6,12 @@ import { axios } from "../../components/baseUrl";
 import dayjs from "dayjs";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Banners = () => {
   const [banner, setBanner] = useState([]);
   const [viewBanner, setViewBanner] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
@@ -18,9 +19,10 @@ const Banners = () => {
       axios.get("/banner").then((response) => {
         console.log(response.data.data);
         setBanner(response.data.data);
-        setLoading(true);
+        setLoading(false);
       });
     } catch (error) {
+      setLoading(false);
       console.log(error.response.data);
     }
   };
@@ -61,7 +63,7 @@ const Banners = () => {
     });
   };
 
-  if (!loading) {
+  if (loading) {
     return (
       <div
         className="spinner mx-auto"
@@ -321,4 +323,4 @@ const Banners = () => {
   );
 };
 
-export default Banners;
+export default Protectedd(Banners, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

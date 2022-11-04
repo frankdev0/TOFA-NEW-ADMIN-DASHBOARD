@@ -10,6 +10,7 @@ import "./faq.css";
 import "jquery/dist/jquery.min.js";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Faqs = () => {
   const [faq, setFaq] = useState([]);
@@ -315,4 +316,4 @@ const Faqs = () => {
   );
 };
 
-export default Faqs;
+export default Protectedd(Faqs, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

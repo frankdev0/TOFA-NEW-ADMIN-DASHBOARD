@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Protectedd } from "../../utils/Protectedd";
 
 const CreateUsers = () => {
   const [file, setFile] = useState("");
@@ -196,4 +197,4 @@ const CreateUsers = () => {
   );
 };
 
-export default CreateUsers;
+export default Protectedd(CreateUsers, ["SUPER_ADMIN"]);

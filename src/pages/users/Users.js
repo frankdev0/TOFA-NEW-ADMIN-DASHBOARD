@@ -9,6 +9,7 @@ import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 import { confirmAlert } from "react-confirm-alert";
 import { Link } from "react-router-dom";
+import { Protectedd } from "../../utils/Protectedd";
 
 const Users = () => {
   const [buyer, setBuyer] = useState([]);
@@ -291,4 +292,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Protectedd(Users, ["SUPER_ADMIN"]);

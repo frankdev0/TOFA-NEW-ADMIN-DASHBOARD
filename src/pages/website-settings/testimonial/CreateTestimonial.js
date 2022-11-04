@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { axios } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Protectedd } from "../../../utils/Protectedd";
 // import { useNavigate} from 'react-router-dom';
 
 const CreateTestimonial = () => {
@@ -166,4 +167,4 @@ const CreateTestimonial = () => {
   );
 };
 
-export default CreateTestimonial;
+export default Protectedd(CreateTestimonial, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

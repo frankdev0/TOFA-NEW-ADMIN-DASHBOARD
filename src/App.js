@@ -28,7 +28,7 @@ import EditFaq from "./pages/website-settings/faqs/EditFaq";
 import EditTestimonial from "./pages/website-settings/testimonial/EditTestimonial";
 import EditCommodity from "./pages/website-settings/commodityInsight/EditCommodity";
 import EditBanner from "./pages/website-settings/bannners/EditBannner";
-import ProtectedRoutes from "./pages/components/ProtectedRoutes";
+
 import Users from "./pages/users/Users";
 import ConfirmPassword from "./pages/login/ConfirmPassword";
 import SecurityQuestion from "./pages/login/SecurityQuestion";
@@ -40,271 +40,126 @@ import CreateTraction from "./pages/website-settings/traction/CreateTraction";
 import EditTraction from "./pages/website-settings/traction/EditTraction";
 import Bar from "./pages/components/sidebar/Bar";
 import ForgotPassword from "./pages/login/ForgotPassword";
+import Page404 from "./pages/components/page404/Page404";
+import Partnerships from "./pages/website-settings/partnerships/Partnerships";
+import CreatePartner from "./pages/website-settings/partnerships/CreatePartner";
+import EditPartner from "./pages/website-settings/partnerships/EditPartner";
 // import Protected from "./pages/components/Protected";
 
 function App() {
   // const [loading, setLoading] = useState(false)
 
-  const { user, userLoading } = useContext(AppContext);
+  // const { user, userLoading } = useContext(AppContext);
 
-  if (userLoading) {
-    setTimeout(() => {}, 3000);
-    return (
-      <div
-        className="spinner mx-auto"
-        align="center"
-        id="spinner"
-        style={{
-          position: "absolute",
-          top: "calc(50% - 60px)",
-          left: "calc(50% - 60px)",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          margin: "auto",
-        }}
-      ></div>
-    );
-  }
+  // if (userLoading) {
+  //   setTimeout(() => {}, 3000);
+  //   return (
+  //     <div
+  //       className="spinner mx-auto"
+  //       align="center"
+  //       id="spinner"
+  //       style={{
+  //         position: "absolute",
+  //         top: "calc(50% - 60px)",
+  //         left: "calc(50% - 60px)",
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         textAlign: "center",
+  //         margin: "auto",
+  //       }}
+  //     ></div>
+  //   );
+  // }
 
   return (
     <AppState>
       <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route exact path="/login" element={<Login />} />
-            <Route
-              exact
-              path="/set-password/:userId/:setPasswordToken"
-              element={<ConfirmPassword />}
-            />
+        {/* <BrowserRouter> */}
+        <Routes>
+          <Route exact path="/login" element={<Login />} />
+          <Route
+            exact
+            path="/set-password/:userId/:setPasswordToken"
+            element={<ConfirmPassword />}
+          />
 
-            <Route
-              exact
-              path="/securityquestion"
-              element={<SecurityQuestion />}
-            />
-            <Route exact path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            exact
+            path="/securityquestion"
+            element={<SecurityQuestion />}
+          />
+          <Route exact path="/forgot-password" element={<ForgotPassword />} />
 
-            {user && user.type === "SUPER_ADMIN" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/newcommodity" element={<NewCommodity />} />
-                <Route exact path="/orders" element={<Orders />} />
+          <Route path="page" element={<Page404 />} />
+          <Route exact path="/newcommodity" element={<NewCommodity />} />
+          <Route exact path="/orders" element={<Orders />} />
+          <Route exact path="/corders" element={<COrders />} />
+          <Route exact path="/message" element={<MessageCenter />} />
+          <Route exact path="/overview" element={<Overview />} />
+          <Route exact path="/testimonial" element={<Testimonial />} />
+          <Route exact path="/banners" element={<Banners />} />
+          <Route exact path="/products" element={<Products />} />
+          <Route exact path="/createbanner" element={<CreateBanner />} />
+          <Route exact path="/faq" element={<Faqs />} />
+          <Route exact path="/traction" element={<Tractions />} />
+          <Route exact path="bar" element={<Bar />} />
+          <Route exact path="/partnerships" element={<Partnerships />} />
+          <Route exact path="create-partner" element={<CreatePartner />} />
+          <Route
+            exact
+            path="edit-partner/:myPartnerId"
+            element={<EditPartner />}
+          />
 
-                <Route exact path="/corders" element={<COrders />} />
-                <Route exact path="/message" element={<MessageCenter />} />
-                <Route exact path="/overview" element={<Overview />} />
-                <Route exact path="/testimonial" element={<Testimonial />} />
-                <Route exact path="/banners" element={<Banners />} />
-                <Route exact path="/products" element={<Products />} />
-                <Route exact path="/createbanner" element={<CreateBanner />} />
-                <Route exact path="/faq" element={<Faqs />} />
-                <Route exact path="/traction" element={<Tractions />} />
-                <Route exact path="bar" element={<Bar />} />
-                <Route
-                  exact
-                  path="/edittraction/:tractionId"
-                  element={<EditTraction />}
-                />
-                <Route
-                  exact
-                  path="/createtraction"
-                  element={<CreateTraction />}
-                />
-                <Route
-                  exact
-                  path="/createproduct"
-                  element={<CreateProducts />}
-                />
-                <Route exact path="/disputes" element={<Disputes />} />
-                <Route exact path="/inquiry" element={<Inquiries />} />
-                <Route exact path="/applicants" element={<Applicants />} />
-                <Route
-                  exact
-                  path="/editproduct/:productId"
-                  element={<EditProducts />}
-                />
-                <Route exact path="/buyers" element={<Buyers />} />
-                <Route exact path="/editfaq/:myFaqId" element={<EditFaq />} />
-                <Route
-                  exact
-                  path="/edittestimonial/:myTestimonialId"
-                  element={<EditTestimonial />}
-                />
-                <Route
-                  exact
-                  path="/createtestimonial/"
-                  element={<CreateTestimonial />}
-                />
-                <Route
-                  exact
-                  path="/editbanner/:bannerId"
-                  element={<EditBanner />}
-                />
-                <Route
-                  exact
-                  path="/editcommodity/:commodityId"
-                  element={<EditCommodity />}
-                />
-                <Route exact path="/nav" element={<Navbar />} />
-                <Route exact path="/createuser" element={<CreateUser />} />
-                <Route exact path="/users" element={<Users />} />
-                <Route exact path="/sidebar" element={<Sidebar />} />
+          <Route
+            exact
+            path="/edittraction/:tractionId"
+            element={<EditTraction />}
+          />
+          <Route exact path="/createtraction" element={<CreateTraction />} />
+          <Route exact path="/createproduct" element={<CreateProducts />} />
+          <Route exact path="/disputes" element={<Disputes />} />
+          <Route exact path="/inquiry" element={<Inquiries />} />
+          <Route exact path="/applicants" element={<Applicants />} />
+          <Route
+            exact
+            path="/editproduct/:productId"
+            element={<EditProducts />}
+          />
+          <Route exact path="/buyers" element={<Buyers />} />
+          <Route exact path="/editfaq/:myFaqId" element={<EditFaq />} />
+          <Route
+            exact
+            path="/edittestimonial/:myTestimonialId"
+            element={<EditTestimonial />}
+          />
+          <Route
+            exact
+            path="/createtestimonial/"
+            element={<CreateTestimonial />}
+          />
+          <Route exact path="/editbanner/:bannerId" element={<EditBanner />} />
+          <Route
+            exact
+            path="/editcommodity/:commodityId"
+            element={<EditCommodity />}
+          />
+          <Route exact path="/unauthorized" element={<Unauthorized />} />
+          <Route exact path="/nav" element={<Navbar />} />
+          <Route exact path="/createuser" element={<CreateUser />} />
+          <Route exact path="/users" element={<Users />} />
+          <Route exact path="/sidebar" element={<Sidebar />} />
 
-                <Route exact path="/createfaq" element={<CreateFaq />} />
-                <Route
-                  exact
-                  path="/commodityInsight"
-                  element={<CommodityInsight />}
-                />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
+          <Route exact path="/createfaq" element={<CreateFaq />} />
+          <Route
+            exact
+            path="/commodityInsight"
+            element={<CommodityInsight />}
+          />
 
-            {user && user.type === "FINANCE" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/orders" element={<Orders />} />
-                <Route exact path="/overview" element={<Overview />} />
-                <Route exact path="/buyers" element={<Buyers />} />
-                <Route exact path="/disputes" element={<Disputes />} />
-                <Route exact path="/inquiry" element={<Inquiries />} />
-                <Route exact path="/applicants" element={<Applicants />} />
-                <Route exact path="/message" element={<MessageCenter />} />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
-
-            {user && user.type === "SOURCE_PRO_ADMIN" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/orders" element={<Orders />} />
-                <Route exact path="/overview" element={<Overview />} />
-                <Route exact path="/disputes" element={<Disputes />} />
-                <Route exact path="/inquiry" element={<Inquiries />} />
-                <Route exact path="/applicants" element={<Applicants />} />
-                <Route exact path="/message" element={<MessageCenter />} />
-                <Route
-                  exact
-                  path="/createproduct"
-                  element={<CreateProducts />}
-                />
-                <Route
-                  exact
-                  path="/editproduct/:productId"
-                  element={<EditProducts />}
-                />
-                <Route
-                  exact
-                  path="/commodityInsight"
-                  element={<CommodityInsight />}
-                />
-                <Route
-                  exact
-                  path="/editcommodity/:commodityId"
-                  element={<EditCommodity />}
-                />
-                <Route exact path="/buyers" element={<Buyers />} />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
-
-            {user && user.type === "SOURCE_PRO_AGENT" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/overview" element={<Overview />} />
-                <Route exact path="/disputes" element={<Disputes />} />
-                <Route exact path="/inquiry" element={<Inquiries />} />
-                <Route exact path="/applicants" element={<Applicants />} />
-                <Route exact path="/message" element={<MessageCenter />} />
-                <Route
-                  exact
-                  path="/editcommodity/:commodityId"
-                  element={<EditCommodity />}
-                />
-                <Route
-                  exact
-                  path="/createproduct"
-                  element={<CreateProducts />}
-                />
-                <Route
-                  exact
-                  path="/commodityInsight"
-                  element={<CommodityInsight />}
-                />
-                <Route
-                  exact
-                  path="/editproduct/:productId"
-                  element={<EditProducts />}
-                />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
-
-            {user && user.type === "MARKETPLACE_ADMINN" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/orders" element={<Orders />} />
-                <Route exact path="/overview" element={<Overview />} />
-                <Route exact path="/message" element={<MessageCenter />} />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
-
-            {user && user.type === "WEBSITE_ADMIN" ? (
-              <Route element={<ProtectedRoutes />}>
-                <Route exact path="/testimonial" element={<Testimonial />} />
-                <Route exact path="/banners" element={<Banners />} />
-                <Route exact path="/createbanner" element={<CreateBanner />} />
-                <Route exact path="/faq" element={<Faqs />} />
-                <Route exact path="/traction" element={<Tractions />} />
-                <Route exact path="bar" element={<Bar />} />
-                <Route
-                  exact
-                  path="/edittraction/:tractionId"
-                  element={<EditTraction />}
-                />
-                <Route exact path="/editfaq/:myFaqId" element={<EditFaq />} />
-                <Route
-                  exact
-                  path="/edittestimonial/:myTestimonialId"
-                  element={<EditTestimonial />}
-                />
-                <Route
-                  exact
-                  path="/createtestimonial/"
-                  element={<CreateTestimonial />}
-                />
-                <Route
-                  exact
-                  path="/editbanner/:bannerId"
-                  element={<EditBanner />}
-                />
-                <Route
-                  exact
-                  path="/editcommodity/:commodityId"
-                  element={<EditCommodity />}
-                />
-                <Route
-                  exact
-                  path="/createtraction"
-                  element={<CreateTraction />}
-                />
-                <Route
-                  exact
-                  path="/commodityInsight"
-                  element={<CommodityInsight />}
-                />
-                <Route exact path="/overview" element={<Overview />} />
-              </Route>
-            ) : (
-              <Route exact path="/unauthorized" element={<Unauthorized />} />
-            )}
-
-            {/* </Route> */}
-          </Routes>
-        </BrowserRouter>
+          {/* </Route> */}
+        </Routes>
+        {/* </BrowserRouter> */}
       </div>
     </AppState>
   );

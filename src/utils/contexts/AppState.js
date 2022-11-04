@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { axios } from "../../pages/components/baseUrl";
 
 export const AppContext = createContext();
@@ -11,19 +12,22 @@ const AppState = ({ children }) => {
   const [user, setUser] = useState("");
   const [userLoading, setUserLoading] = useState(true);
   const [metrics, setMetrics] = useState("");
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    axios
-      .get("/auth/current-user")
-      .then((response) => {
-        setUser(response.data.currentUser);
-        setUserLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setUserLoading(false);
-      });
-  }, []);
+  // useEffect(() => {
+  //   const { data } = axios
+  //     .get("/auth/current-user")
+  //     .then((response) => {
+  //       setUser(response.data.currentUser);
+  //       setUserLoading(false);
+  //       console.log("my data", data);
+  //     })
+  //     .catch((error) => {
+  //       // navigate("/login");
+  //       console.log(error);
+  //       setUserLoading(false);
+  //     });
+  // }, []);
 
   // useEffect(() => {
   //   axios
@@ -57,7 +61,15 @@ const AppState = ({ children }) => {
   //     ></div>
   //   );
   // }
-  const value = { user, userLoading, metrics };
+  const value = {
+    user,
+    userLoading,
+    metrics,
+    setUser,
+    setUserLoading,
+    setMetrics,
+  };
+
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 

@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const EditTraction = () => {
   const [id, setId] = useState(null);
@@ -182,4 +183,4 @@ const EditTraction = () => {
   );
 };
 
-export default EditTraction;
+export default Protectedd(EditTraction, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

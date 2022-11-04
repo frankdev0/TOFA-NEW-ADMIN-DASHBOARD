@@ -11,6 +11,7 @@ import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import { Link } from "react-router-dom";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Products = () => {
   const [product, setProduct] = useState([]);
@@ -71,7 +72,7 @@ const Products = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 2000);
+      }, 1500);
     });
   }, []);
   if (!loading) {
@@ -621,4 +622,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Protectedd(Products, ["SUPER_ADMIN", "SOURCE_PRO_ADMIN"]);

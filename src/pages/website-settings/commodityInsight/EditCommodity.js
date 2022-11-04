@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
 import JoditEditor from "jodit-react";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const EditCommodity = () => {
   const [name, setName] = useState("");
@@ -268,4 +269,8 @@ const EditCommodity = () => {
   );
 };
 
-export default EditCommodity;
+export default Protectedd(EditCommodity, [
+  "SUPER_ADMIN",
+  "SOURCE_PRO_ADMIN",
+  "FINANCE",
+]);

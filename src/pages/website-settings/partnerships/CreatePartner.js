@@ -5,24 +5,18 @@ import { axios } from "../../components/baseUrl";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { dark } from "@mui/material/styles/createPalette";
+import { Protectedd } from "../../../utils/Protectedd";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Protectedd } from "../../../utils/Protectedd";
 
-const CreateBanner = () => {
+const CreatePartner = () => {
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
-  const [banner, setBanner] = useState({
-    action: "",
-    link: "",
-    section: "",
-  });
+  const [partnerName, setPartnerName] = useState("");
+  //   const [partnerLogo, setPartnerLogo] = useState("")
 
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setBanner({ ...banner, [e.target.name]: e.target.value });
-  };
 
   const [selectedImages, setSelectedImages] = useState([]);
 
@@ -34,17 +28,17 @@ const CreateBanner = () => {
       return URL.createObjectURL(file);
     });
     setSelectedImages((previousImages) => previousImages.concat(imagesArray));
+  };
 
-    console.log(selectedFiles);
+  const handleChange = (e) => {
+    setPartnerName({ ...partnerName, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       const jsonData = {
-        callToAction: banner.action,
-        link: banner.link,
-        section: banner.section,
+        partnerName,
       };
       const formData = new FormData();
       for (const property in jsonData) {
@@ -52,24 +46,24 @@ const CreateBanner = () => {
       }
       formData.append("image", e.target.image.files[0]);
       console.log(e.target.image.files[0]);
-      const { data: result } = await axios.post("/banner", formData, {
+      const { data: result } = await axios.post("/partner", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       setTimeout(() => {
         navigate(-1);
-      }, 5000);
-      toast.success("SUCCESSFULLY CREATED NEW BANNER", {
+      }, 3000);
+      toast.success("SUCCESSFULLY CREATED FAQ", {
         position: "top-right",
         autoClose: 4000,
         pauseHover: true,
         draggable: true,
+        className: dark,
       });
       console.log(result);
     } catch (err) {
       if (err.response.data.errors[0].field) {
-        console.log(err.response.data.errors);
         setFormErrors(
           err.response.data.errors.reduce(function(obj, err) {
             obj[err.field] = err.message;
@@ -82,9 +76,18 @@ const CreateBanner = () => {
         alert(customError);
       }
     }
-    // if (formErrors.email || formErrors.password) {
-    //   navigate("/banner");
-    // }
+    if (!formErrors.question || !formErrors.answer) {
+      //   navigate("/faq");
+      // } else {
+      //   toast.error("FILL IN THE FIELDS"),
+      //     {
+      //       position: "top-right",
+      //       autoClose: 8000,
+      //       pauseHover: true,
+      //       draggable: true,
+      //       className: dark,
+      //     };
+    }
   };
 
   return (
@@ -100,13 +103,13 @@ const CreateBanner = () => {
 
           {/* <!-- wrapper  --> */}
           <div className="dashboard-wrapper">
-            <ToastContainer />
             <div className="container-fluid dashboard-content">
+              <ToastContainer />
               {/* <!-- pageheader --> */}
-              <div className="row">
+              <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  <div className="page-header" style={{ textAlign: "left" }}>
-                    <h2 className="pageheader-title">Banner</h2>
+                  <div className="page-header">
+                    <h2 className="pageheader-title">Partnerships</h2>
                   </div>
                 </div>
               </div>
@@ -115,68 +118,39 @@ const CreateBanner = () => {
               <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div className="card">
-                    <h4 className="card-header font-bold">Create Banner</h4>
+                    <h5 className="card-header">Edit Partner</h5>
                     <div className="card-body">
-                      <form onSubmit={handleSubmit}>
+                      <form>
                         <div className="form-group">
                           <label
                             htmlFor="inputText3"
                             className="col-form-label"
                           >
-                            Call to Action
+                            Partner Name
                           </label>
                           <input
-                            id="inputText3"
-                            name="action"
+                            name="partnerName"
                             type="text"
                             className="form-control"
                             onChange={handleChange}
                           />
-                          {formErrors.callToAction && (
+                          {formErrors.question && (
                             <p className="text-danger">
-                              {formErrors.callToAction}
+                              {formErrors.partnerName}
                             </p>
                           )}
                         </div>
                         <div className="form-group">
-                          <label
-                            htmlFor="inputText3"
-                            className="col-form-label"
-                          >
-                            Link
+                          <label htmlFor="exampleFormControlTextarea1">
+                            Upload Parnter Logo
                           </label>
-                          <input
-                            id="inputText3"
-                            name="link"
-                            type="text"
-                            className="form-control"
-                            onChange={handleChange}
-                          />
-                          {formErrors.link && (
-                            <p className="text-danger">{formErrors.link}</p>
-                          )}
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label mx-2">
-                            Upload Banner{" "}
-                            <select name="section" onChange={handleChange}>
-                              <option>...Select Banner</option>
-                              <option>Hero Section Banner</option>
-                              <option>Buyers Hub Slider</option>
-                            </select>
-                          </label>
-                          {formErrors.section && (
-                            <p className="text-danger">{formErrors.section}</p>
-                          )}
                           <input
                             type="file"
                             id="image"
                             name="image"
                             accept="image/*"
                             onChange={onSelectFile}
-                            multiple
                           />
-
                           <div className="iamges d-flex image-container">
                             {selectedImages &&
                               selectedImages.map((image, index) => {
@@ -216,13 +190,20 @@ const CreateBanner = () => {
                               })}
                             {console.log(selectedImages)}
                           </div>
-
-                          {formErrors.image && (
-                            <p className="text-danger">{formErrors.image}</p>
+                          {formErrors.answer && (
+                            <p className="text-danger">
+                              {formErrors.partnerLogo}
+                            </p>
                           )}
                         </div>
                         <div className="form-group">
-                          <button className="btn btn-dark">Save Banner</button>
+                          <button
+                            type="submit"
+                            className="btn btn-dark"
+                            onClick={handleSubmit}
+                          >
+                            Submit
+                          </button>
                         </div>
                       </form>
                     </div>
@@ -231,11 +212,10 @@ const CreateBanner = () => {
               </div>
             </div>
           </div>
-          {/* <!-- end main wrapper --> */}
         </div>
       </>
     </div>
   );
 };
 
-export default Protectedd(CreateBanner, ["SUPER_ADMIN", "WEBSITE_ADMIN"]);
+export default Protectedd(CreatePartner, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { axios } from "../../components/baseUrl";
+import { Protectedd } from "../../../utils/Protectedd";
 
 // import { useAppContext } from "../../../utils/contexts/AppContext";
 // import DropFileInput from "../../components/DropFileInput";
@@ -104,7 +105,7 @@ const EditProducts = () => {
       setFeaturedImage(
         response.data.data.productImages &&
           response.data.data.productImages.filter(
-            (image) => image.isMain == true
+            (image) => image.isMain === true
           )[0].image
       );
 
@@ -610,4 +611,4 @@ const EditProducts = () => {
   );
 };
 
-export default EditProducts;
+export default Protectedd(EditProducts, ["SUPER_ADMIN", "SOURCE_PRO_ADMIN"]);

@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const EditFaq = () => {
   const [id, setId] = useState(null);
@@ -183,4 +184,4 @@ const EditFaq = () => {
   );
 };
 
-export default EditFaq;
+export default Protectedd(EditFaq, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

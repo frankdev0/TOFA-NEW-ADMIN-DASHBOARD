@@ -7,6 +7,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Buyers = () => {
   const [buyer, setBuyer] = useState([]);
@@ -225,4 +226,8 @@ const Buyers = () => {
   );
 };
 
-export default Buyers;
+export default Protectedd(Buyers, [
+  "SUPER_ADMIN",
+  "SOURCE_PRO_ADMIN",
+  "FINANCE",
+]);

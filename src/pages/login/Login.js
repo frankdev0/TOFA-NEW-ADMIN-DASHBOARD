@@ -55,6 +55,7 @@ const Login = () => {
         password: userInfo.password,
       });
       setLoading(true);
+      console.log("new data", data);
 
       if (data) {
         navigate("/overview");
@@ -138,7 +139,9 @@ const Login = () => {
                   className="btn btn-dark btn-lg btn-block"
                   disabled={loading}
                 >
-                  {loading && <i class="fa fa-spinner" aria-hidden="true"></i>}
+                  {loading && (
+                    <i className="fa fa-spinner" aria-hidden="true"></i>
+                  )}
                   Sign in
                 </button>
               </form>

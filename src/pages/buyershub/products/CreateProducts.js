@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "./products.css";
 import { africanCountryData } from "./africanCountries";
+import { Protectedd } from "../../../utils/Protectedd";
 // import DropFileInput from "../../components/DropFileInput";
 // import OtherImages from "./OtherImages";
 
@@ -25,6 +26,7 @@ const CreateProducts = () => {
     subCategory: "",
     specification: "",
     productDescription: "",
+    commodityTag: "",
   });
   const [specifications, setSpecifications] = useState([
     { type: "", value: "" },
@@ -33,10 +35,6 @@ const CreateProducts = () => {
 
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
-  // const [file, setFile] = useState({
-  //   imageOne:"",
-  //   imageTwo:""
-  // })
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -65,17 +63,6 @@ const CreateProducts = () => {
     setSpecifications(values);
   };
 
-  //  const getCountry = () => {
-  //    const countries = document.getElementsByClassName("country-keys");
-
-  //    const country = [];
-  //    for (let i = 0; i < countries.length; i++) {
-  //      const [shortName, countryName] = countries[i].value.split("___");
-  //      if (shortName && countryName) country.push({ shortName, countryName });
-  //    }
-  //    return JSON.stringify(country);
-  //  };
-
   const getCountry = () => {
     const countries = document.getElementsByClassName("country-keys");
     const prices = document.getElementsByClassName("country-values");
@@ -95,7 +82,7 @@ const CreateProducts = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const specific = getSpecifications();
+
       const newCountry = getCountry();
       console.log("these are specs", specifications);
       console.log("these are countries", newCountry);
@@ -103,7 +90,7 @@ const CreateProducts = () => {
       const jsonData = {
         productName: capitalizeFirstLetter(productDetails.productName),
         currency: "USD",
-        category: "hazzle",
+        commodityTag: productDetails.commodityTag,
         parentCategory: productDetails.parentCategory,
         unitForMinOrder: productDetails.unitForMinOrder,
         unitForSupplyCapacity: productDetails.unitForSupplyCapacity,
@@ -488,9 +475,13 @@ const CreateProducts = () => {
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4">
+                <div className="col-12">
                   <label className="form-label">Commodity Tag</label>
-                  <select className="form-control">
+                  <select
+                    className="form-control"
+                    name="commodityTag"
+                    onChange={handleProductChange}
+                  >
                     <option>select commodity tag</option>
                     <option>Cashew Nuts</option>
                     <option>Sesame seeds</option>
@@ -592,4 +583,4 @@ const CreateProducts = () => {
   );
 };
 
-export default CreateProducts;
+export default Protectedd(CreateProducts, ["SUPER_ADMIN", "SOURCE_PRO_ADMIN"]);

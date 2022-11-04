@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { dark } from "@mui/material/styles/createPalette";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const CreateFaq = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -168,4 +169,4 @@ const CreateFaq = () => {
   );
 };
 
-export default CreateFaq;
+export default Protectedd(CreateFaq, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

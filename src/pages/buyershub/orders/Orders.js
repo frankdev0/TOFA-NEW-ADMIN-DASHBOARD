@@ -16,22 +16,26 @@ import $ from "jquery";
 import { axios } from "../../components/baseUrl";
 import dayjs from "dayjs";
 import { AppContext } from "../../../utils/contexts/AppState";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [order, setOrder] = useState([]);
   const [status, setStatus] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [metricsLoading, setMetricsLoading] = useState(true);
   const [viewLoader, setViewLoader] = useState(false);
+  const [metrics, setMetrics] = useState({});
 
   const getOrders = async () => {
     try {
       axios.get("/order").then((response) => {
         console.log(response.data);
         setOrders(response.data.data);
-        setLoading(true);
+        setLoading(false);
       });
     } catch (error) {
+      setLoading(false);
       console.log(error.response.data.erros);
     }
   };
@@ -57,7 +61,18 @@ const Orders = () => {
     }
   };
 
-  const { metrics } = useContext(AppContext);
+  useEffect(() => {
+    axios
+      .get("/admin/dashboard-metrics")
+      .then((response) => {
+        setMetrics(response.data.data);
+        setMetricsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setMetricsLoading(false);
+      });
+  }, []);
 
   // const handleCancel = () => {
   //   axios.patch("/order/cancel/{{orderID}}").then(() => {});
@@ -82,7 +97,7 @@ const Orders = () => {
     });
   };
 
-  if (!loading) {
+  if (loading || metricsLoading) {
     return (
       <div
         className="spinner mx-auto"
@@ -762,4 +777,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Protectedd(Orders, ["SUPER_ADMIN", "FINANCE"]);

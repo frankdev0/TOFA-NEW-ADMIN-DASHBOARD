@@ -1,12 +1,9 @@
 import React from "react";
-import { useOutletContext } from "react-router-dom";
+import { Protectedd } from "../../utils/Protectedd";
 import Navbar from "../components/navbar/Navbar";
 import Sidebar from "../components/sidebar/Sidebar";
 
 const Overview = () => {
-  const [currentUser] = useOutletContext();
-  console.log(currentUser);
-
   return (
     <div>
       <div>
@@ -156,4 +153,4 @@ const Overview = () => {
   );
 };
 
-export default Overview;
+export default Protectedd(Overview);

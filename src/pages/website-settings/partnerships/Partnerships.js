@@ -11,20 +11,21 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { Protectedd } from "../../../utils/Protectedd";
 
-const Testimonial = () => {
-  const [testimonial, setTestimonial] = useState([]);
-  const [viewTestimonial, setViewTestimonial] = useState([]);
-  const [loading, setLoading] = useState(false);
+const Partnerships = () => {
+  const [partners, setPartners] = useState([]);
+  const [viewPartner, setViewPartner] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
       axios.get("/testimonial").then((response) => {
-        setTestimonial(response.data.data);
-        setLoading(true);
+        setPartners(response.data.data);
+        setLoading(false);
       });
     } catch (error) {
       console.log(error.response.data.erros);
+      loading(false);
     }
   };
 
@@ -67,12 +68,12 @@ const Testimonial = () => {
   const showDetails = (testimonialID) => {
     setViewLoader(true);
     axios.get(`/testimonial/${testimonialID}`).then((response) => {
-      setViewTestimonial(response.data.data);
+      setViewPartner(response.data.data);
       setViewLoader(false);
     });
   };
 
-  if (!loading) {
+  if (loading) {
     return (
       <div
         className="spinner mx-auto"
@@ -108,15 +109,15 @@ const Testimonial = () => {
             <div className="row">
               <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                 <div className="page-header" style={{ textAlign: "left" }}>
-                  <h2 className="pageheader-title">Testimonials</h2>
+                  <h2 className="pageheader-title">Partnerships</h2>
                 </div>
               </div>
               <div
                 className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                 align="right"
               >
-                <a href="/createtestimonial" className="btn btn-dark">
-                  New Testimonial
+                <a href="/create-partner" className="btn btn-dark">
+                  New Partner
                 </a>
               </div>
             </div>
@@ -128,7 +129,7 @@ const Testimonial = () => {
                     className="card-header font-bold"
                     style={{ textAlign: "left" }}
                   >
-                    All Testimonial
+                    All Partners
                   </h5>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -148,7 +149,7 @@ const Testimonial = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {testimonial.map((item, index) => {
+                            {partners.map((item, index) => {
                               return (
                                 <tr key={item.id}>
                                   <td>{index + 1}</td>
@@ -245,7 +246,7 @@ const Testimonial = () => {
                                                 className="modal-title"
                                                 id="exampleModalLabel"
                                               >
-                                                TESTIMONIAL
+                                                PARTNERSHIP
                                               </h5>
                                               <button
                                                 type="button"
@@ -256,16 +257,12 @@ const Testimonial = () => {
                                             </div>
 
                                             <div className="modal-body">
+                                              <p>Name: {viewPartner.name}</p>
                                               <p>
-                                                Name: {viewTestimonial.name}
+                                                Company: {viewPartner.company}
                                               </p>
                                               <p>
-                                                Company:{" "}
-                                                {viewTestimonial.company}
-                                              </p>
-                                              <p>
-                                                Message:{" "}
-                                                {viewTestimonial.message}
+                                                Message: {viewPartner.message}
                                               </p>
                                             </div>
 
@@ -301,4 +298,4 @@ const Testimonial = () => {
   );
 };
 
-export default Protectedd(Testimonial, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);
+export default Protectedd(Partnerships, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);

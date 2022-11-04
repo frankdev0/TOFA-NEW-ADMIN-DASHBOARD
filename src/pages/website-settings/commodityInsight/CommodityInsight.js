@@ -16,6 +16,7 @@ import $ from "jquery";
 import { axios } from "../../components/baseUrl";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const CommodityInsight = () => {
   const [commodity, setCommodity] = useState([]);
@@ -387,4 +388,8 @@ const CommodityInsight = () => {
   );
 };
 
-export default CommodityInsight;
+export default Protectedd(CommodityInsight, [
+  "SUPER_ADMIN",
+  "SOURCE_PRO_ADMIN",
+  "FINANCE",
+]);

@@ -7,6 +7,7 @@ import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import JoditEditor from "jodit-react";
+import { Protectedd } from "../../../utils/Protectedd";
 
 const NewCommodity = () => {
   const editorRef = useRef();
@@ -243,4 +244,8 @@ const NewCommodity = () => {
   );
 };
 
-export default NewCommodity;
+export default Protectedd(NewCommodity, [
+  "SUPER_ADMIN",
+  "SOURCE_PRO_ADMIN",
+  "FINANCE",
+]);

@@ -2,36 +2,32 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { axios } from "../../components/baseUrl";
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../../utils/Protectedd";
 
-// import { useNavigate} from 'react-router-dom';
-
-const EditTestimonial = () => {
+const CreatePartner = () => {
   const [id, setId] = useState(0);
-  const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [message, setMessage] = useState("");
-  //   const [testimonialInfo, setTestimonialInfo] = useState({})
+  const [partnerName, setPartnerName] = useState("");
+  const [partnerLogo, setPartnerLogo] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [imageFile, setImageFile] = useState("");
+
+  //   const [partnerLogo, setPartnerLogo] = useState("")
 
   const navigate = useNavigate();
 
-  const { myTestimonialId } = useParams();
+  const { myPartnerId } = useParams();
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/testimonial/${myTestimonialId}`);
+      const response = await axios.get(`/testimonial/${myPartnerId}`);
       // setTestimonialInfo(response.data.data)
       console.log(response.data.data);
       setId(response.data.data.id);
-      setName(response.data.data.name);
-      setCompany(response.data.data.company);
-      setMessage(response.data.data.message);
+      setPartnerName(response.data.data.name);
+      setPartnerLogo(response.data.data.company);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -44,33 +40,28 @@ const EditTestimonial = () => {
   }, []);
 
   const handleUpdate = async (e) => {
-    try {
-      e.preventDefault();
-      await axios.patch(`/testimonial/${id}`, {
-        name: name,
-        company: company,
-        message: message,
-      });
-      setTimeout(() => {
-        navigate(-1);
-      }, 2500);
-      toast.success("EDITED SUCCESSFULLY", {
-        position: "top-right",
-        autoClose: 2000,
-        pauseHover: true,
-        draggable: true,
-      });
-    } catch (error) {
-      if (error) {
-        toast.error("FAILED TRY AGAIN", {
-          position: "top-right",
-          autoClose: 4000,
-          pauseHover: true,
-          draggable: true,
-        });
-        console.log(error);
-      }
+    e.preventDefault();
+    const jsonData = {
+      partnerName,
+    };
+    const formData = new FormData();
+    for (const property in jsonData) {
+      formData.append(`${property}`, jsonData[property]);
     }
+    formData.append("image", imageFile);
+    console.log(imageFile);
+    const { data: result } = await axios.patch(`/partner/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(result);
+    toast.success("EDITED SUCCESSFULLY", {
+      position: "top-right",
+      autoClose: 4000,
+      pauseHover: true,
+      draggable: true,
+    });
   };
 
   if (isLoading) {
@@ -105,13 +96,13 @@ const EditTestimonial = () => {
 
           {/* <!-- wrapper  --> */}
           <div className="dashboard-wrapper">
-            <ToastContainer />
             <div className="container-fluid dashboard-content">
+              <ToastContainer />
               {/* <!-- pageheader --> */}
-              <div className="row">
+              <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  <div className="page-header" style={{ textAlign: "left" }}>
-                    <h2 className="pageheader-title">Testimonial</h2>
+                  <div className="page-header">
+                    <h2 className="pageheader-title">Partnerships</h2>
                   </div>
                 </div>
               </div>
@@ -120,54 +111,43 @@ const EditTestimonial = () => {
               <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div className="card">
-                    <h5 className="card-header font-bold">Edit Testimonial</h5>
+                    <h5 className="card-header">Edit Partner</h5>
                     <div className="card-body">
-                      <form>
+                      <form onSubmit={handleUpdate}>
                         <div className="form-group">
                           <label
                             htmlFor="inputText3"
                             className="col-form-label"
                           >
-                            Name
+                            Partner Name
                           </label>
                           <input
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            name="partnerName"
+                            value={partnerName}
                             type="text"
                             className="form-control"
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label
-                            htmlFor="inputText3"
-                            className="col-form-label"
-                          >
-                            Company
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={company}
-                            onChange={(e) => setCompany(e.target.value)}
+                            onChange={(e) => setPartnerName(e.target.value)}
                           />
                         </div>
                         <div className="form-group">
                           <label htmlFor="exampleFormControlTextarea1">
-                            Message
+                            Upload Parnter Logo
                           </label>
-                          <textarea
+                          <input
                             className="form-control"
-                            rows="3"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
+                            name="image"
+                            id="file"
+                            type="file"
+                            onChange={(e) => setImageFile(e.target.files[0])}
+                          />
+                          <img
+                            src={partnerLogo}
+                            alt="banner image"
+                            style={{ width: "100px", height: "100px" }}
                           />
                         </div>
                         <div className="form-group">
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleUpdate}
-                          >
+                          <button className="btn btn-dark" type="submit">
                             Update
                           </button>
                         </div>
@@ -184,4 +164,4 @@ const EditTestimonial = () => {
   );
 };
 
-export default Protectedd(EditTestimonial, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);
+export default Protectedd(CreatePartner, ["WEBSITE_ADMIN", "SUPER_ADMIN"]);
