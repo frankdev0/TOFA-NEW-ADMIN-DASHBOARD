@@ -38,9 +38,6 @@ const CreateFaq = () => {
       const { data: result } = await axios.post("/faq", {
         question: faq.question,
         answer: faq.answer,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
       });
       setTimeout(() => {
         navigate(-1);

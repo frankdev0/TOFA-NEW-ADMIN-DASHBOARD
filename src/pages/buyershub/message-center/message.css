@@ -111,7 +111,7 @@
   text-align: left;
   float: right !important;
   border-radius: 16px 16px 0px 16px !important;
-  background-color: #71748d;
+  background-color: #7a85e1;
   color: white;
   padding: 15px 20px;
 
@@ -253,4 +253,36 @@ button {
 .css-1s2u09g-control {
   border-radius: 6px !important;
   min-height: 47px !important;
+}
+
+.fontz{
+  line-height: 0.2 !important;
+}
+
+.message-list{
+  margin-bottom: 1.3rem;
+  font-weight: 100;
+}
+
+.buyers-name{
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.message-indicator {
+  content: '';
+  display: inline-block;
+  margin-left: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 100%;
+  background-color: #10f172;
+  animation: .9s infinite beatHeart;
+  transform-origin: center;
+}
+
+.account-summary{
+  cursor: pointer;
+  text-align: left;
+ 
 }

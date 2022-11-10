@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import { axios } from "../../components/baseUrl";
@@ -7,9 +7,10 @@ import "./message.css";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 
-export const NewOrderModal = () => {
+export const NewOrderModal = ({ buyerId }) => {
   const [country, setCountry] = useState("");
-  const [local, setLocal] = useState("");
+  const [products, setProducts] = useState([]);
+  const [productsId, setProductsId] = useState([]);
   const [formErrors, setFormErrors] = useState("");
   const [customError, setCustomError] = useState("");
   const [orderDetails, setOrderDetails] = useState({
@@ -27,11 +28,31 @@ export const NewOrderModal = () => {
   });
   const options = useMemo(() => countryList().getData(), []);
 
+  const productId = useParams();
+  console.log(productId);
+
   const navigate = useNavigate();
 
   const handleOrder = (e) => {
     setOrderDetails({ ...orderDetails, [e.target.name]: e.target.value });
   };
+
+  const getProductInfo = async () => {
+    try {
+      const { data } = await axios.get("/product");
+      const products = data.data.map((item) => item.productName);
+      setProducts(products);
+      const id = data.data.map((item) => item.id);
+      setProductsId(id);
+      console.log(id);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getProductInfo();
+  }, []);
 
   // const totalCost = priceSelected * orderDetails.quantity;
 
@@ -52,23 +73,36 @@ export const NewOrderModal = () => {
         grade: orderDetails.port,
       };
       if (!orderDetails.address) {
-        console.log("these are values for foreign", localOrderInfo);
-        // const { data: result } = await axios.post("/order/foreign", {
-        //   localOrderInfo,
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // });
-        // console.log(result);
+        console.log("these are values for foreign");
+        const { data: result } = await axios.post("/order/foreign", {
+          quantity: orderDetails.quantity,
+          productID: productsId,
+          country: country.label,
+          countryOfOrigin: orderDetails.countryOfOrigin,
+          shipping: orderDetails.shipping,
+          paymentTerm: orderDetails.paymentTerm,
+          cost: orderDetails.cost,
+          port: orderDetails.port,
+          productRequirement: orderDetails.productRequirement,
+        });
+        console.log(result);
       } else {
         console.log("these are values for local", localOrderInfo);
-        // const { data: result } = await axios.post("/order/local", {
-        //   localOrderInfo,
-        //   headers: {
-        //     "Content-Type": "multipart/form-data",
-        //   },
-        // });
-        // console.log(result);
+        const { data: result } = await axios.post("/order/local", {
+          quantity: orderDetails.quantity,
+          productID: productsId,
+          buyerID: buyerId,
+          country: country.label,
+          countryOfOrigin: orderDetails.countryOfOrigin,
+          shipping: orderDetails.shipping,
+          paymentTerm: orderDetails.paymentTerm,
+          cost: orderDetails.cost,
+          address: orderDetails.address,
+          productRequirement: orderDetails.productRequirement,
+          specification: orderDetails.productRequirement,
+          grade: orderDetails.port,
+        });
+        console.log(result);
       }
 
       // setTimeout(() => {
@@ -96,9 +130,6 @@ export const NewOrderModal = () => {
     }
   };
 
-  const handleChange = (e) => {
-    setLocal(e.target.value);
-  };
   return (
     <div
       className="modal fade place-order-modal px-5"
@@ -128,24 +159,21 @@ export const NewOrderModal = () => {
                 <form className="w-100" onSubmit={handleSubmit}>
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1">Product Name</label>
+
                     <select
                       className="form-select selects"
                       aria-label="Default select example"
                       onChange={handleOrder}
                       name=""
                     >
-                      <option defaultValue="Select Product" className="options">
-                        Select Product
-                      </option>
-                      <option value="1" className="options">
-                        Cashew
-                      </option>
-                      <option value="2" className="options">
-                        Cocoa
-                      </option>
-                      <option value="3" className="options">
-                        Paddy Rice
-                      </option>
+                      {products &&
+                        products.map((item, id) => {
+                          return (
+                            <option key={id} value="1" className="options">
+                              {item.id}
+                            </option>
+                          );
+                        })}
                     </select>
                   </div>
 

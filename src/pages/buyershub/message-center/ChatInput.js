@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function ChatInput({ handleSendMsg }) {
+function ChatInput({ handleSendMsg, buyerId }) {
   const [msg, setMsg] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
 
@@ -23,7 +23,7 @@ function ChatInput({ handleSendMsg }) {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (msg.length > 0) {
-      handleSendMsg(msg);
+      handleSendMsg(msg, buyerId);
       setMsg("");
       const chatInput = document.querySelector("#chatInput");
       chatInput.focus();
