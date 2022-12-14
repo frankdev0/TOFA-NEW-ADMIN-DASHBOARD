@@ -142,7 +142,7 @@ const CreatePartner = () => {
                           />
                           <img
                             src={partnerLogo}
-                            alt="banner image"
+                            alt="banner"
                             style={{ width: "100px", height: "100px" }}
                           />
                         </div>

@@ -58,20 +58,27 @@
     transition: max-height 0.5s;
 }
 
-@media only screen  and (max-width:800px){
+ @media only screen and (max-width: 800px){
     .sub-menu-wrap-two {
         position: absolute;
         top: 12.2%;
         right: 0;
-        
         width: 100%;
         max-height: 800px;
         overflow: hidden;
         transition: max-height 0.5s;
         z-index: 10;
+    } 
+}  
+
+@media only screen and (min-width:600px) {
+    .sidebar-bg {
+        position: absolute;
+        overflow: hidden;
+        z-index: 10;
     }
-    
-} 
+}
+
 
 .sub-menu-wrap .open-menu {
     max-height: 400px;

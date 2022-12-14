@@ -59,49 +59,44 @@ export const NewOrderModal = ({ buyerId }) => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const localOrderInfo = {
+      const foreignOrderInfo = {
         quantity: orderDetails.quantity,
-        country: country,
+        buyerID: buyerId,
+        country: country.label,
         countryOfOrigin: orderDetails.countryOfOrigin,
         shipping: orderDetails.shipping,
         paymentTerm: orderDetails.paymentTerm,
         cost: orderDetails.cost,
         port: orderDetails.port,
+        productRequirement: orderDetails.productRequirement,
+      };
+      const localOrderInfo = {
+        quantity: orderDetails.quantity,
+        buyerID: buyerId,
+        country: country.label,
+        countryOfOrigin: orderDetails.countryOfOrigin,
+        shipping: orderDetails.shipping,
+        paymentTerm: orderDetails.paymentTerm,
+        cost: orderDetails.cost,
         address: orderDetails.address,
         productRequirement: orderDetails.productRequirement,
         specification: orderDetails.productRequirement,
-        grade: orderDetails.port,
+        grade: "W320",
       };
       if (!orderDetails.address) {
-        console.log("these are values for foreign");
-        const { data: result } = await axios.post("/order/foreign", {
-          quantity: orderDetails.quantity,
-          productID: productsId,
-          country: country.label,
-          countryOfOrigin: orderDetails.countryOfOrigin,
-          shipping: orderDetails.shipping,
-          paymentTerm: orderDetails.paymentTerm,
-          cost: orderDetails.cost,
-          port: orderDetails.port,
-          productRequirement: orderDetails.productRequirement,
-        });
+        console.log("these are values for foreign", foreignOrderInfo);
+        const { data: result } = await axios.post(
+          "/order/foreign",
+          foreignOrderInfo
+        );
         console.log(result);
+        console.log(localOrderInfo);
       } else {
         console.log("these are values for local", localOrderInfo);
-        const { data: result } = await axios.post("/order/local", {
-          quantity: orderDetails.quantity,
-          productID: productsId,
-          buyerID: buyerId,
-          country: country.label,
-          countryOfOrigin: orderDetails.countryOfOrigin,
-          shipping: orderDetails.shipping,
-          paymentTerm: orderDetails.paymentTerm,
-          cost: orderDetails.cost,
-          address: orderDetails.address,
-          productRequirement: orderDetails.productRequirement,
-          specification: orderDetails.productRequirement,
-          grade: orderDetails.port,
-        });
+        const { data: result } = await axios.post(
+          "/order/local",
+          localOrderInfo
+        );
         console.log(result);
       }
 
@@ -166,14 +161,17 @@ export const NewOrderModal = ({ buyerId }) => {
                       onChange={handleOrder}
                       name=""
                     >
-                      {products &&
-                        products.map((item, id) => {
-                          return (
-                            <option key={id} value="1" className="options">
-                              {item.id}
-                            </option>
-                          );
-                        })}
+                      {/* {products &&
+                        products.map((item, id) => { */}
+                      {/* return ( */}
+                      <option>...select product</option>
+                      <option value="1" className="options">
+                        Cocoa
+                      </option>
+                      <option>Cashew</option>
+                      <option>Maize</option>
+                      {/* );
+                        })} */}
                     </select>
                   </div>
 
@@ -272,9 +270,9 @@ export const NewOrderModal = ({ buyerId }) => {
                         <option defaultValue="Country of Origin">
                           Country of Origin
                         </option>
-                        <option value="1">India</option>
-                        <option value="2">China</option>
-                        <option value="3">Bangladesh</option>
+                        <option value="India">India</option>
+                        <option value="China">China</option>
+                        <option value="Bangladesh">Bangladesh</option>
                       </select>
                     </div>
                   </div>

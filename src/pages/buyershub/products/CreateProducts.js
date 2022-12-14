@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import IconButton from "@mui/material/IconButton";
@@ -26,15 +26,29 @@ const CreateProducts = () => {
     subCategory: "",
     specification: "",
     productDescription: "",
-    commodityTag: "",
+    // commodityTag: "",
   });
   const [specifications, setSpecifications] = useState([
     { type: "", value: "" },
   ]);
   const [country, setCountry] = useState([{ countryName: "", price: "" }]);
 
+  const [commodityTag, setCommodityTag] = useState([]);
+  const [myId, setMyId] = useState("");
+
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
+
+  const getCommodityId = () => {
+    axios.get("/commodity").then((response) => {
+      setCommodityTag(response.data.data);
+      console.log(response.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getCommodityId();
+  }, []);
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -42,6 +56,10 @@ const CreateProducts = () => {
 
   const handleProductChange = (e) => {
     setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
+  };
+
+  const handleCommodityId = (e) => {
+    setCommodityTag({ ...commodityTag, [e.target.name]: e.target.value });
   };
 
   const getSpecifications = () => {
@@ -90,7 +108,7 @@ const CreateProducts = () => {
       const jsonData = {
         productName: capitalizeFirstLetter(productDetails.productName),
         currency: "USD",
-        commodityTag: productDetails.commodityTag,
+        commodityTag: myId,
         parentCategory: productDetails.parentCategory,
         unitForMinOrder: productDetails.unitForMinOrder,
         unitForSupplyCapacity: productDetails.unitForSupplyCapacity,
@@ -104,6 +122,7 @@ const CreateProducts = () => {
         specification: getSpecifications(),
         countries: capitalizeFirstLetter(africanCountry),
       };
+      console.log("these are data", jsonData);
       const formData = new FormData();
       for (const property in jsonData) {
         formData.append(`${property}`, jsonData[property]);
@@ -477,17 +496,18 @@ const CreateProducts = () => {
               <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-12">
                   <label className="form-label">Commodity Tag</label>
+
                   <select
                     className="form-control"
                     name="commodityTag"
-                    onChange={handleProductChange}
+                    onChange={(e) => setMyId(e.target.value)}
                   >
-                    <option>select commodity tag</option>
-                    <option>Cashew Nuts</option>
-                    <option>Sesame seeds</option>
-                    <option>Soyabeans</option>
-                    <option>Ginger</option>
-                    <option>Groundnuts</option>
+                    {commodityTag &&
+                      commodityTag.map((commodity) => (
+                        <option key={commodity.id} value={commodity.id}>
+                          {commodity.name}
+                        </option>
+                      ))}
                   </select>
                 </div>
               </div>

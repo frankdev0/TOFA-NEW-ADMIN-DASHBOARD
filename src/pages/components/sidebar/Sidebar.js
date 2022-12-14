@@ -190,7 +190,7 @@ const Sidebar = () => {
                       onClick={() => setSupplier(!supplier)}
                       className="headings"
                     >
-                      <i className="icon-grid"></i>Suppliers Marketplace
+                      <i className="icon-grid"></i>Marketplace
                     </span>
                     <i
                       className="bi bi-caret-right-fill toggle-btn"
@@ -204,7 +204,22 @@ const Sidebar = () => {
                     >
                       <li className="nav-item">
                         <a className="nav-link" href="general-table.html">
-                          Orders
+                          Buyers
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="general-table.html">
+                          Sellers
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="general-table.html">
+                          Transactions
+                        </a>
+                      </li>
+                      <li className="nav-item">
+                        <a className="nav-link" href="general-table.html">
+                          Category
                         </a>
                       </li>
                       <li className="nav-item">
@@ -219,12 +234,12 @@ const Sidebar = () => {
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" href="data-tables.html">
-                          Suppliers
+                          Disputes
                         </a>
                       </li>
                       <li className="nav-item">
                         <a className="nav-link" href="data-tables.html">
-                          Subscriptions
+                          Sellers Subscriptions
                         </a>
                       </li>
                       <li className="nav-item">
@@ -253,6 +268,7 @@ const Sidebar = () => {
         </div>
       </div>
 
+      {/* Sidebar for mobile view */}
       <div className="sidebar">
         <div
           className={toggleLogout ? "sub-menu-wrap-two" : "sub-menu-wrap"}
@@ -383,7 +399,7 @@ const Sidebar = () => {
                   className="headings"
                   onClick={() => setSupplierBg(!supplierBg)}
                 >
-                  <i className="icon-grid"></i>Suppliers Marketplace
+                  <i className="icon-grid"></i>Marketplace
                 </span>
                 <i
                   className="bi bi-caret-right-fill toggle-btn"
@@ -394,9 +410,25 @@ const Sidebar = () => {
                 <ul className="nav flex-column">
                   <li className="nav-item">
                     <a className="nav-link" href="general-table.html">
-                      Orders
+                      Buyers
                     </a>
                   </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="general-table.html">
+                      Sellers
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="general-table.html">
+                      Transactions
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a className="nav-link" href="general-table.html">
+                      Category
+                    </a>
+                  </li>
+
                   <li className="nav-item">
                     <a className="nav-link" href="data-tables.html">
                       RFQ's
@@ -409,12 +441,12 @@ const Sidebar = () => {
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="data-tables.html">
-                      Suppliers
+                      Disputes
                     </a>
                   </li>
                   <li className="nav-item">
                     <a className="nav-link" href="data-tables.html">
-                      Subscriptions
+                      Sellers Subscriptions
                     </a>
                   </li>
                   <li className="nav-item">

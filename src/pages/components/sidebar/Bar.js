@@ -6,7 +6,7 @@ const Bar = () => {
       <div className="nav-left-sidebar sidebar-dark">
         <div className="menu-list">
           <nav className="navbar navbar-expand-lg navbar-light">
-            <a className="d-xl-none d-lg-none" href="#">
+            <a className="d-xl-none d-lg-none" href="new">
               Dashboard
             </a>
             <button
@@ -26,7 +26,7 @@ const Bar = () => {
                 <li className="nav-item ">
                   <a
                     className="nav-link active"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-1"
@@ -98,7 +98,7 @@ const Bar = () => {
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          href="#"
+                          href="new"
                           data-toggle="collapse"
                           aria-expanded="false"
                           data-target="#submenu-1-1"
@@ -141,7 +141,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-2"
@@ -193,7 +193,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-3"
@@ -239,7 +239,7 @@ const Bar = () => {
                 <li className="nav-item ">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-4"
@@ -270,7 +270,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-5"
@@ -297,7 +297,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-6"
@@ -391,7 +391,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-7"
@@ -428,7 +428,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-8"
@@ -477,7 +477,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-9"
@@ -503,7 +503,7 @@ const Bar = () => {
                 <li className="nav-item">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="new"
                     data-toggle="collapse"
                     aria-expanded="false"
                     data-target="#submenu-10"
@@ -514,14 +514,14 @@ const Bar = () => {
                   <div id="submenu-10" className="collapse submenu">
                     <ul className="nav flex-column">
                       <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <a className="nav-link" href="new">
                           Level 1
                         </a>
                       </li>
                       <li className="nav-item">
                         <a
                           className="nav-link"
-                          href="#"
+                          href="new"
                           data-toggle="collapse"
                           aria-expanded="false"
                           data-target="#submenu-11"
@@ -532,12 +532,12 @@ const Bar = () => {
                         <div id="submenu-11" className="collapse submenu">
                           <ul className="nav flex-column">
                             <li className="nav-item">
-                              <a className="nav-link" href="#">
+                              <a className="nav-link" href="new">
                                 Level 1
                               </a>
                             </li>
                             <li className="nav-item">
-                              <a className="nav-link" href="#">
+                              <a className="nav-link" href="new">
                                 Level 2
                               </a>
                             </li>
@@ -545,7 +545,7 @@ const Bar = () => {
                         </div>
                       </li>
                       <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <a className="nav-link" href="new">
                           Level 3
                         </a>
                       </li>

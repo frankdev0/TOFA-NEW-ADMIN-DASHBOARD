@@ -13,10 +13,11 @@ import { Protectedd } from "../../../utils/Protectedd";
 
 const MessageCenter = () => {
   const [messages, setMessages] = useState([]);
-  // const [viewLoader, setViewLoader] = useState([])
   const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [buyerId, setBuyerId] = useState(null);
+  const [buyersName, setBuyersName] = useState([]);
   const scrollRef = useRef();
   const socket = useRef();
   const { user } = useContext(AppContext);
@@ -40,15 +41,25 @@ const MessageCenter = () => {
     try {
       axios.get("/admin/contacts").then((response) => {
         setContacts(response.data.data);
-        const newId = response.data.data.map((item) => item.id);
-        setBuyerId(newId);
-        console.log(newId);
         console.log(response.data.data);
       });
     } catch (error) {
       console.log(error);
     }
   };
+
+  // const handleBuyersName = async (buyerId) => {
+  //   try {
+  //     axios.get("/admin/contacts").then((response) => {
+  //       setBuyersName(
+  //         response.data.data.map((buyerName) => buyerName.fullName)
+  //       );
+  //       console.log(response.data.data.map((buyerName) => buyerName.fullName));
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     myContacts();
@@ -71,15 +82,27 @@ const MessageCenter = () => {
   //   (async () => {})();
   // }, []);
 
-  const showDetails = async (buyerId) => {
+  const showChats = async (buyerId) => {
     try {
       const {
         data: { data },
       } = await axios.get(`/message/receive-message/${buyerId}`);
       console.log(data);
       setMessages(data);
+      setBuyerId(buyerId);
+      setLoading(false);
+      const {
+        data: { newData },
+      } = await axios.get("/admin/contacts/").then((response) => {
+        setBuyersName(
+          response.data.data.map((buyerName) => buyerName.fullName[buyerId])
+        );
+        console.log(response.data.data.map((buyerName) => buyerName.fullName));
+      });
+      console.log(newData);
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -106,9 +129,9 @@ const MessageCenter = () => {
       socket.current.emit(socketEvents.sendMessage, payload);
       axios.post("/message/send-message/", payload);
 
-      // const msgs = [...messages];
-      // msgs.push({ fromSelf: true, message: msg });
-      // setMessages(msgs);
+      const msgs = [...messages];
+      msgs.push({ fromSelf: true, message: msg });
+      setMessages(msgs);
     } catch (error) {
       console.log(error);
     }
@@ -142,6 +165,7 @@ const MessageCenter = () => {
                   </button>
                   <span className="title">Message Center</span>
                 </div>
+
                 <div className="aside-nav collapse aside-body">
                   <div className="chat-list">
                     {contacts &&
@@ -150,13 +174,12 @@ const MessageCenter = () => {
                           <div
                             key={item.id}
                             className=" account-summary"
-                            onClick={(e) => showDetails(item.id)}
+                            onClick={(e) => showChats(item.id)}
                           >
                             <h6 className="fontz buyers-name">
                               {item.fullName}
                               <span className="message-indicator"></span>
                             </h6>
-
                             <div className="message-list">
                               {item.Message.map((msg) => {
                                 return (
@@ -170,14 +193,9 @@ const MessageCenter = () => {
                               })}
                               <hr />
                             </div>
-
-                            {/* <span className="account-description px-2">
-                            {item && item.fromSelf === false && item.message}
-                          </span> */}
                           </div>
                         );
                       })}
-                    {/* </a> */}
                   </div>
                 </div>
               </div>
@@ -185,51 +203,58 @@ const MessageCenter = () => {
 
             <div className="main-content container-fluid p-0">
               <div className="chat-header bg-white border-bottom">
-                <h2 className="active-user-chat">{employee}</h2>
+                <h2
+                  className="active-user-chat"
+                  // onClick={() => handleBuyersName(buyerId)}
+                >
+                  {/* {employee} */}
+                  {buyersName}
+                </h2>
               </div>
               <div className="content-container">
-                <div className="chat-module">
-                  <div className="chat-module-top">
-                    <div className="chat-module-body border-bottom">
-                      {/* {viewMessage ? (
-                        <div>...Select A User to Respond to</div>
-                      ) : ( */}
-                      <div>
-                        <img
-                          alt="Kimberly"
-                          src={avatar1}
-                          className="rounded-circle user-avatar-lg"
-                        />
-                        {messages.map((msg, index) => {
-                          return (
-                            <div
-                              className={
-                                msg.fromSelf ? "mediaa-body" : "media-body"
-                              }
-                              ref={scrollRef}
-                              key={index}
-                            >
+                {loading ? (
+                  <div className="mx-auto">....Select a Buyer to Chat With</div>
+                ) : (
+                  <div className="chat-module">
+                    <div className="chat-module-top">
+                      <div className="chat-module-body border-bottom">
+                        <div>
+                          <img
+                            alt="Kimberly"
+                            src={avatar1}
+                            className="rounded-circle user-avatar-lg"
+                          />
+                          {messages.map((msg, index) => {
+                            return (
                               <div
-                                className={msg.fromSelf ? "sender" : "receiver"}
+                                className={
+                                  msg.fromSelf ? "mediaa-body" : "media-body"
+                                }
+                                ref={scrollRef}
+                                key={index}
                               >
-                                <div className="chat-item-ody">
-                                  {msg.message}
-                                  <p className="chat-timestamp">
-                                    {dayjs(msg.createdAt).format("hh:mm a")}
-                                  </p>
+                                <div
+                                  className={
+                                    msg.fromSelf ? "sender" : "receiver"
+                                  }
+                                >
+                                  <div className="chat-item-ody">
+                                    {msg.message}
+                                    <p className="chat-timestamp">
+                                      {dayjs(msg.createdAt).format("hh:mm a")}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
-                      {/* )} */}
                     </div>
-                  </div>
 
-                  <div className="chat-module-bottom">
-                    <div align="right" className="my-3">
-                      {/* <a
+                    <div className="chat-module-bottom">
+                      <div align="right" className="my-3">
+                        {/* <a
                         href="comingsoon"
                         className="btn btn-rounded btn-outline-dark mb-3 chat-btn"
                         data-toggle="modal"
@@ -237,24 +262,25 @@ const MessageCenter = () => {
                       >
                         Start Order
                       </a> */}
-                      <button
-                        data-bs-toggle="modal"
-                        data-bs-target="#orderModal"
-                        className="start-btn btn btn-dark me-2"
-                        align="right"
-                      >
-                        Start Order
-                      </button>
-                    </div>
-                    {/* <!-- Modal --> */}
-                    <NewOrderModal />
+                        <button
+                          data-bs-toggle="modal"
+                          data-bs-target="#orderModal"
+                          className="start-btn btn btn-dark me-2"
+                          align="right"
+                        >
+                          Start Order
+                        </button>
+                      </div>
+                      {/* <!-- Modal --> */}
+                      <NewOrderModal buyerId={buyerId} />
 
-                    <ChatInput
-                      handleSendMsg={handleSendMsg}
-                      buyerId={buyerId}
-                    />
+                      <ChatInput
+                        handleSendMsg={handleSendMsg}
+                        buyerId={buyerId}
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

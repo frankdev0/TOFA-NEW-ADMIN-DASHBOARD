@@ -127,7 +127,7 @@ const Navbar = () => {
 
                   <p>Help & Support </p>
                 </a>
-                <a className="sub-menu-link">
+                <a className="sub-menu-link" href="new">
                   {/* <img src={logout} alt="profile" /> */}
                   <i className="fa fa-sign-out" aria-hidden="true"></i>
                   <p onClick={handleLogout}>Logout </p>

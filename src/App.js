@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import MessageCenter from "./pages/buyershub/message-center/MessageCenter";
 import Orders from "./pages/buyershub/orders/Orders";
@@ -34,7 +34,7 @@ import ConfirmPassword from "./pages/login/ConfirmPassword";
 import SecurityQuestion from "./pages/login/SecurityQuestion";
 // import { AuthContext, AuthContextProvider } from "./utils/contexts/AuthContext";
 import Unauthorized from "./pages/components/unauthorized/Unauthorized";
-import AppState, { AppContext } from "./utils/contexts/AppState";
+import AppState from "./utils/contexts/AppState";
 import Tractions from "./pages/website-settings/traction/Traction";
 import CreateTraction from "./pages/website-settings/traction/CreateTraction";
 import EditTraction from "./pages/website-settings/traction/EditTraction";
@@ -44,6 +44,7 @@ import Page404 from "./pages/components/page404/Page404";
 import Partnerships from "./pages/website-settings/partnerships/Partnerships";
 import CreatePartner from "./pages/website-settings/partnerships/CreatePartner";
 import EditPartner from "./pages/website-settings/partnerships/EditPartner";
+import MarketBuyers from "./pages/marketplace/buyers/MarketBuyers";
 // import Protected from "./pages/components/Protected";
 
 function App() {
@@ -104,7 +105,9 @@ function App() {
           <Route exact path="/traction" element={<Tractions />} />
           <Route exact path="bar" element={<Bar />} />
           <Route exact path="/partnerships" element={<Partnerships />} />
-          <Route exact path="create-partner" element={<CreatePartner />} />
+          <Route exact path="/create-partner" element={<CreatePartner />} />
+          <Route exact path="/market-buyers" element={<MarketBuyers />} />
+
           <Route
             exact
             path="edit-partner/:myPartnerId"
