@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Editor } from "@tinymce/tinymce-react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,15 +8,14 @@ import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../../utils/Protectedd";
 
 const EditBanner = () => {
-  const editorRef = useRef();
-
-  // const editorRef = useRef();
-
   const [id, setId] = useState(0);
   const [image, setImage] = useState("");
   const [link, setLink] = useState("");
   const [callToAction, setCallToAction] = useState("");
-  const [imageFile, setImageFile] = useState("");
+  const [banner, setBanner] = useState();
+  const [imageBanner, setImageBanner] = useState(null);
+
+  console.log("this is the new banner", imageBanner);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -30,6 +28,7 @@ const EditBanner = () => {
       const response = await axios.get(`/banner/${bannerId}`);
       setCallToAction(response.data.data.callToAction);
       setImage(response.data.data.image);
+      console.log(response.data.data.image);
       setLink(response.data.data.link);
       setId(response.data.data.id);
       console.log(response.data.data);
@@ -54,13 +53,16 @@ const EditBanner = () => {
     for (const property in jsonData) {
       formData.append(`${property}`, jsonData[property]);
     }
-    formData.append("image", imageFile);
-    console.log(imageFile);
+    formData.append("image", imageBanner);
+    // console.log(imageFile);
     const { data: result } = await axios.patch(`/banner/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+    setTimeout(() => {
+      navigate(-1);
+    }, 4000);
     console.log(result);
     toast.success("EDITED SUCCESSFULLY", {
       position: "top-right",
@@ -100,66 +102,103 @@ const EditBanner = () => {
         {/* <!-- wrapper  --> */}
         <div className="dashboard-wrapper">
           <ToastContainer />
-          <div>
-            <form className="mx-5 my-5" onSubmit={handleUpdate}>
-              <div className="d-flex justify-content-between">
-                <h2> Edit Banner</h2>
-                {/* <Link to="/commodityInsight">
-                <button className="btn btn-primary m-3">Show Commodity</button>
-              </Link> */}
-                <div
-                  className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
-                  align="right"
-                >
-                  <a href="/banners" className="btn btn-dark">
-                    Back
-                  </a>
+          <div className="container-fluid dashboard-content">
+            <div className="d-flex justify-content-between">
+              <h2> Edit Banner</h2>
+              {/* <div
+                className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 my-2"
+                align="right"
+              > */}
+              <a href="/banners" className="btn btn-dark">
+                Back
+              </a>
+              {/* </div> */}
+            </div>
+            <div className="row my-2" style={{ textAlign: "left" }}>
+              <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div className="card">
+                  <div className="card-body">
+                    <form onSubmit={handleUpdate}>
+                      <div className="form-group">
+                        <label htmlFor="inputText3" className="col-form-label">
+                          Call to Action
+                        </label>
+                        <input
+                          value={callToAction}
+                          type="text"
+                          className="form-control"
+                          aria-describedby="emailHelp"
+                          onChange={(e) => setCallToAction(e.target.value)}
+                        />
+                        {/* {formErrors.callToAction && (
+                    <p className="text-danger">{formErrors.callToAction}</p>
+                  )} */}
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="inputText3" className="col-form-label">
+                          Link
+                        </label>
+                        <input
+                          value={link}
+                          type="text"
+                          className="form-control"
+                          aria-describedby="emailHelp"
+                          onChange={(e) => setLink(e.target.value)}
+                        />
+                        {/* {formErrors.link && (
+                    <p className="text-danger">{formErrors.link}</p>
+                  )} */}
+                      </div>
+                      <div className="form-group">
+                        <label className="form-label mx-2">
+                          Upload Banner{" "}
+                          <select
+                            name="section"
+                            onChange={(e) => setBanner(e.target.value)}
+                            defaultValue={banner}
+                          >
+                            <option>...Select Banner</option>
+                            <option>Hero Section Banner</option>
+                            <option>Buyers Hub Slider</option>
+                          </select>
+                        </label>
+                        {/* {formErrors.section && (
+                    <p className="text-danger">{formErrors.section}</p>
+                  )} */}
+                        <input
+                          type="file"
+                          name="image"
+                          accept="image/*"
+                          onChange={(e) => setImageBanner(e.target.files[0])}
+                        />
+                        {imageBanner ? (
+                          <div className="iamges d-flex image-container">
+                            <img
+                              src={
+                                imageBanner && URL.createObjectURL(imageBanner)
+                              }
+                              alt="banner"
+                              className="image"
+                            />
+                          </div>
+                        ) : (
+                          <div className="iamges d-flex image-container">
+                            <img src={image} alt="banner" className="image" />
+                          </div>
+                        )}
+
+                        {/* {formErrors.image && (
+                    <p className="text-danger">{formErrors.image}</p>
+                  )} */}
+                      </div>
+                      <div className="form-group">
+                        <button className="btn btn-dark">Update Banner</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
-
-              <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-6 mt-2">
-                  <label className="form-label">Call To Action:</label>
-                  <input
-                    value={callToAction}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setCallToAction(e.target.value)}
-                  />
-                </div>
-                <div className="col-6 mt-2">
-                  <label className="form-label">Call To Action:</label>
-                  <input
-                    value={link}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setLink(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label mx-2">Upload Banner</label>
-                <input
-                  type="file"
-                  id="image"
-                  onChange={(e) => setImageFile(e.target.files[0])}
-                  name="image"
-                  accept="image/*"
-                />
-                <img
-                  src={image}
-                  alt="banner image"
-                  style={{ width: "100px", height: "100px" }}
-                />
-              </div>
-
-              <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark">Submit</button>
-              </div>
-            </form>
+            </div>
           </div>
         </div>
         {/* <!-- end main wrapper --> */}

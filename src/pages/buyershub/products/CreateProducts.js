@@ -300,6 +300,7 @@ const CreateProducts = () => {
                       name="unitForSupplyCapacity"
                       onChange={handleProductChange}
                     >
+                      <option>...select</option>
                       <option>tones</option>
                       <option>kilo</option>
                       <option>grams</option>
@@ -326,6 +327,7 @@ const CreateProducts = () => {
                       name="unitForMinOrder"
                       onChange={handleProductChange}
                     >
+                      <option>...select</option>
                       <option>tones</option>
                       <option>kilo</option>
                       <option>grams</option>
@@ -502,6 +504,7 @@ const CreateProducts = () => {
                     name="commodityTag"
                     onChange={(e) => setMyId(e.target.value)}
                   >
+                    <option defaultValue={true}>...Select Commodity Tag</option>
                     {commodityTag &&
                       commodityTag.map((commodity) => (
                         <option key={commodity.id} value={commodity.id}>

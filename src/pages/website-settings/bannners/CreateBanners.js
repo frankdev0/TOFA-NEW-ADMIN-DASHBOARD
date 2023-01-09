@@ -116,6 +116,7 @@ const CreateBanner = () => {
                 <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                   <div className="card">
                     <h4 className="card-header font-bold">Create Banner</h4>
+
                     <div className="card-body">
                       <form onSubmit={handleSubmit}>
                         <div className="form-group">

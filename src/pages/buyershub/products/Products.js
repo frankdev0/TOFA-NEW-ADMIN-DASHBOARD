@@ -156,7 +156,7 @@ const Products = () => {
                               <th>minDuration</th>
                               <th>maxDuration</th>
 
-                              <th>Actionn-two</th>
+                              <th>Action</th>
                             </tr>
                           </thead>
                           <tbody>

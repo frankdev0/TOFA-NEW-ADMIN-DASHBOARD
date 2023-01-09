@@ -20,19 +20,24 @@ const EditProducts = () => {
   const [unitForMinOrder, setUnitForMinOrder] = useState("");
   const [supplyCapacity, setSupplyCapacity] = useState("");
   const [unitForSupplyCapacity, setUnitForSupplyCapacity] = useState("");
+  const [minOrder, setMinOrder] = useState("");
   const [minDuration, setMinDuration] = useState("");
   const [maxDuration, setMaxDuration] = useState("");
-  const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [featuredImage, setFeaturedImage] = useState("");
+  const [otherImages, setOtherImages] = useState({});
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const [specification, setSpecification] = useState([{ type: "", value: "" }]);
+  // const [specification, setSpecification] = useState([{ type: "", value: "" }]);
   const [productSpecific, setProductSpecific] = useState([]);
 
-  const [imageFile, setImageFile] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+
+  console.log("selected image", imageFile);
+
+  console.log("my other images", otherImages);
 
   const handleInput = (index, e) => {
     const values = [...productSpecific];
@@ -88,7 +93,7 @@ const EditProducts = () => {
     try {
       const response = await axios.get(`/product/${productId}`);
       // setProductInfo(response.data.data)
-      console.log(response.data.data);
+      console.log("the products", response.data.data);
       setId(response.data.data.id);
       setProductName(response.data.data.productName);
       setParentCategory(response.data.data.parentCategory);
@@ -97,11 +102,24 @@ const EditProducts = () => {
       setUnitForSupplyCapacity(response.data.data.unitForSupplyCapacity);
       setMinDuration(response.data.data.minDuration);
       setMaxDuration(response.data.data.maxDuration);
-      setCategory(response.data.data.category);
+      setMinOrder(response.data.data.minOrdersAllowed);
+      console.log("from category", response.data.data.category);
       setSubCategory(response.data.data.subCategory);
       setProductDescription(response.data.data.productDescription);
       setCountries(response.data.data.CountryTraded);
       console.log("countriesssss", response.data.data.CountryTraded);
+      setOtherImages(
+        response.data.data.productImages &&
+          response.data.data.productImages.filter(
+            (image) => image.isMain === false
+          )[0].image
+      );
+      const newImage =
+        response.data.data.productImages &&
+        response.data.data.productImages.filter(
+          (image) => image.isMain === false
+        )[0].image;
+      console.log("my other Images", newImage);
       setFeaturedImage(
         response.data.data.productImages &&
           response.data.data.productImages.filter(
@@ -158,7 +176,8 @@ const EditProducts = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      console.log({
+      const jsonData = {
+        currency: "NGN",
         productName: productName,
         parentCategory: parentCategory,
         unitForMinOrder: unitForMinOrder,
@@ -166,29 +185,44 @@ const EditProducts = () => {
         unitForSupplyCapacity: unitForSupplyCapacity,
         minDuration: minDuration,
         maxDuration: maxDuration,
-        category: category,
         subCategory: subCategory,
         productDescription: productDescription,
-        // featuredImage: imageFile,
-        specification: getSpecifications(),
-        countryTraded: getCountry(),
-      });
-      // return;
-      const { data: result } = await axios.patch(`/product/${id}`, {
-        productName: productName,
-        parentCategory: parentCategory,
-        unitForMinOrder: unitForMinOrder,
-        supplyCapacity: supplyCapacity,
-        unitForSupplyCapacity: unitForSupplyCapacity,
-        minDuration: minDuration,
-        maxDuration: maxDuration,
-        category: category,
-        subCategory: subCategory,
-        productDescription: productDescription,
-        featuredImage: imageFile,
         specification: getSpecifications(),
         countries: getCountry(),
+      };
+      console.log("these are data", jsonData);
+      const formData = new FormData();
+      for (const property in jsonData) {
+        formData.append(`${property}`, jsonData[property]);
+      }
+      console.log("here is image", imageFile);
+      formData.append("productImages", imageFile);
+      // const formData = new FormData();
+      // for (const property in jsonData) {
+      //   formData.append(`${property}`, jsonData[property]);
+      // }
+
+      // for (let i = 0; i < e.target.otherImages.files.length; i++) {
+      //   formData.append("otherImages", e.target.otherImages.files[i]);
+      // }
+      // formData.append("featuredImage", e.target.featuredImage.files[0]);
+
+      const { data: result } = await axios.patch(`/product/${id}`, {
+        currency: "NGN",
+        productName: productName,
+        parentCategory: parentCategory,
+        unitForMinOrder: unitForMinOrder,
+        supplyCapacity: supplyCapacity,
+        unitForSupplyCapacity: unitForSupplyCapacity,
+        minDuration: minDuration,
+        maxDuration: maxDuration,
+        subCategory: subCategory,
+        productDescription: productDescription,
+        specification: getSpecifications(),
+        countries: getCountry(),
+        featuredImage: imageFile,
       });
+      console.log(result);
       setTimeout(() => {
         navigate(-1);
       }, 4000);
@@ -264,28 +298,25 @@ const EditProducts = () => {
                   <label className="form-label">Product Name:</label>
                   <input
                     name="productName"
-                    value={productName}
                     type="text"
-                    className="form-control"
+                    className="form-control product_input"
+                    value={productName}
                     aria-describedby="emailHelp"
                     onChange={(e) => setProductName(e.target.value)}
                   />
-                  {/* {formErrors.productName && (
-                    <p className="text-danger">{formErrors.productName}</p>
-                  )} */}
                 </div>
 
                 <div className="col-4 ">
                   <label className="form-label">Parent Category</label>
 
                   <select
-                    className="form-control"
+                    className="form-control product_input"
                     name="parentCategory"
                     value={parentCategory}
                     aria-describedby="Default select example"
                     onChange={(e) => setParentCategory(e.target.value)}
-                    placeholder="parent category"
                   >
+                    <option>Select Parent Cateogory</option>
                     <option>CONSTRUCTION_MATERIAL</option>
                     <option>FOOD_AND_BEVERAGE</option>
                     <option>APPAREL</option>
@@ -295,132 +326,87 @@ const EditProducts = () => {
                     <option> MINERALS_AND_METALLURGY</option>
                     <option> AGRICULTURE</option>
                   </select>
-
-                  {/* {formErrors.parentCategory && (
-                    <p className="text-danger">{formErrors.parentCategory}</p>
-                  )} */}
-                </div>
-
-                <div className="col-4 ">
-                  <label className="form-label">Supply Capacity</label>
-                  <input
-                    type="number"
-                    value={supplyCapacity}
-                    name="supplyCapacity"
-                    className="form-control"
-                    onChange={(e) => setSupplyCapacity(e.target.value)}
-                  ></input>
-                  {/* {formErrors.supplyCapacity && (
-                    <p className="text-danger">{formErrors.supplyCapacity}</p>
-                  )} */}
-                </div>
-
-                {/* <div className="col-4 mb-3">
-                  <label className="form-label">Currency</label>
-                  <input
-                    name="currency"
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                  />
-                </div> */}
-              </div>
-
-              <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4 mb-3">
-                  <label className="form-label">Unit of Min order</label>
-                  <input
-                    name="unitForMinOrder"
-                    value={unitForMinOrder}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setUnitForMinOrder(e.target.value)}
-                  />
-                  {/* {formErrors.unitForMinOrder && (
-                    <p className="text-danger">{formErrors.unitForMinOrder}</p>
-                  )} */}
-                </div>
-
-                <div className="col-4  mb-3">
-                  <label className="form-label">Unit of Supply Capacity</label>
-                  <input
-                    name="unitForSupplyCapacity"
-                    value={unitForSupplyCapacity}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setUnitForSupplyCapacity(e.target.value)}
-                  />
-                  {/* {formErrors.unitForSupplyCapacity && (
-                    <p className="text-danger">
-                      {formErrors.unitForSupplyCapacity}
-                    </p>
-                  )} */}
-                </div>
-
-                <div className="col-4 mb-3">
-                  <label className="form-label">Min Duration</label>
-                  <input
-                    name="minDuration"
-                    value={minDuration}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setMinDuration(e.target.value)}
-                  />
-                  {/* {formErrors.minDuration && (
-                    <p className="text-danger">{formErrors.minDuration}</p>
-                  )} */}
-                </div>
-              </div>
-
-              <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4  mb-3">
-                  <label className="form-label">Max Duration</label>
-                  <input
-                    name="maxDuration"
-                    value={maxDuration}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setMaxDuration(e.target.value)}
-                  />
-                  {/* {formErrors.maxDuration && (
-                    <p className="text-danger">{formErrors.maxDuration}</p>
-                  )} */}
-                </div>
-
-                <div className="col-4 mb-3">
-                  <label className="form-label">Category</label>
-                  <input
-                    name="category"
-                    value={category}
-                    type="text"
-                    className="form-control"
-                    aria-describedby="emailHelp"
-                    onChange={(e) => setCategory(e.target.value)}
-                  />
-                  {/* {formErrors.category && (
-                    <p className="text-danger">{formErrors.category}</p>
-                  )} */}
                 </div>
 
                 <div className="col-4 mb-3">
                   <label className="form-label">Sub Category</label>
                   <input
                     name="subCategory"
-                    value={subCategory}
                     type="text"
-                    className="form-control"
+                    className="form-control product_input"
+                    value={subCategory}
                     aria-describedby="emailHelp"
                     onChange={(e) => setSubCategory(e.target.value)}
                   />
-                  {/* {formErrors.subCategory && (
-                    <p className="text-danger">{formErrors.subCategory}</p>
-                  )} */}
                 </div>
               </div>
+
+              <div className="row" style={{ textAlign: "left" }}>
+                <div className="col-4 mb-3 ">
+                  <label className="form-label">Supply Capacity</label>
+                  <div className="d-flex">
+                    <input
+                      type="number"
+                      name="supplyCapacity"
+                      className="form-control supply_capacity"
+                      value={supplyCapacity}
+                      onChange={(e) => setSupplyCapacity(e.target.value)}
+                    />
+
+                    <select
+                      className="unit_style"
+                      name="unitForSupplyCapacity"
+                      value={unitForSupplyCapacity}
+                      onChange={(e) => setUnitForSupplyCapacity(e.target.value)}
+                    >
+                      <option>...select</option>
+                      <option>tones</option>
+                      <option>kilo</option>
+                      <option>grams</option>
+                      <option>meter</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="col-4">
+                  <label className="form-label">Min Order</label>
+                  <div className=" d-flex">
+                    <input
+                      type="number"
+                      name="minOrder"
+                      value={minOrder}
+                      className="form-control supply_capacity"
+                      onChange={(e) => setMinOrder(e.target.value)}
+                    />
+
+                    <select
+                      className="unit_style"
+                      name="unitForMinOrder"
+                      onChange={(e) => setUnitForMinOrder(e.target.value)}
+                      value={unitForMinOrder}
+                    >
+                      <option>...select</option>
+                      <option>tones</option>
+                      <option>kilo</option>
+                      <option>grams</option>
+                      <option>meter</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="col-4 mb-3">
+                  <label className="form-label"> Min Lead-Time</label>
+                  <input
+                    name="minDuration"
+                    value={minDuration}
+                    type="text"
+                    className="form-control product_input"
+                    aria-describedby="emailHelp"
+                    onChange={(e) => setMinDuration(e.target.value)}
+                  />
+                </div>
+              </div>
+
               <div className="row">
                 <div className="col-6" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
@@ -456,10 +442,6 @@ const EditProducts = () => {
                         </div>
                       </div>
                     ))}
-
-                  {/* {formErrors.specification && (
-                    <p className="text-danger">{formErrors.specification}</p>
-                  )}  */}
                 </div>
 
                 <div className="col-6" style={{ textAlign: "left" }}>
@@ -497,11 +479,27 @@ const EditProducts = () => {
                         </div>
                       </div>
                     ))}
-                  {/* {formErrors.country && (
-                    <p className="text-danger">{formErrors.country}</p>
-                  )} */}
                 </div>
               </div>
+
+              {/* <div className="row" style={{ textAlign: "left" }}>
+                <div className="col-12">
+                  <label className="form-label">Commodity Tag</label>
+
+                  <select
+                    className="form-control"
+                    name="commodityTag"
+                    onChange={(e) => setMyId(e.target.value)}
+                  >
+                    {commodityTag &&
+                      commodityTag.map((commodity) => (
+                        <option key={commodity.id} value={commodity.id}>
+                          {commodity.name}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div> */}
 
               <div className="mb-3" style={{ textAlign: "left" }}>
                 <label className="form-label">Description</label>
@@ -517,9 +515,9 @@ const EditProducts = () => {
                 )} */}
               </div>
 
-              <div className="row">
+              <div className="row mx-1">
                 <div className="col-6 box">
-                  <h3 className="header">Featured Images</h3>
+                  <h3 className="header">Featured Image</h3>
                   <input
                     type="file"
                     name="productImages"
@@ -528,12 +526,26 @@ const EditProducts = () => {
                   />
                   <br />
 
-                  <img
+                  {/* <img
                     src={featuredImage}
                     alt="featured"
                     className="my-3 px-2"
                     style={{ width: "100px", height: "100px" }}
-                  />
+                  /> */}
+
+                  {imageFile ? (
+                    <div className="iamges d-flex image-container justify-content-center">
+                      <img
+                        src={imageFile && URL.createObjectURL(imageFile)}
+                        alt="banner"
+                        className="image"
+                      />
+                    </div>
+                  ) : (
+                    <div className="iamges d-flex image-container justify-content-center">
+                      <img src={featuredImage} alt="banner" className="image" />
+                    </div>
+                  )}
                 </div>
 
                 <div className="col-6 mx-auto">
