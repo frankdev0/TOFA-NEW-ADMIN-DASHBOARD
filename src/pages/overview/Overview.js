@@ -42,7 +42,7 @@ const Overview = () => {
                         <div className="card-body">
                           <div className="d-inline-block">
                             <h5 className="text-muted">Total Views</h5>
-                            <h2 className="mb-0"> 10,280,056</h2>
+                            <h2 className="mb-0"> 90,280</h2>
                           </div>
                           <div
                             className="float-right icon-circle-medium  icon-box-lg  bg-info-light mb-2"

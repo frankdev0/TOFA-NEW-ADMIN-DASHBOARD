@@ -40,6 +40,10 @@ const Orders = () => {
     }
   };
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   useEffect(() => {
     //initialize datatable
     $(document).ready(function() {
@@ -167,7 +171,7 @@ const Orders = () => {
                     <div className="card">
                       <div className="card-body">
                         <div className="d-inline-block">
-                          <h5 className="text-muted">Total Transactions</h5>
+                          <h5 className="text-muted">Transactions</h5>
                           <h2 className="mb-0">
                             {" "}
                             ${metrics.totalTransactions}
@@ -257,7 +261,7 @@ const Orders = () => {
                               return (
                                 <tr key={item.id}>
                                   <td>{index + 1}</td>
-                                  <td>{item.cost}</td>
+                                  <td>{numberWithCommas(item.cost)}</td>
                                   <td>{item.country}</td>
                                   <td>{item.incoterm}</td>
 
@@ -536,7 +540,10 @@ const Orders = () => {
                                                       Payment Status:{" "}
                                                     </h6>
                                                     <div
-                                                      style={{ width: "100px" }}
+                                                      style={{
+                                                        width: "100px",
+                                                        textAlign: "left",
+                                                      }}
                                                     >
                                                       {order.status ===
                                                         "PENDING" && (
@@ -710,15 +717,8 @@ const Orders = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  Copyright © 2018 Concept. All rights reserved. Dashboard by{" "}
+                  Copyright © 2023 Concept. All rights reserved. Dashboard by{" "}
                   <a href="https://colorlib.com/wp/">Colorlib</a>.
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  <div className="text-md-right footer-links d-none d-sm-block">
-                    <a href="jav">About</a>
-                    <a href="jav">Support</a>
-                    <a href="jav">Contact Us</a>
-                  </div>
                 </div>
               </div>
             </div>

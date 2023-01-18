@@ -455,44 +455,6 @@ const CreateProducts = () => {
                     <p className="text-danger">{formErrors.country}</p>
                   )}
                 </div>
-                {/* <div className="col-4">
-                  <label className="form-label">Country</label>
-                  {country.map((info, index) => (
-                    <div key={index} className="root my-2">
-                      <input
-                        type="text"
-                        name="countryName"
-                        value={country.countryName}
-                        variant="filled"
-                        placeholder="country name"
-                        className="mx-1 form-control country-keys "
-                      />
-
-                      <input
-                        type="text"
-                        name="price"
-                        value={country.price}
-                        variant="filled"
-                        placeholder="price"
-                        className="mx-1 form-control country-values"
-                      />
-
-                      <div className="d-flex align-items-center">
-                        <i
-                          className="fa-solid fa-plus mx-1 "
-                          onClick={() => handleAddCountry()}
-                        ></i>
-                        <i
-                          className="fa-solid fa-minus mx-1"
-                          onClick={() => handleRemoveCountry(index)}
-                        ></i>
-                      </div>
-                    </div>
-                  ))}
-                  {formErrors.country && (
-                    <p className="text-danger">{formErrors.country}</p>
-                  )}
-                </div> */}
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>

@@ -25,12 +25,12 @@ const EditProducts = () => {
   const [maxDuration, setMaxDuration] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [productDescription, setProductDescription] = useState("");
+  const [commodityTag, setCommodityTag] = useState("");
+  const [commodities, setCommodities] = useState([]);
   const [featuredImage, setFeaturedImage] = useState("");
   const [otherImages, setOtherImages] = useState({});
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  // const [specification, setSpecification] = useState([{ type: "", value: "" }]);
   const [productSpecific, setProductSpecific] = useState([]);
 
   const [imageFile, setImageFile] = useState(null);
@@ -44,6 +44,17 @@ const EditProducts = () => {
     values[index][e.target.name] = e.target.value;
     setProductSpecific(values);
   };
+
+  const getCommodityId = () => {
+    axios.get("/commodity").then((response) => {
+      setCommodities(response.data.data);
+      console.log(response.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getCommodityId();
+  }, []);
 
   const handleCountryInput = (index, e) => {
     const values = [...countries];
@@ -103,6 +114,7 @@ const EditProducts = () => {
       setMinDuration(response.data.data.minDuration);
       setMaxDuration(response.data.data.maxDuration);
       setMinOrder(response.data.data.minOrdersAllowed);
+      setCommodityTag(response.data.data.commodityTag);
       console.log("from category", response.data.data.category);
       setSubCategory(response.data.data.subCategory);
       setProductDescription(response.data.data.productDescription);
@@ -186,6 +198,7 @@ const EditProducts = () => {
         minDuration: minDuration,
         maxDuration: maxDuration,
         subCategory: subCategory,
+        commodityTag: commodityTag,
         productDescription: productDescription,
         specification: getSpecifications(),
         countries: getCountry(),
@@ -279,10 +292,8 @@ const EditProducts = () => {
           <div>
             <form className="mx-5 my-5">
               <div className="d-flex justify-content-between">
-                <h2> Create Products</h2>
-                {/* <Link to="/commodityInsight">
-                <button className="btn btn-primary m-3">Show Commodity</button>
-              </Link> */}
+                <h2> Edit Products</h2>
+
                 <div
                   className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
                   align="right"
@@ -401,14 +412,23 @@ const EditProducts = () => {
                     value={minDuration}
                     type="text"
                     className="form-control product_input"
-                    aria-describedby="emailHelp"
                     onChange={(e) => setMinDuration(e.target.value)}
                   />
                 </div>
               </div>
 
-              <div className="row">
-                <div className="col-6" style={{ textAlign: "left" }}>
+              <div className="row" style={{ textAlign: "left" }}>
+                <div className="col-4  mb-3">
+                  <label className="form-label">Max Lead-Time</label>
+                  <input
+                    name="maxDuration"
+                    type="text"
+                    value={maxDuration}
+                    className="form-control product_input"
+                    onChange={(e) => setMaxDuration(e.target.value)}
+                  />
+                </div>
+                <div className="col-4" style={{ textAlign: "left" }}>
                   <label className="form-label">Specification</label>
                   {console.log("the specifics", productSpecific)}
                   {productSpecific &&
@@ -417,7 +437,6 @@ const EditProducts = () => {
                         <input
                           type="text"
                           defaultValue={spec[0]}
-                          // value={spec[0]}
                           onChange={(e) => handleInput(index, e)}
                           className="mx-1 form-control specification-keys"
                         />
@@ -425,7 +444,6 @@ const EditProducts = () => {
                         <input
                           type="text"
                           defaultValue={spec[1]}
-                          // value={spec[1]}
                           onChange={(e) => handleInput(index, e)}
                           className="mx-1 form-control specification-values"
                         />
@@ -444,7 +462,7 @@ const EditProducts = () => {
                     ))}
                 </div>
 
-                <div className="col-6" style={{ textAlign: "left" }}>
+                <div className="col-4" style={{ textAlign: "left" }}>
                   <label className="form-label">Country</label>
                   {console.log("the countries", countries)}
                   {countries &&
@@ -482,24 +500,24 @@ const EditProducts = () => {
                 </div>
               </div>
 
-              {/* <div className="row" style={{ textAlign: "left" }}>
+              <div className="row" style={{ textAlign: "left" }}>
                 <div className="col-12">
                   <label className="form-label">Commodity Tag</label>
 
                   <select
                     className="form-control"
                     name="commodityTag"
-                    onChange={(e) => setMyId(e.target.value)}
+                    onChange={(e) => setCommodityTag(e.target.value)}
                   >
-                    {commodityTag &&
-                      commodityTag.map((commodity) => (
+                    {commodities &&
+                      commodities.map((commodity) => (
                         <option key={commodity.id} value={commodity.id}>
                           {commodity.name}
                         </option>
                       ))}
                   </select>
                 </div>
-              </div> */}
+              </div>
 
               <div className="mb-3" style={{ textAlign: "left" }}>
                 <label className="form-label">Description</label>
@@ -510,9 +528,6 @@ const EditProducts = () => {
                   className="form-control"
                   onChange={(e) => setProductDescription(e.target.value)}
                 />
-                {/* {formErrors.productDescription && (
-                  <p className="text-danger">{formErrors.productDescription}</p>
-                )} */}
               </div>
 
               <div className="row mx-1">

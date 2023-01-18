@@ -31,6 +31,10 @@ const Products = () => {
     }
   };
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   useEffect(() => {
     getData();
   }, []);
@@ -72,7 +76,7 @@ const Products = () => {
     $(document).ready(function() {
       setTimeout(function() {
         $("#example").DataTable();
-      }, 1500);
+      }, 2000);
     });
   }, []);
   if (!loading) {
@@ -166,10 +170,16 @@ const Products = () => {
                                   {/* <td>{item.id}</td> */}
                                   <td>{index + 1}</td>
                                   <td>{item.productName}</td>
-                                  <td>{item.minPricePerUnit}</td>
-                                  <td>{item.maxPricePerUnit}</td>
+                                  <td>
+                                    {numberWithCommas(item.minPricePerUnit)}
+                                  </td>
+                                  <td>
+                                    {numberWithCommas(item.maxPricePerUnit)}
+                                  </td>
 
-                                  <td>{item.supplyCapacity}</td>
+                                  <td>
+                                    {numberWithCommas(item.supplyCapacity)}
+                                  </td>
                                   <td>{item.minDuration}</td>
                                   <td>{item.maxDuration}</td>
 
@@ -411,10 +421,10 @@ const Products = () => {
                                                             }}
                                                           >
                                                             {" "}
-                                                            Min price:{" "}
+                                                            Max Lead Time:{" "}
                                                           </h6>
                                                           {
-                                                            viewProduct.minPricePerUnit
+                                                            viewProduct.maxDuration
                                                           }
                                                         </div>
                                                         <div className="modal-body">
@@ -425,10 +435,10 @@ const Products = () => {
                                                             }}
                                                           >
                                                             {" "}
-                                                            Category:{" "}
+                                                            Unit:{" "}
                                                           </h6>
                                                           {
-                                                            viewProduct.subCategory
+                                                            viewProduct.unitForMinOrder
                                                           }
                                                         </div>
                                                       </div>
@@ -462,6 +472,21 @@ const Products = () => {
                                                             }}
                                                           >
                                                             {" "}
+                                                            Category:{" "}
+                                                          </h6>
+                                                          {
+                                                            viewProduct.parentCategory
+                                                          }
+                                                        </div>
+
+                                                        <div className="modal-body">
+                                                          <h6
+                                                            style={{
+                                                              color:
+                                                                "rgba(0, 0, 0, 0.62)",
+                                                            }}
+                                                          >
+                                                            {" "}
                                                             Min Duration:{" "}
                                                           </h6>
                                                           {
@@ -476,24 +501,10 @@ const Products = () => {
                                                             }}
                                                           >
                                                             {" "}
-                                                            Category:{" "}
+                                                            Min price:{" "}
                                                           </h6>
                                                           {
-                                                            viewProduct.subCategory
-                                                          }
-                                                        </div>
-                                                        <div className="modal-body">
-                                                          <h6
-                                                            style={{
-                                                              color:
-                                                                "rgba(0, 0, 0, 0.62)",
-                                                            }}
-                                                          >
-                                                            {" "}
-                                                            Subcategory:{" "}
-                                                          </h6>
-                                                          {
-                                                            viewProduct.subCategory
+                                                            viewProduct.minPricePerUnit
                                                           }
                                                         </div>
                                                       </div>
@@ -507,7 +518,33 @@ const Products = () => {
                                                         }}
                                                       >
                                                         {" "}
-                                                        Cost of product:{" "}
+                                                        Country Traded and
+                                                        Price:{" "}
+                                                        {viewProduct.CountryTraded &&
+                                                          viewProduct.CountryTraded.map(
+                                                            (productInfo) => {
+                                                              return (
+                                                                <div
+                                                                  className="d-flex my-2"
+                                                                  key={
+                                                                    productInfo.id
+                                                                  }
+                                                                >
+                                                                  <span>
+                                                                    {
+                                                                      productInfo.countryName
+                                                                    }
+                                                                    :
+                                                                  </span>
+                                                                  <span className="mx-3">
+                                                                    {
+                                                                      productInfo.price
+                                                                    }
+                                                                  </span>
+                                                                </div>
+                                                              );
+                                                            }
+                                                          )}
                                                       </h6>
                                                       <div className="d-flex">
                                                         <div className="modal-body">
@@ -518,14 +555,17 @@ const Products = () => {
                                                           }
                                                         </div>
                                                         <div className="modal-body">
-                                                          Currency: <br />
-                                                          {viewProduct.currency}
+                                                          Minimum Price Per
+                                                          Unit: <br />
+                                                          {
+                                                            viewProduct.minPricePerUnit
+                                                          }
                                                         </div>
                                                       </div>
                                                     </div>
                                                   </div>
                                                   <Link
-                                                    to={`/editproduct/${item.id}`}
+                                                    to={`/editproduct/${viewProduct.id}`}
                                                   >
                                                     <h5
                                                       style={{
@@ -545,41 +585,12 @@ const Products = () => {
                                                     border: "1px solid #000000",
                                                   }}
                                                 >
-                                                  ToFa has developed
-                                                  partnerships with Vietnam’s
-                                                  top suppliers to provide
-                                                  high-quality cashew nuts to
-                                                  markets worldwide. Vietnam has
-                                                  been producing cashews
-                                                  throughout the country since
-                                                  the early 1980s. Cashew nuts
-                                                  are grown in various regions
-                                                  in Vietnam, including Binh
-                                                  Phuoc, Dak Nong, Dong Nai,
-                                                  Binh Duong provinces.
-                                                  Particularly, Binh Phuoc
-                                                  province is known as the
-                                                  leading region for the growth
-                                                  of cashew nuts, constituting
-                                                  over 50% of the entire cashew
-                                                  nuts production in Vietnam.
-                                                  Tridge can provide two types
-                                                  of cashew nuts for export:
-                                                  kernel and processed nuts.
-                                                  With kernel cashew nuts, there
-                                                  are various sizes ranging from
-                                                  W180 to W500. For processed
-                                                  nuts, salt-roasted cashew is
-                                                  most popular. Moreover, Tridge
-                                                  can provide organic cashew
-                                                  kernel, which is gaining
-                                                  popularity in the market. he
-                                                  cashew nuts in Vietnam are
-                                                  based on size, color, and
-                                                  degree of rupture.
+                                                  {
+                                                    viewProduct.productDescription
+                                                  }
                                                 </div>
                                                 <Link
-                                                  to={`/editproduct/${item.id}`}
+                                                  to={`/editproduct/${viewProduct.id}`}
                                                 >
                                                   <h5
                                                     style={{ color: "#DC4D04" }}
