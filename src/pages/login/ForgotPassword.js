@@ -19,12 +19,13 @@ const ForgotPassword = () => {
     try {
       e.preventDefault();
 
-      const { data } = await axios.post("/auth/forgot-password", {
-        email,
-      });
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      const { data } = await axios.post(
+        "/auth/employee/forgot-password",
+        email
+      );
+      // setTimeout(() => {
+      //   navigate("/login");
+      // }, 2000);
       swal({
         title: "Password Link",
         text: `A Link has been Successfully sent to ${email}`,
@@ -33,21 +34,22 @@ const ForgotPassword = () => {
       });
       console.log(data);
     } catch (err) {
-      if (err.response.data.errors[0].field) {
-        setFormErrors(
-          err.response.data.errors.reduce(function(obj, err) {
-            obj[err.field] = err.message;
-            return obj;
-          }, {})
-        );
-      } else {
-        console.log(err.response.data.errors[0].message);
-        setCustomError(err.response.data.errors[0].message);
-        alert(customError);
-      }
-    }
-    if (!formErrors.email || !formErrors.password) {
-      navigate("/confirmpassword");
+      console.log(err);
+      //   if (err.response.data.errors[0].field) {
+      //     setFormErrors(
+      //       err.response.data.errors.reduce(function(obj, err) {
+      //         obj[err.field] = err.message;
+      //         return obj;
+      //       }, {})
+      //     );
+      //   } else {
+      //     console.log(err.response.data.errors[0].message);
+      //     setCustomError(err.response.data.errors[0].message);
+      //     alert(customError);
+      //   }
+      // }
+      // if (!formErrors.email || !formErrors.password) {
+      //   navigate("/confirmpassword");
     }
   };
   return (

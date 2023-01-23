@@ -8,6 +8,7 @@ import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
+import "./inquiries.css";
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -115,8 +116,8 @@ const Inquiries = () => {
                             <tr>
                               <th>ID</th>
                               <th>productName</th>
-                              <th>targetPrice</th>
-                              <th>unit</th>
+                              <th>Name</th>
+                              <th>email</th>
                               <th>Country</th>
                               <th>paymentTerms</th>
                               <th className="text-center">Action</th>
@@ -128,8 +129,8 @@ const Inquiries = () => {
                                 <tr key={item.id}>
                                   <td>{index + 1}</td>
                                   <td>{item.productName}</td>
-                                  <td>{item.targetPrice}</td>
-                                  <td>{item.unit}</td>
+                                  <td>{item.buyer && item.buyer.fullName}</td>
+                                  <td>{item.buyer && item.buyer.email}</td>
                                   <td>{item.destinationPort}</td>
                                   <td>{item.paymentTerms}</td>
 
@@ -185,68 +186,107 @@ const Inquiries = () => {
                                                 aria-label="Close"
                                               ></button>
                                             </div>
+                                            <div className="modal-wrapper">
+                                              <div className="d-flex ">
+                                                <div className="d-flex viewmodal-body px-2">
+                                                  <div>Full Name:</div>
+                                                  <br />
+                                                  <div>
+                                                    {" "}
+                                                    {inquiryView.buyer &&
+                                                      inquiryView.buyer
+                                                        .fullName}
+                                                  </div>
+                                                </div>
+                                                <div className=" d-flex viewmodal-body px-2">
+                                                  <div>Email: </div>
+                                                  <div>
+                                                    {inquiryView.buyer &&
+                                                      inquiryView.buyer.email}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className="d-flex ">
+                                                <div className="d-flex viewmodal-body px-2">
+                                                  <div>
+                                                    Product Name:
+                                                    {inquiryView.ProductName}
+                                                  </div>
+                                                  <br />
+                                                  <div> Cashew</div>
+                                                </div>
+                                                <div className="viewmodal-body px-2">
+                                                  <label>Payment Terms: </label>
+                                                  <p>
+                                                    {inquiryView.paymentTerms}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                              <div className="d-flex">
+                                                <div className="d-flex viewmodal-body px-2">
+                                                  <div>Terms Of Trade: </div>
+                                                  <div>
+                                                    {inquiryView.termsOfTrade}
+                                                  </div>
+                                                </div>
 
-                                            <div className="modal-body px-2">
-                                              <label>
-                                                Product Name:
-                                                {inquiryView.ProductName}
-                                              </label>
-                                              <br />
-                                              <p> Cashew</p>
-                                            </div>
-                                            <div className="modal-body px-2">
-                                              <label>Payment Terms: </label>
-                                              <p>{inquiryView.paymentTerms}</p>
-                                            </div>
-
-                                            <div className="modal-body px-2">
-                                              <label>Terms Of Trade: </label>
-                                              <p>{inquiryView.termsOfTrade}</p>
-                                            </div>
-
-                                            <div className="modal-body px-2">
-                                              <label>Destination Port: </label>
-                                              <p>
-                                                {inquiryView.destinationPort}
-                                              </p>
-                                            </div>
-                                            <div className="modal-body px-2">
-                                              <label>Quantity Requested:</label>
-                                              <p>
-                                                {inquiryView.quantityRequired}
-                                              </p>
-                                            </div>
-                                            <div className="modal-body px-2">
-                                              <label>Target Price:</label>
-                                              <p>{inquiryView.targetPrice}</p>
-                                            </div>
-
-                                            <div className=" modal-bodyb px-2">
-                                              <label>Units:</label>
-                                              <p> {inquiryView.unit}</p>
-                                            </div>
-                                            <div className="modal-body px-2">
-                                              <label>
-                                                Product Specification:
-                                              </label>
-                                              <p>
-                                                {inquiryView.productDescription}
-                                              </p>
-                                              <p>
-                                                Commodo eget a et dignissim
-                                                dignissim morbi vitae, mi. Mi
-                                                aliquam sit ultrices enim
-                                                cursus. Leo sapien, pretium duis
-                                                est eu volutpat interdum eu non.
-                                                Odio eget nullam elit laoreet.
-                                                Libero at felis nam at orci
-                                                venenatis rutrum nunc. Etiam
-                                                mattis ornare pellentesque
-                                                iaculis enim. Felis eu non in
-                                                aliquam egestas placerat. Eget
-                                                maecenas ornare venenatis lacus
-                                                nunc{" "}
-                                              </p>
+                                                <div className="d-flex viewmodal-body px-2">
+                                                  <div>Destination Port: </div>
+                                                  <div>
+                                                    {
+                                                      inquiryView.destinationPort
+                                                    }
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div className="d-flex">
+                                                <div className="d-flex viewmodal-body px-2">
+                                                  <div>Quantity Requested:</div>
+                                                  <div>
+                                                    {
+                                                      inquiryView.quantityRequired
+                                                    }
+                                                  </div>
+                                                </div>
+                                                <div className="viewmodal-body px-2">
+                                                  <label>Target Price:</label>
+                                                  <p>
+                                                    {inquiryView.targetPrice}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                              <div className="d-flex">
+                                                <div className="viewmodal-body px-2">
+                                                  <label>Units:</label>
+                                                  <p> {inquiryView.unit}</p>
+                                                </div>
+                                                <div className="viewmodal-body px-2">
+                                                  <label>
+                                                    Product Specification:
+                                                  </label>
+                                                  <p>
+                                                    {
+                                                      inquiryView.productDescription
+                                                    }
+                                                  </p>
+                                                  <p>
+                                                    Commodo eget a et dignissim
+                                                    dignissim morbi vitae, mi.
+                                                    Mi aliquam sit ultrices enim
+                                                    cursus. Leo sapien, pretium
+                                                    duis est eu volutpat
+                                                    interdum eu non. Odio eget
+                                                    nullam elit laoreet. Libero
+                                                    at felis nam at orci
+                                                    venenatis rutrum nunc. Etiam
+                                                    mattis ornare pellentesque
+                                                    iaculis enim. Felis eu non
+                                                    in aliquam egestas placerat.
+                                                    Eget maecenas ornare
+                                                    venenatis lacus nunc{" "}
+                                                  </p>
+                                                </div>
+                                              </div>
                                             </div>
 
                                             <div className="modal-footer">

@@ -7,11 +7,12 @@ import "./message.css";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 
-export const NewOrderModal = ({ buyerId }) => {
+export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   const [country, setCountry] = useState("");
   const [products, setProducts] = useState([]);
   const [productsId, setProductsId] = useState([]);
   const [formErrors, setFormErrors] = useState("");
+  const [orderAlert, setOrderAlert] = useState("");
   const [customError, setCustomError] = useState("");
   const [orderDetails, setOrderDetails] = useState({
     quantity: "",
@@ -89,6 +90,9 @@ export const NewOrderModal = ({ buyerId }) => {
           "/order/foreign",
           foreignOrderInfo
         );
+        setOrderAlert(
+          `Your order has been created. Proceed to "My Order" to approve`
+        );
         console.log(result);
         console.log(localOrderInfo);
       } else {
@@ -96,6 +100,9 @@ export const NewOrderModal = ({ buyerId }) => {
         const { data: result } = await axios.post(
           "/order/local",
           localOrderInfo
+        );
+        setOrderAlert(
+          `Your order has been created. Proceed to "My Order" to approve`
         );
         console.log(result);
       }
@@ -124,6 +131,12 @@ export const NewOrderModal = ({ buyerId }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (orderAlert) {
+      return handleSendMsg(orderAlert, buyerId);
+    }
+  }, [orderAlert]);
 
   return (
     <div

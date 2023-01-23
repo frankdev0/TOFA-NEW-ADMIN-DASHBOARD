@@ -70,6 +70,10 @@ const Tractions = () => {
     });
   };
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   useEffect(() => {}, [loading]);
 
   useEffect(() => {
@@ -174,7 +178,7 @@ const Tractions = () => {
                                   <tr key={item.id}>
                                     <td width="40px">{index + 1}</td>
                                     <td>{item.name}</td>
-                                    <td>{item.count}</td>
+                                    <td>{numberWithCommas(item.count)}</td>
 
                                     <td className="action-table" width="50px">
                                       <div className="nav-item dropdown">

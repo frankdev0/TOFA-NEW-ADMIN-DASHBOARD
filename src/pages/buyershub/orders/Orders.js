@@ -1,22 +1,15 @@
-import React, { useState, useEffect, useContext } from "react";
-// import { useFetch } from '../../../useFetch'
-// import { axios } from '../../components/baseUrl'
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-
-import { datatabless } from "../../website-settings/commodityInsight/DummyData";
-// import '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css'
-
 import "jquery/dist/jquery.min.js";
-
-//Datatable Modules
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
+import { confirmAlert } from "react-confirm-alert";
 import { axios } from "../../components/baseUrl";
 import dayjs from "dayjs";
-import { AppContext } from "../../../utils/contexts/AppState";
 import { Protectedd } from "../../../utils/Protectedd";
+import "./orders.css";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -26,6 +19,7 @@ const Orders = () => {
   const [metricsLoading, setMetricsLoading] = useState(true);
   const [viewLoader, setViewLoader] = useState(false);
   const [metrics, setMetrics] = useState({});
+  const [paymentReceipt, setPaymentReceipt] = useState(null);
 
   const getOrders = async () => {
     try {
@@ -43,6 +37,52 @@ const Orders = () => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+
+  const getPaymentReceipt = async (paymentReceiptID) => {
+    try {
+      await axios
+        .get(`/order/image/receipt/${paymentReceiptID}`)
+        .then((response) => {
+          setPaymentReceipt(response.data);
+          console.log(response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submit = (paymentReceiptID) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure to do this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: (e) => deletePaymentReceipt(paymentReceiptID),
+        },
+        {
+          label: "No",
+          //onClick: () => alert('Click No')
+        },
+      ],
+    });
+  };
+
+  const deletePaymentReceipt = async (paymentReceiptID) => {
+    try {
+      await axios
+        .delete(`order/image/receipt/${paymentReceiptID}`)
+        .then((response) => {
+          console.log(response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPaymentReceipt();
+  }, []);
 
   useEffect(() => {
     //initialize datatable
@@ -92,13 +132,24 @@ const Orders = () => {
     getOrders();
   }, []);
 
-  const showDetails = (orderID) => {
-    setViewLoader(true);
-    axios.get(`/order/${orderID}`).then((response) => {
-      setOrder(response.data.data);
-      console.log(response.data.data);
-      setViewLoader(false);
-    });
+  const showDetails = async (orderID) => {
+    try {
+      setViewLoader(true);
+      await axios.get(`/order/${orderID}`).then((response) => {
+        setOrder(response.data.data);
+        console.log(response.data.data);
+        setViewLoader(false);
+      });
+      const paymentReceiptID = orderID;
+      await axios
+        .get(`/order/image/receipt/${paymentReceiptID}`)
+        .then((response) => {
+          setPaymentReceipt(response.data);
+          console.log(response.data);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (loading || metricsLoading) {
@@ -344,7 +395,7 @@ const Orders = () => {
                                           <div className="modal-content">
                                             <div className="modal-header">
                                               <h3
-                                                className="modal-title"
+                                                className="order-modal-title"
                                                 id="exampleModalLabel"
                                               >
                                                 Order Details
@@ -357,22 +408,15 @@ const Orders = () => {
                                               ></button>
                                             </div>
                                             <div>
-                                              <div className="top-ctn d-flex">
-                                                <div className="modal-body">
-                                                  <img
-                                                    src={
-                                                      order.product &&
-                                                      order.product
-                                                        .productImages[0].image
-                                                    }
-                                                    alt="order"
-                                                    style={{
-                                                      width: "125px",
-                                                      height: "125px",
-                                                    }}
-                                                  />
-                                                </div>
-                                                <div className="modal-body">
+                                              <div
+                                                className="middle-ctn d-flex mx-auto d-flex align-items-center"
+                                                style={{
+                                                  width: "80%",
+                                                  justifyContent:
+                                                    "space-between",
+                                                }}
+                                              >
+                                                <div className="viewmodal-body">
                                                   <h6
                                                     style={{
                                                       color:
@@ -401,19 +445,41 @@ const Orders = () => {
                                                     </span>
                                                   </h6>
                                                 </div>
-                                                <div className="modal-body">
-                                                  <h5
-                                                    style={{
-                                                      color:
-                                                        "rgba(0, 0, 0, 0.62)",
-                                                    }}
-                                                  >
-                                                    Order status
-                                                  </h5>
+                                                <div className="viewmodal-body">
+                                                  <div>Payment Receipt</div>
+                                                  <div className="receipt-container">
+                                                    {/* <img src={paymentReceipt} alt='payment receipt'/> */}
+                                                    <i
+                                                      className="fa fa-file receipt"
+                                                      aria-hidden="true"
+                                                    ></i>
+                                                    <div className="receipt-call-to-action">
+                                                      <a
+                                                        href="/"
+                                                        className="action-font"
+                                                      >
+                                                        view
+                                                      </a>
+                                                      <div
+                                                        className="action-font"
+                                                        onClick={(e) =>
+                                                          submit(item.id)
+                                                        }
+                                                      >
+                                                        delete
+                                                      </div>
+                                                      <div className="action-font">
+                                                        downlaod
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div className="viewmodal-body">
                                                   <h6
                                                     style={{
                                                       color:
                                                         "rgba(0, 0, 0, 0.62)",
+                                                      width: "70%",
                                                     }}
                                                   >
                                                     {" "}
@@ -422,7 +488,7 @@ const Orders = () => {
                                                   </h6>
                                                   <select
                                                     style={{ width: "150px" }}
-                                                    className="form-control my-3"
+                                                    className="form-control"
                                                     onChange={
                                                       handleStatusChange
                                                     }
@@ -456,18 +522,15 @@ const Orders = () => {
                                                 </div>
                                               </div>
 
-                                              <div
-                                                className="modal-body middle-ctn d-flex"
-                                                style={{ width: "100%" }}
-                                              >
+                                              <div className="my-2 middle-ctn d-flex mx-auto d-flex justify-content-center align-items-center">
                                                 <div
                                                   className="middle-ctn-left"
                                                   style={{
                                                     border: "1px solid #DDDDDD",
-                                                    width: "50%",
+                                                    width: "40%",
                                                   }}
                                                 >
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -481,7 +544,7 @@ const Orders = () => {
                                                       {order.quantityOrdered}
                                                     </p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -493,7 +556,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.country}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -505,7 +568,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.incoterm}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -517,7 +580,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.shippingType}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -529,7 +592,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.paymentTerm}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -547,7 +610,7 @@ const Orders = () => {
                                                     >
                                                       {order.status ===
                                                         "PENDING" && (
-                                                        <div className="bg-warning rounded-pill text-center mx-2">
+                                                        <div className="bg-warning rounded-pill text-center">
                                                           PENDING
                                                         </div>
                                                       )}
@@ -583,10 +646,10 @@ const Orders = () => {
                                                   className="middle-ctn-right"
                                                   style={{
                                                     border: "1px solid #DDDDDD",
-                                                    width: "50%",
+                                                    width: "40%",
                                                   }}
                                                 >
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -601,7 +664,7 @@ const Orders = () => {
                                                         order.buyer.fullName}
                                                     </p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -613,7 +676,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.buyerID}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -627,7 +690,7 @@ const Orders = () => {
                                                         order.buyer.email}
                                                     </p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -639,7 +702,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.orderNumber}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -651,7 +714,7 @@ const Orders = () => {
                                                     </h6>
                                                     <p>{order.port}</p>
                                                   </div>
-                                                  <div className="modal-body">
+                                                  <div className="viewmodal-body">
                                                     <h6
                                                       style={{
                                                         color:
@@ -668,13 +731,9 @@ const Orders = () => {
                                               <div className="bottom-ctn"></div>
                                             </div>
 
-                                            <div className="modal-body px-2">
-                                              <label>Note: </label>
+                                            <div className="modal-body px-2 order-note">
+                                              <div>Note: </div>
                                               <p>{order.note}</p>
-                                            </div>
-                                            <div className="modal-body px-2">
-                                              <label>Product ID: </label>
-                                              <p>{order.productID}</p>
                                             </div>
 
                                             <div className="modal-footer">
@@ -717,8 +776,7 @@ const Orders = () => {
             <div className="container-fluid">
               <div className="row">
                 <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                  Copyright © 2023 Concept. All rights reserved. Dashboard by{" "}
-                  <a href="https://colorlib.com/wp/">Colorlib</a>.
+                  Copyright © 2023 Concept. All rights reserved
                 </div>
               </div>
             </div>

@@ -1,12 +1,11 @@
 import React, { useContext, useRef, useState } from "react";
 import logo from "../../../assets/logo.JPG";
 import { axios } from "../baseUrl";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import { AppContext } from "../../../utils/contexts/AppState";
 
 const Navbar = () => {
-  const [currentUser, setCurrentUser] = useState();
   const [toggleLogout, setToggleLogout] = useState(false);
   const navigate = useNavigate();
 
@@ -23,9 +22,8 @@ const Navbar = () => {
     axios
       .get("auth/signout")
       .then((response) => {
-        setCurrentUser(response.data.currentUser);
         console.log("this is from protected route", response.data.currentUser);
-        if (setCurrentUser) {
+        if (response.data.currentUser) {
           navigate("/login");
         }
       })
@@ -127,11 +125,11 @@ const Navbar = () => {
 
                   <p>Help & Support </p>
                 </a>
-                <a className="sub-menu-link" href="new">
+                <Link to="/login" className="sub-menu-link">
                   {/* <img src={logout} alt="profile" /> */}
                   <i className="fa fa-sign-out" aria-hidden="true"></i>
                   <p onClick={handleLogout}>Logout </p>
-                </a>
+                </Link>
               </div>
             </div>
           </ul>

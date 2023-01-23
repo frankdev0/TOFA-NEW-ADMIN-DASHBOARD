@@ -17,7 +17,7 @@ const MessageCenter = () => {
   const [loading, setLoading] = useState(true);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [buyerId, setBuyerId] = useState(null);
-  const [buyersName, setBuyersName] = useState([]);
+  const [buyersName, setBuyersName] = useState("");
   const scrollRef = useRef();
   const socket = useRef();
   const { user } = useContext(AppContext);
@@ -82,7 +82,8 @@ const MessageCenter = () => {
   //   (async () => {})();
   // }, []);
 
-  const showChats = async (buyerId) => {
+  const showChats = async (buyerId, fullName) => {
+    setBuyersName(fullName);
     try {
       const {
         data: { data },
@@ -91,15 +92,15 @@ const MessageCenter = () => {
       setMessages(data);
       setBuyerId(buyerId);
       setLoading(false);
-      const {
-        data: { newData },
-      } = await axios.get("/admin/contacts/").then((response) => {
-        setBuyersName(
-          response.data.data.map((buyerName) => buyerName.fullName[buyerId])
-        );
-        console.log(response.data.data.map((buyerName) => buyerName.fullName));
-      });
-      console.log(newData);
+      // const {
+      //   data: { newData },
+      // } = await axios.get("/admin/contacts/").then((response) => {
+      //   setBuyersName(
+      //     response.data.data.map((buyerName) => buyerName.fullName[buyerId])
+      //   );
+      //   console.log(response.data.data.map((buyerName) => buyerName.fullName));
+      // });
+      // console.log(newData);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -174,7 +175,7 @@ const MessageCenter = () => {
                           <div
                             key={item.id}
                             className=" account-summary"
-                            onClick={(e) => showChats(item.id)}
+                            onClick={(e) => showChats(item.id, item.fullName)}
                           >
                             <h6 className="fontz buyers-name">
                               {item.fullName}
@@ -205,7 +206,7 @@ const MessageCenter = () => {
               <div className="chat-header bg-white border-bottom">
                 <h2
                   className="active-user-chat"
-                  // onClick={() => handleBuyersName(buyerId)}
+                  style={{ textAlign: "center" }}
                 >
                   {/* {employee} */}
                   {buyersName}
@@ -217,13 +218,11 @@ const MessageCenter = () => {
                 ) : (
                   <div className="chat-module">
                     <div className="chat-module-top">
-                      <div className="chat-module-body border-bottom">
+                      <div
+                        className="chat-module-body border-bottom"
+                        style={{ marginTop: "28px" }}
+                      >
                         <div>
-                          <img
-                            alt="Kimberly"
-                            src={avatar1}
-                            className="rounded-circle user-avatar-lg"
-                          />
                           {messages.map((msg, index) => {
                             return (
                               <div
@@ -239,7 +238,8 @@ const MessageCenter = () => {
                                   }
                                 >
                                   <div className="chat-item-ody">
-                                    {msg.message}
+                                    <span>{msg.message}</span>
+
                                     <p className="chat-timestamp">
                                       {dayjs(msg.createdAt).format("hh:mm a")}
                                     </p>
@@ -272,7 +272,10 @@ const MessageCenter = () => {
                         </button>
                       </div>
                       {/* <!-- Modal --> */}
-                      <NewOrderModal buyerId={buyerId} />
+                      <NewOrderModal
+                        buyerId={buyerId}
+                        handleSendMsg={handleSendMsg}
+                      />
 
                       <ChatInput
                         handleSendMsg={handleSendMsg}

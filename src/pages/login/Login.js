@@ -6,6 +6,8 @@ import { axios } from "../components/baseUrl";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { AuthContext } from "../../utils/contexts/AuthContext";
 // import { useFetch } from "../../useFetch";
 
@@ -18,8 +20,6 @@ const Login = () => {
   const [formErrors, setFormErrors] = useState({});
   const [icon, setIcon] = useState(eyeOff);
   const [type, setType] = useState("password");
-
-  const [customError, setCustomError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // const { currentUser } = useContext(AuthContext);
@@ -63,6 +63,16 @@ const Login = () => {
       // dispatch({ type: "LOGIN", payload: data });
       console.log(data);
     } catch (err) {
+      setLoading(false);
+      console.log(err);
+      if (!err.response.data.errors) {
+        return toast.error(`The Server is Down`, {
+          position: "top-right",
+          autoClose: 4000,
+          pauseHover: true,
+          draggable: true,
+        });
+      }
       if (err.response.data.errors[0].field) {
         setFormErrors(
           err.response.data.errors.reduce(function(obj, err) {
@@ -72,12 +82,15 @@ const Login = () => {
         );
       } else {
         console.log(err.response.data.errors[0].message);
-        setCustomError(err.response.data.errors[0].message);
-        alert(customError);
+        if (err.response.data.errors[0].message) {
+          toast.error(`${err.response.data.errors[0].message}`, {
+            position: "top-right",
+            autoClose: 4000,
+            pauseHover: true,
+            draggable: true,
+          });
+        }
       }
-    }
-    if (!formErrors.email || !formErrors.password) {
-      navigate("/overview");
     }
   };
   return (
@@ -87,6 +100,7 @@ const Login = () => {
     <!-- login page  -->
     <!-- ============================================================== --> */}
         <div className="splash-container">
+          <ToastContainer />
           <div className="card ">
             <div className="card-header text-center">
               <a href="../index.html">
@@ -129,21 +143,30 @@ const Login = () => {
                   <span>
                     <Icon onClick={handleToggle} icon={icon} size={15} />{" "}
                   </span>
-                  {formErrors.password && (
-                    <p className="text-danger">{formErrors.password}</p>
-                  )}
                 </div>
-                {/* {formErrors.pass} */}
-                <button
-                  type="submit"
-                  className="btn btn-dark btn-lg btn-block"
-                  disabled={loading}
-                >
-                  {loading && (
-                    <i className="fa fa-spinner" aria-hidden="true"></i>
-                  )}
-                  Sign in
-                </button>
+                {formErrors.password && (
+                  <p className="text-danger">{formErrors.password}</p>
+                )}
+
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-4"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-4"
+                  >
+                    Login
+                  </button>
+                )}
               </form>
             </div>
             <div className="card-footer bg-white p-0  ">
@@ -153,7 +176,7 @@ const Login = () => {
                 </a>
               </div>
               <div className="card-footer-item card-footer-item-bordered">
-                <a href="link" className="footer-link">
+                <a href="/forgot-password" className="footer-link">
                   Forgot Password
                 </a>
               </div>
@@ -161,12 +184,8 @@ const Login = () => {
           </div>
         </div>
 
-        {/* <!-- ============================================================== -->
-    <!-- end login page  -->
-    <!-- ============================================================== -->
-    <!-- Optional JavaScript -->
-    <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.js"></script> */}
+        {/* 
+    <!-- end login page  --> */}
       </section>
     </div>
   );
