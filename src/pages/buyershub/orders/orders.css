@@ -15,12 +15,14 @@
   cursor: pointer;
 }
 
-.receipt-container{
-  position: relative;
-}
+
 .receipt-call-to-action{
   position: absolute;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: auto;
   top: 3;
 }
 .receipt{
@@ -29,7 +31,22 @@
   font-size: 2rem;
 }
 
- a:active{
-  color: aquamarine;
-  background: yellow;
+ .fa-trash:hover{
+  color: red;
+}
+
+.fa-download:hover{
+  color: blue;
+}
+
+.react-confirm-alert-body {
+  z-index: 2000 !important;
+}
+
+.react-confirm-alert {
+  z-index: 2000 !important;
+}
+
+.react-confirm-alert-overlay{
+  z-index: 2000 !important;
 }

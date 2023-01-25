@@ -11,9 +11,8 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   const [country, setCountry] = useState("");
   const [products, setProducts] = useState([]);
   const [productsId, setProductsId] = useState([]);
-  const [formErrors, setFormErrors] = useState("");
   const [orderAlert, setOrderAlert] = useState("");
-  const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [orderDetails, setOrderDetails] = useState({
     quantity: "",
     country: "",
@@ -29,10 +28,9 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   });
   const options = useMemo(() => countryList().getData(), []);
 
-  const productId = useParams();
-  console.log(productId);
-
   const navigate = useNavigate();
+
+  // console.log(orderAlert);
 
   const handleOrder = (e) => {
     setOrderDetails({ ...orderDetails, [e.target.name]: e.target.value });
@@ -41,11 +39,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   const getProductInfo = async () => {
     try {
       const { data } = await axios.get("/product");
-      const products = data.data.map((item) => item.productName);
-      setProducts(products);
-      const id = data.data.map((item) => item.id);
-      setProductsId(id);
-      console.log(id);
+      setProducts(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -58,9 +52,12 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   // const totalCost = priceSelected * orderDetails.quantity;
 
   const handleSubmit = async (e) => {
+    setLoading(true);
+    console.log("productsId", productsId);
     try {
       e.preventDefault();
       const foreignOrderInfo = {
+        productID: productsId,
         quantity: orderDetails.quantity,
         buyerID: buyerId,
         country: country.label,
@@ -72,6 +69,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
         productRequirement: orderDetails.productRequirement,
       };
       const localOrderInfo = {
+        productID: productsId,
         quantity: orderDetails.quantity,
         buyerID: buyerId,
         country: country.label,
@@ -90,9 +88,22 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
           "/order/foreign",
           foreignOrderInfo
         );
-        setOrderAlert(
-          `Your order has been created. Proceed to "My Order" to approve`
-        );
+        setLoading(false);
+        setOrderDetails({
+          quantity: "",
+          country: "",
+          countryOfOrigin: "",
+          shipping: "",
+          paymentTerm: "",
+          cost: "",
+          port: "",
+          address: "",
+          productRequirement: "",
+          specification: "",
+          grade: "",
+        });
+        setOrderAlert(JSON.stringify(result.data));
+        // setOrderAlert(`Your order has been created`);
         console.log(result);
         console.log(localOrderInfo);
       } else {
@@ -101,33 +112,51 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
           "/order/local",
           localOrderInfo
         );
-        setOrderAlert(
-          `Your order has been created. Proceed to "My Order" to approve`
-        );
+        setOrderDetails({
+          quantity: "",
+          country: "",
+          countryOfOrigin: "",
+          shipping: "",
+          paymentTerm: "",
+          cost: "",
+          port: "",
+          address: "",
+          productRequirement: "",
+          specification: "",
+          grade: "",
+        });
+        // setOrderAlert(`Your order has been created`);
+        setOrderAlert(JSON.stringify(result.data));
         console.log(result);
       }
 
-      // setTimeout(() => {
-      //   navigate(-1);
-      // }, 3000);
-      // toast.success("SUCCESSFULLY CREATED ORDER", {
-      //   position: "top-right",
-      //   autoClose: 4000,
-      //   pauseHover: true,
-      //   draggable: true,
-      // });
+      setTimeout(() => {
+        navigate("/message");
+      }, 3000);
+      toast.success("SUCCESSFULLY CREATED ORDER", {
+        position: "top-right",
+        autoClose: 4000,
+        pauseHover: true,
+        draggable: true,
+      });
     } catch (err) {
-      if (err.response.data.errors[0].field) {
-        setFormErrors(
-          err.response.data.errors.reduce(function(obj, err) {
-            obj[err.field] = err.message;
-            return obj;
-          }, {})
-        );
+      console.log(err);
+      if (err.response.data.errors[0].message) {
+        toast.error(`${err.response.data.errors[0].message}`, {
+          position: "top-right",
+          autoClose: 4000,
+          pauseHover: true,
+          draggable: true,
+        });
       } else {
-        console.log(err.response.data.errors[0].message);
-        setCustomError(err.response.data.errors[0].message);
-        alert(customError);
+        if (err.response.data.errors[0].message) {
+          toast.error(`${err.response.data.errors[0].message}`, {
+            position: "top-right",
+            autoClose: 4000,
+            pauseHover: true,
+            draggable: true,
+          });
+        }
       }
     }
   };
@@ -171,20 +200,18 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
                     <select
                       className="form-select selects"
                       aria-label="Default select example"
-                      onChange={handleOrder}
-                      name=""
+                      onChange={(e) => setProductsId(e.target.value)}
+                      name="productID"
                     >
-                      {/* {products &&
-                        products.map((item, id) => { */}
-                      {/* return ( */}
                       <option>...select product</option>
-                      <option value="1" className="options">
-                        Cocoa
-                      </option>
-                      <option>Cashew</option>
-                      <option>Maize</option>
-                      {/* );
-                        })} */}
+                      {products &&
+                        products.map((product) => {
+                          return (
+                            <option key={product.id} value={product.id}>
+                              {product.productName}
+                            </option>
+                          );
+                        })}
                     </select>
                   </div>
 

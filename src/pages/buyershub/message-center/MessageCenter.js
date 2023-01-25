@@ -31,11 +31,6 @@ const MessageCenter = () => {
   };
 
   const dataResponse = useContext(AppContext);
-  const employee = dataResponse.user.fullName;
-
-  // const Capitalize = (str) => {
-  //   return str.charAt(0);
-  // };
 
   const myContacts = async () => {
     try {
@@ -48,18 +43,23 @@ const MessageCenter = () => {
     }
   };
 
-  // const handleBuyersName = async (buyerId) => {
-  //   try {
-  //     axios.get("/admin/contacts").then((response) => {
-  //       setBuyersName(
-  //         response.data.data.map((buyerName) => buyerName.fullName)
-  //       );
-  //       console.log(response.data.data.map((buyerName) => buyerName.fullName));
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  function isMsgObject(msg) {
+    let isObject;
+
+    try {
+      const orderResultObj = JSON.parse(msg);
+      if (typeof orderResultObj === "object") {
+        isObject = true;
+      }
+      // console.log(orderResultObj);
+    } catch (error) {
+      if (error) {
+        isObject = false;
+      }
+    }
+
+    return isObject;
+  }
 
   useEffect(() => {
     myContacts();
@@ -68,7 +68,7 @@ const MessageCenter = () => {
   useEffect(() => {
     if (user) {
       socket.current = io(
-        "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com"
+        "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081"
       );
       socket.current.emit(socketEvents.addUser, user.id, user.type);
       socket.current.on(socketEvents.receiveMessage, (msg) => {
@@ -77,10 +77,6 @@ const MessageCenter = () => {
       });
     }
   }, [user]);
-
-  // useEffect(() => {
-  //   (async () => {})();
-  // }, []);
 
   const showChats = async (buyerId, fullName) => {
     setBuyersName(fullName);
@@ -92,15 +88,6 @@ const MessageCenter = () => {
       setMessages(data);
       setBuyerId(buyerId);
       setLoading(false);
-      // const {
-      //   data: { newData },
-      // } = await axios.get("/admin/contacts/").then((response) => {
-      //   setBuyersName(
-      //     response.data.data.map((buyerName) => buyerName.fullName[buyerId])
-      //   );
-      //   console.log(response.data.data.map((buyerName) => buyerName.fullName));
-      // });
-      // console.log(newData);
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -183,12 +170,16 @@ const MessageCenter = () => {
                             </h6>
                             <div className="message-list">
                               {item.Message.map((msg) => {
+                                console.log("JSON", isMsgObject(msg.message));
+                                // console.log("JSON", JSON.parse(msg.message));
                                 return (
                                   <p
                                     className="fontz message-list "
                                     key={item.id}
                                   >
-                                    {msg.message}
+                                    {isMsgObject(msg.message)
+                                      ? "Your order has been created"
+                                      : msg.message}
                                   </p>
                                 );
                               })}
@@ -238,8 +229,12 @@ const MessageCenter = () => {
                                   }
                                 >
                                   <div className="chat-item-ody">
-                                    <span>{msg.message}</span>
-
+                                    {" "}
+                                    {isMsgObject(msg.message) ? (
+                                      "Your order has been created"
+                                    ) : (
+                                      <span>{msg.message} </span>
+                                    )}
                                     <p className="chat-timestamp">
                                       {dayjs(msg.createdAt).format("hh:mm a")}
                                     </p>

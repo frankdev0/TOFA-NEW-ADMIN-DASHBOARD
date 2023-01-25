@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
+import { saveAs } from "file-saver";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -19,7 +20,7 @@ const Orders = () => {
   const [metricsLoading, setMetricsLoading] = useState(true);
   const [viewLoader, setViewLoader] = useState(false);
   const [metrics, setMetrics] = useState({});
-  const [paymentReceipt, setPaymentReceipt] = useState(null);
+  const [paymentReceipt, setPaymentReceipt] = useState("");
 
   const getOrders = async () => {
     try {
@@ -37,19 +38,6 @@ const Orders = () => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-
-  const getPaymentReceipt = async (paymentReceiptID) => {
-    try {
-      await axios
-        .get(`/order/image/receipt/${paymentReceiptID}`)
-        .then((response) => {
-          setPaymentReceipt(response.data);
-          console.log(response.data);
-        });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const submit = (paymentReceiptID) => {
     confirmAlert({
@@ -80,9 +68,9 @@ const Orders = () => {
     }
   };
 
-  useEffect(() => {
-    getPaymentReceipt();
-  }, []);
+  // useEffect(() => {
+  //   getPaymentReceipt();
+  // }, []);
 
   useEffect(() => {
     //initialize datatable
@@ -139,17 +127,21 @@ const Orders = () => {
         setOrder(response.data.data);
         console.log(response.data.data);
         setViewLoader(false);
+        setPaymentReceipt(response.data.data.paymentReceipt);
       });
-      const paymentReceiptID = orderID;
-      await axios
-        .get(`/order/image/receipt/${paymentReceiptID}`)
-        .then((response) => {
-          setPaymentReceipt(response.data);
-          console.log(response.data);
-        });
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const downloadReceipt = () => {
+    const fileName = paymentReceipt.image.split("./").pop();
+    const aTag = document.createElement("a");
+    aTag.href = paymentReceipt;
+    aTag.setAttribute("download", fileName);
+    document.body.appendChild(aTag);
+    aTag.click();
+    aTag.remove();
   };
 
   if (loading || metricsLoading) {
@@ -298,7 +290,7 @@ const Orders = () => {
                             <tr>
                               <th>ID</th>
                               <th>Cost</th>
-                              <th>Country</th>
+                              <th>Order No</th>
                               <th>IncoTerm</th>
                               <th>paymentTerm</th>
                               <th>ShippingType</th>
@@ -313,7 +305,7 @@ const Orders = () => {
                                 <tr key={item.id}>
                                   <td>{index + 1}</td>
                                   <td>{numberWithCommas(item.cost)}</td>
-                                  <td>{item.country}</td>
+                                  <td>{item.orderNumber}</td>
                                   <td>{item.incoterm}</td>
 
                                   <td>{item.paymentTerm}</td>
@@ -417,60 +409,61 @@ const Orders = () => {
                                                 }}
                                               >
                                                 <div className="viewmodal-body">
-                                                  <h6
-                                                    style={{
-                                                      color:
-                                                        "rgba(0, 0, 0, 0.62)",
-                                                    }}
-                                                  >
-                                                    {" "}
-                                                    Product name:{" "}
-                                                  </h6>
+                                                  <div>Product name:</div>
                                                   <p>
                                                     {order.product &&
                                                       order.product.productName}
                                                   </p>
-                                                  <h6
-                                                    style={{
-                                                      color:
-                                                        "rgba(0, 0, 0, 0.62)",
-                                                    }}
-                                                  >
-                                                    {" "}
-                                                    Date of placed order:{" "}
-                                                    <span>
+
+                                                  <div>
+                                                    Date of placed order:
+                                                    <p>
                                                       {dayjs(
                                                         order.createdAt
                                                       ).format("D MMMM YYYY")}
-                                                    </span>
-                                                  </h6>
+                                                    </p>
+                                                  </div>
                                                 </div>
-                                                <div className="viewmodal-body">
-                                                  <div>Payment Receipt</div>
+                                                <div className="v">
                                                   <div className="receipt-container">
-                                                    {/* <img src={paymentReceipt} alt='payment receipt'/> */}
-                                                    <i
-                                                      className="fa fa-file receipt"
-                                                      aria-hidden="true"
-                                                    ></i>
-                                                    <div className="receipt-call-to-action">
+                                                    {paymentReceipt ? (
                                                       <a
-                                                        href="/"
-                                                        className="action-font"
+                                                        href={
+                                                          paymentReceipt.image
+                                                        }
+                                                        download
                                                       >
-                                                        view
+                                                        view payment receipt
                                                       </a>
-                                                      <div
-                                                        className="action-font"
+                                                    ) : (
+                                                      "No payment receipt"
+                                                    )}
+
+                                                    <div className="receipt-call-to-action">
+                                                      <button
+                                                        className="btn"
+                                                        onClick={() => {
+                                                          downloadReceipt();
+                                                        }}
+                                                      >
+                                                        <i className="fa fa-download" />
+                                                      </button>
+                                                      <button
+                                                        className="btn"
                                                         onClick={(e) =>
-                                                          submit(item.id)
+                                                          submit(
+                                                            order.paymentReceipt &&
+                                                              order
+                                                                .paymentReceipt
+                                                                .id
+                                                          )
                                                         }
                                                       >
-                                                        delete
-                                                      </div>
-                                                      <div className="action-font">
-                                                        downlaod
-                                                      </div>
+                                                        <i
+                                                          className="fa fa-trash"
+                                                          aria-hidden="true"
+                                                        ></i>
+                                                      </button>
                                                     </div>
                                                   </div>
                                                 </div>

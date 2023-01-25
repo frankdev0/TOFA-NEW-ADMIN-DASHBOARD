@@ -6,7 +6,7 @@ import Orders from "./pages/buyershub/orders/Orders";
 import COrders from "./pages/buyershub/orders/COrders";
 import Navbar from "./pages/components/navbar/Navbar";
 import Sidebar from "./pages/components/sidebar/Sidebar";
-import Login from "./pages/login/Login";
+import Login from "./pages/Authentication/Login";
 import Overview from "./pages/overview/Overview";
 import CommodityInsight from "./pages/website-settings/commodityInsight/CommodityInsight";
 import NewCommodity from "./pages/website-settings/commodityInsight/NewCommodity";
@@ -30,8 +30,8 @@ import EditCommodity from "./pages/website-settings/commodityInsight/EditCommodi
 import EditBanner from "./pages/website-settings/bannners/EditBannner";
 
 import Users from "./pages/users/Users";
-import ConfirmPassword from "./pages/login/ConfirmPassword";
-import SecurityQuestion from "./pages/login/SecurityQuestion";
+import ConfirmPassword from "./pages/Authentication/ConfirmPassword";
+import SecurityQuestion from "./pages/Authentication/SecurityQuestion";
 // import { AuthContext, AuthContextProvider } from "./utils/contexts/AuthContext";
 import Unauthorized from "./pages/components/unauthorized/Unauthorized";
 import AppState from "./utils/contexts/AppState";
@@ -39,12 +39,13 @@ import Tractions from "./pages/website-settings/traction/Traction";
 import CreateTraction from "./pages/website-settings/traction/CreateTraction";
 import EditTraction from "./pages/website-settings/traction/EditTraction";
 import Bar from "./pages/components/sidebar/Bar";
-import ForgotPassword from "./pages/login/ForgotPassword";
+import ForgotPassword from "./pages/Authentication/ForgotPassword";
 import Page404 from "./pages/components/page404/Page404";
 import Partnerships from "./pages/website-settings/partnerships/Partnerships";
 import CreatePartner from "./pages/website-settings/partnerships/CreatePartner";
 import EditPartner from "./pages/website-settings/partnerships/EditPartner";
 import MarketBuyers from "./pages/marketplace/buyers/MarketBuyers";
+import ResetPassword from "./pages/Authentication/ResetPassword";
 // import Protected from "./pages/components/Protected";
 
 function App() {
@@ -90,6 +91,11 @@ function App() {
             element={<SecurityQuestion />}
           />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            exact
+            path="/passwordreset/:resetToken"
+            element={<ResetPassword />}
+          />
 
           <Route path="page" element={<Page404 />} />
           <Route exact path="/newcommodity" element={<NewCommodity />} />
