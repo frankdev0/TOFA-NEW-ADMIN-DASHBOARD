@@ -44,7 +44,7 @@ import Page404 from "./pages/components/page404/Page404";
 import Partnerships from "./pages/website-settings/partnerships/Partnerships";
 import CreatePartner from "./pages/website-settings/partnerships/CreatePartner";
 import EditPartner from "./pages/website-settings/partnerships/EditPartner";
-import MarketBuyers from "./pages/marketplace/buyers/MarketBuyers";
+
 import ResetPassword from "./pages/Authentication/ResetPassword";
 // import Protected from "./pages/components/Protected";
 
@@ -78,7 +78,7 @@ function App() {
       <div className="App">
         {/* <BrowserRouter> */}
         <Routes>
-          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/" element={<Login />} />
           <Route
             exact
             path="/set-password/:userId/:setPasswordToken"
@@ -112,7 +112,6 @@ function App() {
           <Route exact path="bar" element={<Bar />} />
           <Route exact path="/partnerships" element={<Partnerships />} />
           <Route exact path="/create-partner" element={<CreatePartner />} />
-          <Route exact path="/market-buyers" element={<MarketBuyers />} />
 
           <Route
             exact

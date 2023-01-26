@@ -16,6 +16,7 @@ const EditTestimonial = () => {
   const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   //   const [testimonialInfo, setTestimonialInfo] = useState({})
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,6 +45,7 @@ const EditTestimonial = () => {
   }, []);
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       await axios.patch(`/testimonial/${id}`, {
@@ -51,6 +53,7 @@ const EditTestimonial = () => {
         company: company,
         message: message,
       });
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 2500);
@@ -61,6 +64,7 @@ const EditTestimonial = () => {
         draggable: true,
       });
     } catch (error) {
+      setLoading(false);
       if (error) {
         toast.error("FAILED TRY AGAIN", {
           position: "top-right",
@@ -163,13 +167,25 @@ const EditTestimonial = () => {
                           />
                         </div>
                         <div className="form-group">
-                          <button
-                            type="submit"
-                            className="btn btn-primary"
-                            onClick={handleUpdate}
-                          >
-                            Update
-                          </button>
+                          {loading ? (
+                            <button
+                              type="submit"
+                              className="btn btn-dark btn-lg btn-block px-5"
+                            >
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-dark"
+                              onClick={handleUpdate}
+                            >
+                              Update Testimonial
+                            </button>
+                          )}
                         </div>
                       </form>
                     </div>

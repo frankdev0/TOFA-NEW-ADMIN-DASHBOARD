@@ -24,7 +24,7 @@ const Navbar = () => {
       .then((response) => {
         console.log("this is from protected route", response.data.currentUser);
         if (response.data.currentUser) {
-          navigate("/login");
+          navigate("/");
         }
       })
       .catch((error) => {
@@ -125,7 +125,7 @@ const Navbar = () => {
 
                   <p>Help & Support </p>
                 </a>
-                <Link to="/login" className="sub-menu-link">
+                <Link to="/" className="sub-menu-link">
                   {/* <img src={logout} alt="profile" /> */}
                   <i className="fa fa-sign-out" aria-hidden="true"></i>
                   <p onClick={handleLogout}>Logout </p>

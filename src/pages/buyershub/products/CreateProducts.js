@@ -35,7 +35,7 @@ const CreateProducts = () => {
 
   const [commodityTag, setCommodityTag] = useState([]);
   const [myId, setMyId] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
 
@@ -56,10 +56,6 @@ const CreateProducts = () => {
 
   const handleProductChange = (e) => {
     setProductDetails({ ...productDetails, [e.target.name]: e.target.value });
-  };
-
-  const handleCommodityId = (e) => {
-    setCommodityTag({ ...commodityTag, [e.target.name]: e.target.value });
   };
 
   const getSpecifications = () => {
@@ -98,6 +94,7 @@ const CreateProducts = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
 
@@ -138,8 +135,8 @@ const CreateProducts = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setLoading(false);
       console.log(result);
-
       setTimeout(() => {
         navigate(-1);
       }, 4000);
@@ -152,6 +149,7 @@ const CreateProducts = () => {
       });
       console.log(result);
     } catch (err) {
+      setLoading(false);
       if (err.response.data.errors[0].field) {
         console.log(err.response.data.errors);
         setFormErrors(
@@ -557,7 +555,20 @@ const CreateProducts = () => {
               </div>
 
               <div className="mx-2" style={{ textAlign: "left" }}>
-                <button className="btn btn-dark mt-3 px-4">Submit</button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block mt-3 px-5"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button className="btn btn-dark mt-3 px-4">Submit</button>
+                )}
               </div>
             </form>
           </div>

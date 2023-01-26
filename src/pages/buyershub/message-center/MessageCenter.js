@@ -1,7 +1,6 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import avatar1 from "../../../assets/avatar-1.jpg";
 import { AppContext } from "../../../utils/contexts/AppState";
 import dayjs from "dayjs";
 import io from "socket.io-client";
@@ -29,8 +28,6 @@ const MessageCenter = () => {
     receiveMessage: "receive-message",
     disconnect: "disconnect",
   };
-
-  const dataResponse = useContext(AppContext);
 
   const myContacts = async () => {
     try {
@@ -170,8 +167,6 @@ const MessageCenter = () => {
                             </h6>
                             <div className="message-list">
                               {item.Message.map((msg) => {
-                                console.log("JSON", isMsgObject(msg.message));
-                                // console.log("JSON", JSON.parse(msg.message));
                                 return (
                                   <p
                                     className="fontz message-list "
@@ -180,6 +175,7 @@ const MessageCenter = () => {
                                     {isMsgObject(msg.message)
                                       ? "Your order has been created"
                                       : msg.message}
+                                    {/* {msg.message} */}
                                   </p>
                                 );
                               })}
@@ -228,17 +224,18 @@ const MessageCenter = () => {
                                     msg.fromSelf ? "sender" : "receiver"
                                   }
                                 >
-                                  <div className="chat-item-ody">
-                                    {" "}
-                                    {isMsgObject(msg.message) ? (
-                                      "Your order has been created"
+                                  {isMsgObject(msg.message) && (
+                                    <p>Your order has been created</p>
+                                  )}
+                                  {!isMsgObject(msg.message) && msg.message}
+                                  {/* {isMsgObject(msg.message) ? (
+                                      <p>Your order has been created</p>
                                     ) : (
-                                      <span>{msg.message} </span>
-                                    )}
-                                    <p className="chat-timestamp">
-                                      {dayjs(msg.createdAt).format("hh:mm a")}
-                                    </p>
-                                  </div>
+                                      msg.message
+                                    )} */}
+                                  <p className="chat-timestamp">
+                                    {dayjs(msg.createdAt).format("hh:mm a")}
+                                  </p>
                                 </div>
                               </div>
                             );
@@ -249,14 +246,6 @@ const MessageCenter = () => {
 
                     <div className="chat-module-bottom">
                       <div align="right" className="my-3">
-                        {/* <a
-                        href="comingsoon"
-                        className="btn btn-rounded btn-outline-dark mb-3 chat-btn"
-                        data-toggle="modal"
-                        data-target="#exampleModal"
-                      >
-                        Start Order
-                      </a> */}
                         <button
                           data-bs-toggle="modal"
                           data-bs-target="#orderModal"

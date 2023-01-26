@@ -12,6 +12,7 @@ import { Protectedd } from "../../../utils/Protectedd";
 const CreateBanner = () => {
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [banner, setBanner] = useState({
     action: "",
     link: "",
@@ -39,6 +40,7 @@ const CreateBanner = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       const jsonData = {
@@ -57,6 +59,7 @@ const CreateBanner = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 5000);
@@ -68,6 +71,7 @@ const CreateBanner = () => {
       });
       console.log(result);
     } catch (err) {
+      setLoading(false);
       if (err.response.data.errors[0].field) {
         console.log(err.response.data.errors);
         setFormErrors(
@@ -223,7 +227,22 @@ const CreateBanner = () => {
                           )}
                         </div>
                         <div className="form-group">
-                          <button className="btn btn-dark">Save Banner</button>
+                          {loading ? (
+                            <button
+                              type="submit"
+                              className="btn btn-dark btn-lg btn-block px-5"
+                            >
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            </button>
+                          ) : (
+                            <button className="btn btn-dark">
+                              Save Banner
+                            </button>
+                          )}
                         </div>
                       </form>
                     </div>

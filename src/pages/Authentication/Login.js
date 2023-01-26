@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
@@ -21,15 +21,6 @@ const Login = () => {
   const [icon, setIcon] = useState(eyeOff);
   const [type, setType] = useState("password");
   const [loading, setLoading] = useState(false);
-
-  // const { currentUser } = useContext(AuthContext);
-  // console.log("This is the currently signed in user", currentUser);
-
-  //   const {error, loading, data} = useFetch("/auth/signin")
-
-  //   if(error) console.log(error)
-
-  //   if (loading) return <h1>LOADING....</h1>
 
   const handleChange = (e) => {
     setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
@@ -66,7 +57,7 @@ const Login = () => {
       setLoading(false);
       console.log(err);
       if (!err.response.data.errors) {
-        return toast.error(`The Server is Down`, {
+        return toast.error(`Network Error, Try Again Later.`, {
           position: "top-right",
           autoClose: 4000,
           pauseHover: true,

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
-import { useNavigate } from "react-router-dom";
 import { axios } from "../components/baseUrl";
 import swal from "sweetalert";
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 
 const ForgotPassword = () => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [formErrors, setFormErrors] = useState({});
-  const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setEmail({ ...email, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
 
@@ -23,38 +23,43 @@ const ForgotPassword = () => {
         "/auth/employee/forgot-password",
         email
       );
+      setLoading(false);
       // setTimeout(() => {
       //   navigate("/login");
       // }, 2000);
       swal({
         title: "Password Link",
-        text: `A Link has been Successfully sent to ${email}`,
+        text: `A Password reset link has been sent to your email`,
         icon: "success",
         button: "ok",
       });
       console.log(data);
     } catch (err) {
+      setLoading(false);
       console.log(err);
-      //   if (err.response.data.errors[0].field) {
-      //     setFormErrors(
-      //       err.response.data.errors.reduce(function(obj, err) {
-      //         obj[err.field] = err.message;
-      //         return obj;
-      //       }, {})
-      //     );
-      //   } else {
-      //     console.log(err.response.data.errors[0].message);
-      //     setCustomError(err.response.data.errors[0].message);
-      //     alert(customError);
-      //   }
-      // }
-      // if (!formErrors.email || !formErrors.password) {
-      //   navigate("/confirmpassword");
+      if (err.response.data.errors[0].message) {
+        toast.error(`${err.response.data.errors[0].message}`, {
+          position: "top-right",
+          autoClose: 4000,
+          pauseHover: true,
+          draggable: true,
+        });
+      } else {
+        if (err.response.data.errors[0].message) {
+          toast.error(`${err.response.data.errors[0].message}`, {
+            position: "top-right",
+            autoClose: 4000,
+            pauseHover: true,
+            draggable: true,
+          });
+        }
+      }
     }
   };
   return (
     <div className="login">
       <section>
+        <ToastContainer />
         <div className="splash-container">
           <div className="card ">
             <div className="card-header text-center">
@@ -81,19 +86,32 @@ const ForgotPassword = () => {
                     onChange={handleChange}
                   />
                 </div>
-                {formErrors.email && (
-                  <p className="text-danger">{formErrors.email}</p>
-                )}
 
-                <button type="submit" className="btn btn-dark btn-lg btn-block">
-                  Reset Password
-                </button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-4"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block"
+                  >
+                    Reset Password
+                  </button>
+                )}
               </form>
             </div>
             <div className="card-footer bg-white p-0  ">
               <div className="card-footer-item card-footer-item-bordered">
                 Have an account?
-                <a href="/login" className="mx-1 footer-link">
+                <a href="/" className="mx-1 footer-link">
                   Login
                 </a>
               </div>

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import cherry from "../../assets/cherry.png";
 import "./user.css";
-import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -11,10 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../utils/Protectedd";
 
 const CreateUsers = () => {
-  const [file, setFile] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState([]);
-  // const [info, setInfo] = useState("");
   const [user, setUser] = useState({
     fullName: "",
     email: "",

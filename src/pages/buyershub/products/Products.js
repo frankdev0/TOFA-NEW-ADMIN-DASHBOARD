@@ -304,7 +304,7 @@ const Products = () => {
                                                           viewProduct.productImages &&
                                                           viewProduct.productImages.filter(
                                                             (image) =>
-                                                              image.isMain ==
+                                                              image.isMain ===
                                                               true
                                                           )[0].image
                                                         }
@@ -323,7 +323,7 @@ const Products = () => {
                                                         viewProduct.productImages
                                                           .filter(
                                                             (image) =>
-                                                              image.isMain ==
+                                                              image.isMain ===
                                                               false
                                                           )
                                                           .map(

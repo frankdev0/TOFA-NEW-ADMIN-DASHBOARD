@@ -32,6 +32,7 @@ const EditProducts = () => {
   const [countries, setCountries] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [productSpecific, setProductSpecific] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [imageFile, setImageFile] = useState(null);
 
@@ -186,6 +187,7 @@ const EditProducts = () => {
   };
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     e.preventDefault();
     try {
       const jsonData = {
@@ -235,6 +237,7 @@ const EditProducts = () => {
         countries: getCountry(),
         featuredImage: imageFile,
       });
+      setLoading(false);
       console.log(result);
       setTimeout(() => {
         navigate(-1);
@@ -247,6 +250,7 @@ const EditProducts = () => {
         draggable: true,
       });
     } catch (err) {
+      setLoading(false);
       toast.error("FAILED! TRY AGAIN", {
         position: "top-right",
         autoClose: 4000,
@@ -625,9 +629,25 @@ const EditProducts = () => {
               </div>
 
               <div style={{ textAlign: "left", margin: "10px" }}>
-                <button className="btn btn-dark px-3" onClick={handleUpdate}>
-                  Update
-                </button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-5"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-dark mt-3 px-4"
+                    onClick={handleUpdate}
+                  >
+                    Update
+                  </button>
+                )}
               </div>
             </form>
           </div>

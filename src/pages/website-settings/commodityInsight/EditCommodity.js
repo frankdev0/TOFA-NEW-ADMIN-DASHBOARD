@@ -13,6 +13,7 @@ const EditCommodity = () => {
   const [name, setName] = useState("");
   const [briefHistory, setBriefHistory] = useState("");
   const [countries, setCountries] = useState([{ countryName: "" }]);
+  const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const editorRef = useRef(null);
@@ -66,6 +67,7 @@ const EditCommodity = () => {
   };
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       console.log("Breif history from Edit", briefHistory);
@@ -84,6 +86,7 @@ const EditCommodity = () => {
       console.log("this is json", jsonData);
       // console.log("target files", e.target.image.files[0]);
       const { data } = await axios.patch("/commodity", jsonData);
+      setLoading(false);
       console.log(data);
       setTimeout(() => {
         navigate(-1);
@@ -95,6 +98,7 @@ const EditCommodity = () => {
         draggable: true,
       });
     } catch (error) {
+      setLoading(false);
       if (error) {
         toast.error("FAILED TRY AGAIN", {
           position: "top-right",
@@ -255,9 +259,22 @@ const EditCommodity = () => {
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark px-5 py-2" type="submit">
-                  Submit
-                </button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-5"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button className="btn btn-dark px-5 py-2" type="submit">
+                    Submit
+                  </button>
+                )}
               </div>
             </form>
           </div>

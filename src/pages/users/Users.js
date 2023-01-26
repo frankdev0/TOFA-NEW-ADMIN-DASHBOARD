@@ -13,9 +13,9 @@ import { Protectedd } from "../../utils/Protectedd";
 
 const Users = () => {
   const [buyer, setBuyer] = useState([]);
-  const [viewBuyer, setViewBuyer] = useState([]);
+  const [viewUser, setViewUser] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [viewLoader, setViewLoader] = useState(false);
+  const [viewLoader, setViewLoader] = useState(false);
 
   const getData = async () => {
     try {
@@ -53,8 +53,10 @@ const Users = () => {
   };
 
   const showDetails = (employeeID) => {
+    setViewLoader(true);
     axios.get(`/auth/employees/${employeeID}`).then((response) => {
-      setViewBuyer(response.data.data);
+      setViewUser(response.data.data);
+      setViewLoader(false);
     });
   };
 
@@ -192,13 +194,7 @@ const Users = () => {
                                             View
                                           </div>
                                         </li>
-                                        <li>
-                                          {/* <Link to={`/editfaq/${item.id}`}>
-                                            <div className="dropdown-item">
-                                              Edit
-                                            </div>
-                                          </Link> */}
-                                        </li>
+
                                         <li>
                                           <div
                                             className="dropdown-item text-danger"
@@ -210,68 +206,77 @@ const Users = () => {
                                       </ul>
                                     </div>
 
-                                    {/* <button
-                                      type="button"
-                                      className="btn btn-primary"
-                                      onClick={(e) => showDetails(item.id)}
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#exampleModal"
-                                    >
-                                      view
-                                    </button> */}
-
-                                    {/* <div
-                                      className="modal fade"
+                                    <div
+                                      className="modal fade p-relative"
                                       id="exampleModal"
                                       tabIndex="-1"
                                       aria-labelledby="exampleModalLabel"
                                       aria-hidden="true"
                                     >
-                                      <div className="modal-dialog">
-                                        <div className="modal-content">
-                                          <div className="modal-header">
-                                            <h5
-                                              className="modal-title"
-                                              id="exampleModalLabel"
-                                            >
-                                              Users Information
-                                            </h5>
-                                            <button
-                                              type="button"
-                                              className="btn-close"
-                                              data-bs-dismiss="modal"
-                                              aria-label="Close"
-                                            ></button>
-                                          </div>
-                                          <div className="d-flex">
-                                            <div className="modal-body">
-                                              Name: {viewBuyer.fullName}
+                                      {viewLoader ? (
+                                        <div
+                                          className="spinner mx-auto"
+                                          align="center"
+                                          id="spinner"
+                                          style={{
+                                            position: "absolute",
+                                            top: "calc(50% - 60px)",
+                                            left: "calc(50% - 60px)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            textAlign: "center",
+                                            margin: "auto",
+                                          }}
+                                        ></div>
+                                      ) : (
+                                        <div className="modal-dialog">
+                                          <div className="modal-content">
+                                            <div className="modal-header">
+                                              <h5
+                                                className="modal-title"
+                                                id="exampleModalLabel"
+                                              >
+                                                USER
+                                              </h5>
+                                              <button
+                                                type="button"
+                                                className="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                              ></button>
                                             </div>
-                                            <div className="modal-body">
-                                              Email: {viewBuyer.email}
+
+                                            <div className="d-flex ">
+                                              <div className="modal-body">
+                                                Full Name: {viewUser.fullName}
+                                              </div>
+                                              <div className="modal-body">
+                                                Email: {viewUser.email}
+                                              </div>
                                             </div>
-                                          </div>
-                                          <div className="modal-body">
-                                            Role: {viewBuyer.type}
-                                          </div>
-                                          <div className="modal-footer">
-                                            <button
-                                              type="button"
-                                              className="btn btn-secondary"
-                                              data-bs-dismiss="modal"
-                                            >
-                                              Close
-                                            </button>
-                                            <button
-                                              type="button"
-                                              className="btn btn-primary"
-                                            >
-                                              Save changes
-                                            </button>
+                                            <div className="d-flex ">
+                                              <div className="modal-body">
+                                                Phone Number:{" "}
+                                                {viewUser.phoneNumber}
+                                              </div>
+                                              <div className="modal-body">
+                                                Role: {viewUser.type}
+                                              </div>
+                                            </div>
+
+                                            <div className="modal-footer">
+                                              <button
+                                                type="button"
+                                                className="btn btn-secondary"
+                                                data-bs-dismiss="modal"
+                                              >
+                                                Close
+                                              </button>
+                                            </div>
                                           </div>
                                         </div>
-                                      </div>
-                                    </div> */}
+                                      )}
+                                    </div>
                                   </td>
                                 </tr>
                               );

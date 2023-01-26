@@ -158,9 +158,25 @@ const SecurityQuestion = () => {
                   {formErrors && <p className="text-danger">{formErrors}</p>}
                 </div>
 
-                <button type="submit" className="btn btn-dark btn-lg btn-block">
-                  Submit
-                </button>
+                {isSubmit ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-4"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block"
+                  >
+                    Submit
+                  </button>
+                )}
               </form>
             </div>
             <div className="card-footer bg-white p-0  ">

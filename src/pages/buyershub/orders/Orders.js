@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { saveAs } from "file-saver";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -433,7 +432,7 @@ const Orders = () => {
                                                         }
                                                         download
                                                       >
-                                                        view payment receipt
+                                                        download payment receipt
                                                       </a>
                                                     ) : (
                                                       "No payment receipt"

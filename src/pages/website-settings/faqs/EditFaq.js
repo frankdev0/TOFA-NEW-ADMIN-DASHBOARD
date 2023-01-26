@@ -13,7 +13,7 @@ const EditFaq = () => {
   const [id, setId] = useState(null);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
-  //   const [faqInfo, setFaqInfo] = useState({});
+  const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   //   const [formErrors, setFormErrors] = useState({})
@@ -46,13 +46,14 @@ const EditFaq = () => {
   //   const faqID =
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       const { data: result } = await axios.patch(`/faq/${id}`, {
         answer: answer,
         question: question,
       });
-
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 2000);
@@ -66,6 +67,7 @@ const EditFaq = () => {
       console.log(result);
       // navigate("/faq");
     } catch (error) {
+      setLoading(false);
       if (error) {
         toast.error("FAILED TRY AGAIN", {
           position: "top-right",
@@ -162,13 +164,26 @@ const EditFaq = () => {
                           />
                           {/* {formErrors.answer && (<p className="text-danger">{formErrors.answer}</p>)} */}
                         </div>
-                        <button
-                          type="submit"
-                          className="btn btn-primary"
-                          onClick={handleUpdate}
-                        >
-                          Update
-                        </button>
+                        {loading ? (
+                          <button
+                            type="submit"
+                            className="btn btn-dark btn-lg btn-block px-5"
+                          >
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                          </button>
+                        ) : (
+                          <button
+                            type="submit"
+                            className="btn btn-dark"
+                            onClick={handleUpdate}
+                          >
+                            Update Faq
+                          </button>
+                        )}
                       </form>
                     </div>
                   </div>

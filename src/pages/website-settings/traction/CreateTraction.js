@@ -11,6 +11,7 @@ import { Protectedd } from "../../../utils/Protectedd";
 const CreateTraction = () => {
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [traction, setTraction] = useState({
     name: "",
     count: "",
@@ -23,6 +24,7 @@ const CreateTraction = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       const { data: result } = await axios.post("/traction ", {
@@ -32,6 +34,7 @@ const CreateTraction = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 2500);
@@ -44,6 +47,7 @@ const CreateTraction = () => {
       });
       console.log(result);
     } catch (err) {
+      setLoading(false);
       if (err.response.data.errors[0].field) {
         setFormErrors(
           err.response.data.errors.reduce(function(obj, err) {
@@ -131,13 +135,25 @@ const CreateTraction = () => {
                           )}
                         </div>
                         <div className="form-group">
-                          <a
-                            href="comingsoon"
-                            className="btn btn-dark"
-                            onClick={handleSubmit}
-                          >
-                            Save Traction
-                          </a>
+                          {loading ? (
+                            <button
+                              type="submit"
+                              className="btn btn-dark btn-lg btn-block px-5"
+                            >
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-dark"
+                              onClick={handleSubmit}
+                            >
+                              Save Traction
+                            </button>
+                          )}
                         </div>
                       </form>
                     </div>

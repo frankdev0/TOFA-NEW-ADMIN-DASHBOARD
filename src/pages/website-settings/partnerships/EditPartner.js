@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { axios } from "../../components/baseUrl";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../../utils/Protectedd";
@@ -15,8 +15,6 @@ const CreatePartner = () => {
   const [imageFile, setImageFile] = useState("");
 
   //   const [partnerLogo, setPartnerLogo] = useState("")
-
-  const navigate = useNavigate();
 
   const { myPartnerId } = useParams();
 

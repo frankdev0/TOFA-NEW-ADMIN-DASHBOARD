@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
 import { axios } from "../../components/baseUrl";
 import "./message.css";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
+import { africanCountryData } from "../products/africanCountries";
 
 export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   const [country, setCountry] = useState("");
@@ -13,6 +14,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
   const [productsId, setProductsId] = useState([]);
   const [orderAlert, setOrderAlert] = useState("");
   const [loading, setLoading] = useState(false);
+  const [countryOfOrigin, setCountryOfOrigin] = useState("");
   const [orderDetails, setOrderDetails] = useState({
     quantity: "",
     country: "",
@@ -26,11 +28,23 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
     specification: "",
     grade: "",
   });
+
+  const initialState = {
+    quantity: "",
+    country: "",
+    countryOfOrigin: "",
+    shipping: "",
+    paymentTerm: "",
+    cost: "",
+    port: "",
+    address: "",
+    productRequirement: "",
+    specification: "",
+    grade: "",
+  };
   const options = useMemo(() => countryList().getData(), []);
 
   const navigate = useNavigate();
-
-  // console.log(orderAlert);
 
   const handleOrder = (e) => {
     setOrderDetails({ ...orderDetails, [e.target.name]: e.target.value });
@@ -40,6 +54,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
     try {
       const { data } = await axios.get("/product");
       setProducts(data.data);
+      console.log(data.data);
     } catch (error) {
       console.log(error);
     }
@@ -49,11 +64,10 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
     getProductInfo();
   }, []);
 
-  // const totalCost = priceSelected * orderDetails.quantity;
-
   const handleSubmit = async (e) => {
     setLoading(true);
     console.log("productsId", productsId);
+    console.log("countryOfOrigin", countryOfOrigin);
     try {
       e.preventDefault();
       const foreignOrderInfo = {
@@ -61,7 +75,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
         quantity: orderDetails.quantity,
         buyerID: buyerId,
         country: country.label,
-        countryOfOrigin: orderDetails.countryOfOrigin,
+        countryOfOrigin: countryOfOrigin,
         shipping: orderDetails.shipping,
         paymentTerm: orderDetails.paymentTerm,
         cost: orderDetails.cost,
@@ -73,7 +87,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
         quantity: orderDetails.quantity,
         buyerID: buyerId,
         country: country.label,
-        countryOfOrigin: orderDetails.countryOfOrigin,
+        countryOfOrigin: countryOfOrigin,
         shipping: orderDetails.shipping,
         paymentTerm: orderDetails.paymentTerm,
         cost: orderDetails.cost,
@@ -89,21 +103,11 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
           foreignOrderInfo
         );
         setLoading(false);
-        setOrderDetails({
-          quantity: "",
-          country: "",
-          countryOfOrigin: "",
-          shipping: "",
-          paymentTerm: "",
-          cost: "",
-          port: "",
-          address: "",
-          productRequirement: "",
-          specification: "",
-          grade: "",
-        });
+        setOrderDetails(initialState);
+        setCountry({ label: "" });
+        setProductsId([]);
+        setCountryOfOrigin("");
         setOrderAlert(JSON.stringify(result.data));
-        // setOrderAlert(`Your order has been created`);
         console.log(result);
         console.log(localOrderInfo);
       } else {
@@ -112,20 +116,11 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
           "/order/local",
           localOrderInfo
         );
-        setOrderDetails({
-          quantity: "",
-          country: "",
-          countryOfOrigin: "",
-          shipping: "",
-          paymentTerm: "",
-          cost: "",
-          port: "",
-          address: "",
-          productRequirement: "",
-          specification: "",
-          grade: "",
-        });
-        // setOrderAlert(`Your order has been created`);
+        setLoading(false);
+        setOrderDetails(initialState);
+        setCountryOfOrigin("");
+        setCountry({ label: "" });
+        setProductsId([]);
         setOrderAlert(JSON.stringify(result.data));
         console.log(result);
       }
@@ -140,6 +135,8 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
         draggable: true,
       });
     } catch (err) {
+      setLoading(false);
+      setOrderDetails(initialState);
       console.log(err);
       if (err.response.data.errors[0].message) {
         toast.error(`${err.response.data.errors[0].message}`, {
@@ -224,6 +221,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
                       style={{ borderRadius: "0.375rem" }}
                       name="productRequirement"
                       onChange={handleOrder}
+                      value={orderDetails.productRequirement}
                       id=""
                       rows="3"
                       placeholder="Enter product requirements"
@@ -244,6 +242,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
                               className="form-control custom-style"
                               id=""
                               placeholder="Enter quantity"
+                              value={orderDetails.quantity}
                               name="quantity"
                               onChange={handleOrder}
                             />
@@ -304,15 +303,18 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
                         className="form-select"
                         aria-label="Default select example"
                         name="countryOfOrigin"
-                        value={orderDetails.countryOfOrigin}
-                        onChange={handleOrder}
+                        onChange={(e) => setCountryOfOrigin(e.target.value)}
                       >
-                        <option defaultValue="Country of Origin">
-                          Country of Origin
-                        </option>
-                        <option value="India">India</option>
-                        <option value="China">China</option>
-                        <option value="Bangladesh">Bangladesh</option>
+                        <option>...Select Country of Origin</option>
+                        {Object.entries(africanCountryData).map(
+                          (country, index) => {
+                            return (
+                              <option key={index} value={`${country[1]}`}>
+                                {country[1]}
+                              </option>
+                            );
+                          }
+                        )}
                       </select>
                     </div>
                   </div>
@@ -375,9 +377,22 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
                     </div>
                   </div>
                   <div>
-                    <button className="btn btn-dark start-btn py-2">
-                      Submit Order Request
-                    </button>
+                    {loading ? (
+                      <button
+                        type="submit"
+                        className="btn btn-dark btn-lg btn-block px-5"
+                      >
+                        <span
+                          className="spinner-border spinner-border-sm"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                      </button>
+                    ) : (
+                      <button className="btn btn-dark start-btn py-2">
+                        Submit Order Request
+                      </button>
+                    )}
                   </div>
                 </form>
               </div>

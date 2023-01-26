@@ -12,6 +12,7 @@ const EditBanner = () => {
   const [image, setImage] = useState("");
   const [link, setLink] = useState("");
   const [callToAction, setCallToAction] = useState("");
+  const [loading, setLoading] = useState(false);
   const [banner, setBanner] = useState();
   const [imageBanner, setImageBanner] = useState(null);
 
@@ -44,6 +45,7 @@ const EditBanner = () => {
   }, []);
 
   const handleUpdate = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const jsonData = {
       callToAction: callToAction,
@@ -60,6 +62,7 @@ const EditBanner = () => {
         "Content-Type": "multipart/form-data",
       },
     });
+    setLoading(false);
     setTimeout(() => {
       navigate(-1);
     }, 4000);
@@ -192,7 +195,22 @@ const EditBanner = () => {
                   )} */}
                       </div>
                       <div className="form-group">
-                        <button className="btn btn-dark">Update Banner</button>
+                        {loading ? (
+                          <button
+                            type="submit"
+                            className="btn btn-dark btn-lg btn-block px-5"
+                          >
+                            <span
+                              className="spinner-border spinner-border-sm"
+                              role="status"
+                              aria-hidden="true"
+                            ></span>
+                          </button>
+                        ) : (
+                          <button className="btn btn-dark">
+                            Update Banner
+                          </button>
+                        )}
                       </div>
                     </form>
                   </div>

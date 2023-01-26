@@ -17,6 +17,7 @@ const NewCommodity = () => {
   const [briefHistory, setBriefHistory] = useState("");
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [country, setCountry] = useState([{ countryName: "" }]);
 
   // const handleEditor = () => {
@@ -41,6 +42,7 @@ const NewCommodity = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       const jsonData = {
@@ -60,6 +62,7 @@ const NewCommodity = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 2000);
@@ -71,6 +74,7 @@ const NewCommodity = () => {
       });
       console.log(result);
     } catch (err) {
+      setLoading(false);
       if (err.response.data.errors[0].field) {
         console.log(err.response.data.errors);
         setFormErrors(
@@ -232,7 +236,20 @@ const NewCommodity = () => {
               </div>
 
               <div style={{ textAlign: "start" }}>
-                <button className="btn btn-dark px-5 py-2">Submit</button>
+                {loading ? (
+                  <button
+                    type="submit"
+                    className="btn btn-dark btn-lg btn-block px-5"
+                  >
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button className="btn btn-dark px-5 py-2">Submit</button>
+                )}
               </div>
             </form>
           </div>

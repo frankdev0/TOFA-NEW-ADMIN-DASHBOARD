@@ -11,20 +11,11 @@ import { Protectedd } from "../../../utils/Protectedd";
 const CreateFaq = () => {
   const [formErrors, setFormErrors] = useState({});
   const [customError, setCustomError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [faq, setFaq] = useState({
     answer: "",
     question: "",
   });
-
-  // const successToast = () => {
-  //   toast("success custom toast", {
-  //   className:"custom-toast",
-  //   draggable: true,
-  //   position: toast.POSITION.TOP_CENTER})
-  // }
-
-  // toast.success("Faq Successfully Created"),
-  // toast.error("Faq Successfully Created")
 
   const navigate = useNavigate();
 
@@ -33,12 +24,14 @@ const CreateFaq = () => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     try {
       e.preventDefault();
       const { data: result } = await axios.post("/faq", {
         question: faq.question,
         answer: faq.answer,
       });
+      setLoading(false);
       setTimeout(() => {
         navigate(-1);
       }, 3000);
@@ -51,6 +44,7 @@ const CreateFaq = () => {
       });
       console.log(result);
     } catch (err) {
+      setLoading(false);
       if (err.response.data.errors[0].field) {
         setFormErrors(
           err.response.data.errors.reduce(function(obj, err) {
@@ -143,13 +137,25 @@ const CreateFaq = () => {
                           )}
                         </div>
                         <div className="form-group">
-                          <a
-                            href="comingsoon"
-                            className="btn btn-dark"
-                            onClick={handleSubmit}
-                          >
-                            Save FAQ
-                          </a>
+                          {loading ? (
+                            <button
+                              type="submit"
+                              className="btn btn-dark btn-lg btn-block px-5"
+                            >
+                              <span
+                                className="spinner-border spinner-border-sm"
+                                role="status"
+                                aria-hidden="true"
+                              ></span>
+                            </button>
+                          ) : (
+                            <button
+                              className="btn btn-dark"
+                              onClick={handleSubmit}
+                            >
+                              Submit Faq
+                            </button>
+                          )}
                         </div>
                       </form>
                     </div>

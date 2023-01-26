@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
 import { axios } from "../../components/baseUrl";
-import { applicantDatatabless } from "./DummyData";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";

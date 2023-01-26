@@ -37,7 +37,7 @@ export const Protectedd = (WrappedComponent, roles) => {
         })
         .catch((error) => {
           console.log(error.response.data);
-          navigate("/login");
+          navigate("/");
           setUserLoading(false);
         });
     }, []);

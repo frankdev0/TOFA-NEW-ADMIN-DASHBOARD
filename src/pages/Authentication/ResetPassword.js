@@ -17,7 +17,6 @@ const ResetPassword = () => {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
-  const [popupMsg, setPopupMsg] = useState("");
   const [tokenError, setTokenError] = useState("");
   const [icon, setIcon] = useState(eyeOff);
   const [type, setType] = useState("password");
@@ -106,9 +105,7 @@ const ResetPassword = () => {
       <section>
         <ToastContainer />
         <div className="splash-container">
-          <div className="bg-success text-light mx-auto my-4 px-5">
-            {popupMsg}
-          </div>
+          <div className="bg-success text-light mx-auto my-4 px-5"></div>
           <div className="card ">
             <div className="card-header text-center">
               <div>
