@@ -213,14 +213,10 @@ const CreateProducts = () => {
         <div className="dashboard-wrapper">
           <ToastContainer />
           <div>
-            <form className="mx-5 my-5" onSubmit={handleSubmit}>
+            <form className="px-3 my-5" onSubmit={handleSubmit}>
               <div className="d-flex justify-content-between">
                 <h2> Create Products</h2>
-
-                <div
-                  className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
-                  align="right"
-                >
+                <div>
                   <a href="/products" className="btn btn-dark">
                     Show Products
                   </a>
@@ -228,7 +224,7 @@ const CreateProducts = () => {
               </div>
 
               <div className="row my-3" style={{ textAlign: "left" }}>
-                <div className="col-4 ">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                   <label className="form-label">Product Name:</label>
                   <input
                     name="productName"
@@ -242,7 +238,7 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4 ">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                   <label className="form-label">Parent Category</label>
 
                   <select
@@ -267,7 +263,7 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4 mb-3">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
                   <label className="form-label">Sub Category</label>
                   <input
                     name="subCategory"
@@ -283,7 +279,7 @@ const CreateProducts = () => {
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4 mb-3 ">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mb-3 ">
                   <label className="form-label">Supply Capacity</label>
                   <div className="d-flex">
                     <input
@@ -310,7 +306,7 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                   <label className="form-label">Min Order</label>
                   <div className=" d-flex">
                     <input
@@ -337,7 +333,7 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4 mb-3">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 mb-3">
                   <label className="form-label"> Min Lead-Time</label>
                   <input
                     name="minDuration"
@@ -353,7 +349,7 @@ const CreateProducts = () => {
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-4  mb-3">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12  mb-3">
                   <label className="form-label">Max Lead-Time</label>
                   <input
                     name="maxDuration"
@@ -367,7 +363,10 @@ const CreateProducts = () => {
                   )}
                 </div>
 
-                <div className="col-4" style={{ textAlign: "left" }}>
+                <div
+                  className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12"
+                  style={{ textAlign: "left" }}
+                >
                   <label className="form-label">Specification</label>
                   {specifications.map((specification, index) => (
                     <div key={index} className="root my-2">
@@ -406,7 +405,7 @@ const CreateProducts = () => {
                     <p className="text-danger">{formErrors.specification}</p>
                   )}
                 </div>
-                <div className="col-4">
+                <div className="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                   <label className="form-label">Country</label>
                   {country.map((info, index) => (
                     <div key={index} className="root my-2">
@@ -489,7 +488,7 @@ const CreateProducts = () => {
               </div>
 
               <div className="row mx-1">
-                <div className="col-6 box">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 box">
                   <h3 className="header">Featured Image</h3>
 
                   {/* <DropFileInput
@@ -497,7 +496,7 @@ const CreateProducts = () => {
                     /> */}
                   <input type="file" name="featuredImage" />
                 </div>
-                <div className="col-6 ">
+                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 ">
                   <div className="mb-3" style={{ textAlign: "left" }}>
                     <label className="form-label d-block">Other Images</label>
                     <input

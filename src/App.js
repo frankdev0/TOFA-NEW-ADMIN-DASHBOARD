@@ -32,7 +32,6 @@ import EditBanner from "./pages/website-settings/bannners/EditBannner";
 import Users from "./pages/users/Users";
 import ConfirmPassword from "./pages/Authentication/ConfirmPassword";
 import SecurityQuestion from "./pages/Authentication/SecurityQuestion";
-// import { AuthContext, AuthContextProvider } from "./utils/contexts/AuthContext";
 import Unauthorized from "./pages/components/unauthorized/Unauthorized";
 import AppState from "./utils/contexts/AppState";
 import Tractions from "./pages/website-settings/traction/Traction";
@@ -46,33 +45,9 @@ import CreatePartner from "./pages/website-settings/partnerships/CreatePartner";
 import EditPartner from "./pages/website-settings/partnerships/EditPartner";
 
 import ResetPassword from "./pages/Authentication/ResetPassword";
-// import Protected from "./pages/components/Protected";
+import NewMessage from "./pages/buyershub/message-center/NewMessage";
 
 function App() {
-  // const [loading, setLoading] = useState(false)
-
-  // const { user, userLoading } = useContext(AppContext);
-
-  // if (userLoading) {
-  //   setTimeout(() => {}, 3000);
-  //   return (
-  //     <div
-  //       className="spinner mx-auto"
-  //       align="center"
-  //       id="spinner"
-  //       style={{
-  //         position: "absolute",
-  //         top: "calc(50% - 60px)",
-  //         left: "calc(50% - 60px)",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         textAlign: "center",
-  //         margin: "auto",
-  //       }}
-  //     ></div>
-  //   );
-  // }
-
   return (
     <AppState>
       <div className="App">
@@ -164,6 +139,7 @@ function App() {
             path="/commodityInsight"
             element={<CommodityInsight />}
           />
+          <Route exact path="/new-message" element={<NewMessage />} />
 
           {/* </Route> */}
         </Routes>

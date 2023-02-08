@@ -113,26 +113,24 @@ const NewCommodity = () => {
 
         {/* <!-- wrapper  --> */}
         <div className="dashboard-wrapper">
-          <div>
+          <div className="container-fluid dashboard-content">
             <ToastContainer />
-            <form className="mx-5 my-5" onSubmit={handleSubmit}>
+            <form className="px-3 my-5" onSubmit={handleSubmit}>
               <div className="d-flex justify-content-between">
-                <h2> Create Commodity Insight</h2>
-                {/* <Link to="/commodityInsight">
-                <button className="btn btn-primary m-3">Show Commodity</button>
-              </Link> */}
-                <div
-                  className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
-                  align="right"
-                >
-                  <a href="/commodityInsight" className="btn btn-dark">
-                    Show Commodity
-                  </a>
+                <h3 className="headder"> Create Commodity Insight</h3>
+
+                <div>
+                  <i
+                    className="fa fa-arrow-left"
+                    style={{ fontSize: "1.25rem" }}
+                    aria-hidden="true"
+                    onClick={() => navigate(-1)}
+                  ></i>
                 </div>
               </div>
 
               <div className="row" style={{ textAlign: "left" }}>
-                <div className="col-6 mt-2">
+                <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 mt-2">
                   <label className="form-label">Commodity Name:</label>
                   <input
                     name="name"
@@ -146,7 +144,7 @@ const NewCommodity = () => {
                   )}
                 </div>
 
-                <div className="col-6">
+                <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                   <label className="form-label">Country</label>
                   {country.map((info, index) => (
                     <div key={index} className="root my-2">
@@ -219,7 +217,7 @@ const NewCommodity = () => {
             <img alt="not found" width={"250px"} src={URL.createObjectURL(file)} />
             </div>
           } */}
-                <label className="form-label mx-2 my-2" htmlFor="firstimg">
+                <label className="form-label  my-2" htmlFor="firstimg">
                   <i
                     className="fa fa-cloud-upload img-upload"
                     aria-hidden="true"

@@ -21,6 +21,16 @@ select:focus {
   outline: none;
 }
 
+/* commodity header */
+
+@media only screen and (max-width:782px) {
+.headder {
+    font-size: small;
+  }
+}
+
+
+
 .dropdown-menu {
   min-width: 5rem !important;
 }

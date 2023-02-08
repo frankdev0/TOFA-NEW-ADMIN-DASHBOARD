@@ -41,10 +41,13 @@ const Login = () => {
       e.preventDefault();
       console.log({ userInfo });
       setLoading(true);
-      const { data } = await axios.post("/auth/signin-employee", {
-        email: userInfo.email,
-        password: userInfo.password,
-      });
+      const { data } = await axios.post(
+        "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/auth/signin-employee",
+        {
+          email: userInfo.email,
+          password: userInfo.password,
+        }
+      );
       setLoading(true);
       console.log("new data", data);
 

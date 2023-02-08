@@ -16,11 +16,15 @@ const Banners = () => {
 
   const getData = async () => {
     try {
-      axios.get("/banner").then((response) => {
-        console.log(response.data.data);
-        setBanner(response.data.data);
-        setLoading(false);
-      });
+      axios
+        .get(
+          "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/banner"
+        )
+        .then((response) => {
+          console.log(response.data.data);
+          setBanner(response.data.data);
+          setLoading(false);
+        });
     } catch (error) {
       setLoading(false);
       console.log(error.response.data);
@@ -32,9 +36,13 @@ const Banners = () => {
   }, []);
 
   const handleDelete = (bannerID) => {
-    axios.delete(`/banners/${bannerID}`).then(() => {
-      getData();
-    });
+    axios
+      .delete(
+        `http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/banners/${bannerID}`
+      )
+      .then(() => {
+        getData();
+      });
   };
 
   const submit = (bannerID) => {

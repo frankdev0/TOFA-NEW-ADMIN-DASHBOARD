@@ -108,20 +108,15 @@ const Products = () => {
         <div className="dashboard-wrapper">
           <div className="container-fluid dashboard-content">
             {/* <!-- pageheader --> */}
-            <div className="row">
-              <div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div className="page-header" style={{ textAlign: "left" }}>
-                  <h2 className="pageheader-title">Product Overview</h2>
-                </div>
+            <div className="d-flex justify-content-between">
+              <div>
+                <h2 className="pageheader-title">Product Overview</h2>
               </div>
 
-              <div
-                className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12"
-                align="right"
-              >
-                <a href="/createproduct" className="btn btn-dark">
-                  Create Products
-                </a>
+              <div>
+                <Link to="/createproduct">
+                  <button className="btn btn-dark py-1">Create Products</button>
+                </Link>
               </div>
             </div>
             {/* <!-- end pageheader --> */}
