@@ -14,7 +14,7 @@ export const Protectedd = (WrappedComponent, roles) => {
 
     useEffect(() => {
       axios
-        .get("http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/auth/current-user")
+        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`)
         .then((response) => {
           const user = response.data.currentUser;
           setUserLoading(false);

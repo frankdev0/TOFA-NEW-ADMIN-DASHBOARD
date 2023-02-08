@@ -42,7 +42,7 @@ const Login = () => {
       console.log({ userInfo });
       setLoading(true);
       const { data } = await axios.post(
-        "https://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/auth/signin-employee",
+        `${process.env.REACT_APP_BACKEND_URL}/auth/signin-employee`,
         {
           email: userInfo.email,
           password: userInfo.password,
