@@ -1,0 +1,8 @@
+[[redirects]]
+  from = “https://tofa-buyershub-admin.netlify.app/*”
+  to = “http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2"
+  status = 200
+[[redirects]]
+  from = “/*”
+  to = “/index.html”
+  status = 200
