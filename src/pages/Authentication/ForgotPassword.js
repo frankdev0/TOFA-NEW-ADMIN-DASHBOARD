@@ -20,7 +20,7 @@ const ForgotPassword = () => {
       e.preventDefault();
 
       const { data } = await axios.post(
-        "/auth/employee/forgot-password",
+        `${process.env.REACT_APP_BACKEND_URL}/auth/employee/forgot-password`,
         email
       );
       setLoading(false);

@@ -14,7 +14,7 @@ export const Protectedd = (WrappedComponent, roles) => {
 
     useEffect(() => {
       axios
-        .get("/auth/current-user")
+        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`)
         .then((response) => {
           const user = response.data.currentUser;
           setUserLoading(false);

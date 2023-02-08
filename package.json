@@ -1,7 +1,6 @@
 {
   "name": "tofa-admin-main",
   "version": "0.1.0",
-  "proxy": "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.0",
