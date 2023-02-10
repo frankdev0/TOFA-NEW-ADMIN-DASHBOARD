@@ -1,24 +1,32 @@
-import React, { useEffect, useState, useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { axios } from "../pages/components/baseUrl";
+// import { axios } from "../pages/components/baseUrl";
 import { AppContext } from "./contexts/AppState";
+import axios from "axios";
 
 export const Protectedd = (WrappedComponent, roles) => {
   return (props) => {
     const navigate = useNavigate();
     const [verified, setVerified] = useState(false);
-    const [userLoading, setUserLoading] = useState(true)
+    const [userLoading, setUserLoading] = useState(true);
 
-
-    const {setUser} = useContext(AppContext)
+    const { setUser } = useContext(AppContext);
 
     useEffect(() => {
+      const newToken = localStorage.getItem("tokenValue")
+      console.log('newToken ===', `tofa-session=${newToken}`)
       axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`)
+        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Cookie" : `tofa-session=${newToken}`},
+        })
         .then((response) => {
+          console.log("some response", response);
           const user = response.data.currentUser;
           setUserLoading(false);
-          setUser(user)
+          setUser(user);
 
           if (!roles && user) {
             return setVerified(true);
@@ -41,9 +49,6 @@ export const Protectedd = (WrappedComponent, roles) => {
           setUserLoading(false);
         });
     }, []);
-
-
-   
 
     if (userLoading)
       return (

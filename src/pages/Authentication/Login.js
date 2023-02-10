@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { axios } from "../components/baseUrl";
+// import { axios } from "../components/baseUrl";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 // import { AuthContext } from "../../utils/contexts/AuthContext";
 // import { useFetch } from "../../useFetch";
 
@@ -47,7 +48,13 @@ const Login = () => {
           email: userInfo.email,
           password: userInfo.password,
         }
+        // {
+        //   headers: {
+        //     token: data.token,
+        //   },
+        // }
       );
+      localStorage.setItem("tokenValue", data.data.token);
       setLoading(true);
       console.log("new data", data);
 

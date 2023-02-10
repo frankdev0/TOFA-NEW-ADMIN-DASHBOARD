@@ -296,3 +296,42 @@ button {
   text-align: left;
  
 }
+
+/* New Message Center */
+
+.message-headers{
+  padding-left: 19.2%;
+}
+
+.message-list-header{
+  display: flex;
+  z-index: 20;
+  background-color: #10f172;
+  color: black;
+}
+.message-body-header{
+  display: flex;
+  background-color: #7a85e1;
+    color: black;
+}
+.contact-body{
+  padding-left: 19.2%;
+}
+
+.message-list-body{
+  background-color: aqua;
+  height: 100vh;
+
+}
+
+.new-message-body{
+  background-color: #686972;
+  color: #ffffff;
+  height: 100vh;
+
+}
+
+/* .inputfield{
+  position: absolute;
+
+} */
