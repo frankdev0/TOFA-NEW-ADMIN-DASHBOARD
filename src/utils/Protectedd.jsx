@@ -14,14 +14,16 @@ export const Protectedd = (WrappedComponent, roles) => {
 
     useEffect(() => {
       const newToken = localStorage.getItem("tokenValue")
+    
+       const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization : `Bearer ${newToken}`
+      }
+    };
       console.log('newToken ===', `tofa-session=${newToken}`)
       axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Cookie" : `tofa-session=${newToken}`},
-        })
+        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`,config)
         .then((response) => {
           console.log("some response", response);
           const user = response.data.currentUser;
