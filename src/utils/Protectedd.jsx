@@ -21,7 +21,6 @@ export const Protectedd = (WrappedComponent, roles) => {
         Authorization : `Bearer ${newToken}`
       }
     };
-      console.log('newToken ===', `tofa-session=${newToken}`)
       axios
         .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`,config)
         .then((response) => {
