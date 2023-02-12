@@ -38,6 +38,7 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log(process.env.REACT_APP_BACKEND_URL);
     try {
       e.preventDefault();
       console.log({ userInfo });
