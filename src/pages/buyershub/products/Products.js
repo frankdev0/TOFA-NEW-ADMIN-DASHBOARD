@@ -19,13 +19,26 @@ const Products = () => {
   const [loading, setLoading] = useState(false);
   const [viewLoader, setViewLoader] = useState(false);
 
+  // const newToken = localStorage.getItem("tokenValue");
+
+  // const config = {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${newToken}`,
+  //   },
+  // };
+
   const getData = async () => {
     try {
-      axios.get("/product").then((response) => {
-        console.log(response.data);
-        setProduct(response.data.data);
-        setLoading(true);
-      });
+      axios
+        .get(`${process.env.REACT_APP_BACKEND_URL}/product`, {
+          withCredential: true,
+        })
+        .then((response) => {
+          console.log(response.data);
+          setProduct(response.data.data);
+          setLoading(true);
+        });
     } catch (error) {
       console.log(error.response.data.erros);
     }
@@ -57,18 +70,22 @@ const Products = () => {
   };
 
   const handleDelete = (productID) => {
-    axios.delete(`/product/${productID}`).then((response) => {
-      setViewProduct(response.data.data);
-    });
+    axios
+      .delete(`${process.env.REACT_APP_BACKEND_URL}/product/${productID}`)
+      .then((response) => {
+        setViewProduct(response.data.data);
+      });
   };
 
   const showDetails = (productID) => {
     setViewLoader(true);
-    axios.get(`/product/${productID}`).then((response) => {
-      setViewProduct(response.data.data);
-      console.log(response.data.data);
-      setViewLoader(false);
-    });
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/product/${productID}`)
+      .then((response) => {
+        setViewProduct(response.data.data);
+        console.log(response.data.data);
+        setViewLoader(false);
+      });
   };
 
   useEffect(() => {
