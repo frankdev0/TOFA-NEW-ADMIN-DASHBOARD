@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const EditTraction = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/traction/${tractionId}`);
+      const response = await axiosInstance.get(`/traction/${tractionId}`);
       //   setFaqInfo(response.data.data);
       console.log(response.data.data);
       setId(response.data.data.id);
@@ -49,7 +49,7 @@ const EditTraction = () => {
     setLoading(true);
     try {
       e.preventDefault();
-      const { data: result } = await axios.patch(`/traction/${id}`, {
+      const { data: result } = await axiosInstance.patch(`/traction/${id}`, {
         name,
         count,
       });

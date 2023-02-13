@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
-import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import swal from "sweetalert";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -19,7 +19,7 @@ const ForgotPassword = () => {
     try {
       e.preventDefault();
 
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         `${process.env.REACT_APP_BACKEND_URL}/auth/employee/forgot-password`,
         email
       );

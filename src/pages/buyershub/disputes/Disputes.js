@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -17,7 +17,7 @@ const Disputes = () => {
 
   const getData = async () => {
     try {
-      axios.get("/dispute").then((response) => {
+      axiosInstance.get("/dispute").then((response) => {
         console.log(response.data);
         setDisputes(response.data.data);
         setLoading(true);
@@ -30,7 +30,7 @@ const Disputes = () => {
   const showDetails = (disputeID) => {
     setViewLoader(true);
     try {
-      axios.get(`/dispute/${disputeID}`).then((response) => {
+      axiosInstance.get(`/dispute/${disputeID}`).then((response) => {
         console.log(response.data.data);
         setViewDisputes(response.data.data);
         setViewLoader(false);
@@ -42,7 +42,7 @@ const Disputes = () => {
 
   const getDispute = async (id) => {
     try {
-      const { data } = await axios.patch("/dispute", {
+      const { data } = await axiosInstance.patch("/dispute", {
         status: "RESOLVED",
         disputeID: id,
       });

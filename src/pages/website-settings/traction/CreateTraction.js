@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -27,7 +27,7 @@ const CreateTraction = () => {
     setLoading(true);
     try {
       e.preventDefault();
-      const { data: result } = await axios.post("/traction ", {
+      const { data: result } = await axiosInstance.post("/traction ", {
         name: traction.name,
         count: traction.count,
         headers: {

@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { Protectedd } from "../../../utils/Protectedd";
 
 // import { useAppContext } from "../../../utils/contexts/AppContext";
@@ -47,7 +47,7 @@ const EditProducts = () => {
   };
 
   const getCommodityId = () => {
-    axios.get("/commodity").then((response) => {
+    axiosInstance.get("/commodity").then((response) => {
       setCommodities(response.data.data);
       console.log(response.data.data);
     });
@@ -103,7 +103,7 @@ const EditProducts = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/product/${productId}`);
+      const response = await axiosInstance.get(`/product/${productId}`);
       // setProductInfo(response.data.data)
       console.log("the products", response.data.data);
       setId(response.data.data.id);
@@ -222,7 +222,7 @@ const EditProducts = () => {
       // }
       // formData.append("featuredImage", e.target.featuredImage.files[0]);
 
-      const { data: result } = await axios.patch(`/product/${id}`, {
+      const { data: result } = await axiosInstance.patch(`/product/${id}`, {
         currency: "NGN",
         productName: productName,
         parentCategory: parentCategory,

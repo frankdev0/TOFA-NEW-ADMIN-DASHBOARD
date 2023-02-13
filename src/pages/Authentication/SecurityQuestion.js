@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import swal from "sweetalert";
 
 const SecurityQuestion = () => {
@@ -54,7 +54,7 @@ const SecurityQuestion = () => {
         },
       ];
       console.log("for security question", securityQuestions);
-      const res = await axios.post("/auth/security-questions", {
+      const res = await axiosInstance.post("/auth/security-questions", {
         securityQuestions: securityQuestions,
       });
       setIsSubmit(true);

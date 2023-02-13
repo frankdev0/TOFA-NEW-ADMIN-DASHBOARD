@@ -3,7 +3,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ const CreateProducts = () => {
   const [customError, setCustomError] = useState("");
 
   const getCommodityId = () => {
-    axios.get("/commodity").then((response) => {
+    axiosInstance.get("/commodity").then((response) => {
       setCommodityTag(response.data.data);
       console.log(response.data.data);
     });
@@ -130,7 +130,7 @@ const CreateProducts = () => {
       }
       formData.append("featuredImage", e.target.featuredImage.files[0]);
 
-      const { data: result } = await axios.post("/product", formData, {
+      const { data: result } = await axiosInstance.post("/product", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

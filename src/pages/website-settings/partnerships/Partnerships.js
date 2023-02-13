@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
@@ -19,7 +19,7 @@ const Partnerships = () => {
 
   const getData = async () => {
     try {
-      axios.get("/testimonial").then((response) => {
+      axiosInstance.get("/testimonial").then((response) => {
         setPartners(response.data.data);
         setLoading(false);
       });
@@ -34,7 +34,7 @@ const Partnerships = () => {
   }, []);
 
   const handleDelete = (testimonialID) => {
-    axios.delete(`/testimonial/${testimonialID}`).then(() => {
+    axiosInstance.delete(`/testimonial/${testimonialID}`).then(() => {
       getData();
     });
   };
@@ -67,7 +67,7 @@ const Partnerships = () => {
 
   const showDetails = (testimonialID) => {
     setViewLoader(true);
-    axios.get(`/testimonial/${testimonialID}`).then((response) => {
+    axiosInstance.get(`/testimonial/${testimonialID}`).then((response) => {
       setViewPartner(response.data.data);
       setViewLoader(false);
     });

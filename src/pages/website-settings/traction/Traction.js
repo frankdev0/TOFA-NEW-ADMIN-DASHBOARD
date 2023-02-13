@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 // import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { Link } from "react-router-dom";
 import "jquery/dist/jquery.min.js";
 //Datatable Modules
@@ -23,7 +23,7 @@ const Tractions = () => {
 
   const getData = async () => {
     try {
-      axios.get("/traction").then((response) => {
+      axiosInstance.get("/traction").then((response) => {
         setTraction(response.data.data);
         console.log(response.data.data);
         setLoading(true);
@@ -38,7 +38,7 @@ const Tractions = () => {
   }, []);
 
   const handleDelete = (tractionID) => {
-    axios.delete(`/traction/${tractionID}`).then((response) => {
+    axiosInstance.delete(`/traction/${tractionID}`).then((response) => {
       getData();
     });
   };
@@ -62,7 +62,7 @@ const Tractions = () => {
 
   const showDetails = (tractionID) => {
     setViewLoader(true);
-    axios.get(`/traction/${tractionID}`).then((response) => {
+    axiosInstance.get(`/traction/${tractionID}`).then((response) => {
       setViewTraction(response.data.data);
       setViewLoader(false);
 

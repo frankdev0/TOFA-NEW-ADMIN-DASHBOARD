@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
@@ -57,11 +57,15 @@ const NewCommodity = () => {
       }
       formData.append("image", e.target.image.files[0]);
       console.log(e.target.image.files[0]);
-      const { data: result } = await axios.post("/commodity", jsonData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const { data: result } = await axiosInstance.post(
+        "/commodity",
+        jsonData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setLoading(false);
       setTimeout(() => {
         navigate(-1);

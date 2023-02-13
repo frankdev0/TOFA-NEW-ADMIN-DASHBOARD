@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 
@@ -22,7 +22,7 @@ const COrders = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const { data: result } = await axios.post("/order/local", {
+      const { data: result } = await axiosInstance.post("/order/local", {
         quantity: orders.quantity,
         country: orders.country,
         address: orders.address,

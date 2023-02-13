@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-// import { axios } from "../pages/components/baseUrl";
+import { axiosInstance } from "../pages/components/baseUrl";
 import { AppContext } from "./contexts/AppState";
-import axios from "axios";
+// import axiosInstance from "axiosInstance";
 
 export const Protectedd = (WrappedComponent, roles) => {
   return (props) => {
@@ -13,16 +13,16 @@ export const Protectedd = (WrappedComponent, roles) => {
     const { setUser } = useContext(AppContext);
 
     useEffect(() => {
-      const newToken = localStorage.getItem("tokenValue")
+    //   const newToken = localStorage.getItem("tokenValue")
     
-       const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization : `Bearer ${newToken}`
-      }
-    };
-      axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/auth/current-user`,config)
+    //    const config = {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization : `Bearer ${newToken}`
+    //   }
+    // };
+      axiosInstance
+        .get(`/auth/current-user`)
         .then((response) => {
           console.log("some response", response);
           const user = response.data.currentUser;

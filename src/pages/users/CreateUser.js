@@ -3,7 +3,7 @@ import "./user.css";
 import Sidebar from "../components/sidebar/Sidebar";
 import Navbar from "../components/navbar/Navbar";
 import { useNavigate } from "react-router-dom";
-import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../utils/Protectedd";
@@ -26,7 +26,7 @@ const CreateUsers = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/auth/add-employee", {
+      const { data } = await axiosInstance.post("/auth/add-employee", {
         fullName: user.fullName,
         email: user.email,
         role: user.role,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Icon } from "react-icons-kit";
@@ -65,7 +65,7 @@ const ConfirmPassword = () => {
       e.preventDefault();
       setFormErrors(validate(userInfo));
       setIsSubmit(false);
-      const result = await axios.post("/auth/set-employee-password", {
+      const result = await axiosInstance.post("/auth/set-employee-password", {
         password: userInfo.password,
         token: setPasswordToken,
         employeeID: userId,

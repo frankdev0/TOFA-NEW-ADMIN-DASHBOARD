@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -17,7 +17,7 @@ const Buyers = () => {
 
   const getData = async () => {
     try {
-      axios.get("/auth/buyers").then((response) => {
+      axiosInstance.get("/auth/buyers").then((response) => {
         console.log(response.data);
         setBuyer(response.data.data);
         setLoading(true);
@@ -36,7 +36,7 @@ const Buyers = () => {
 
   const showDetails = (buyerID) => {
     setViewLoader(true);
-    axios.get(`/auth/buyers/${buyerID}`).then((response) => {
+    axiosInstance.get(`/auth/buyers/${buyerID}`).then((response) => {
       setViewBuyer(response.data.data);
       console.log(response.data.data);
       setViewLoader(false);

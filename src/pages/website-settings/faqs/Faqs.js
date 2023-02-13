@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import { Link } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
@@ -20,7 +20,7 @@ const Faqs = () => {
 
   const getData = async () => {
     try {
-      axios.get("/faq").then((response) => {
+      axiosInstance.get("/faq").then((response) => {
         console.log(response.data);
         setFaq(response.data.data);
         setLoading(true);
@@ -44,7 +44,7 @@ const Faqs = () => {
   }, []);
 
   const handleDelete = (faqID) => {
-    axios.delete(`/faq/${faqID}`).then(() => {
+    axiosInstance.delete(`/faq/${faqID}`).then(() => {
       getData();
     });
   };
@@ -68,7 +68,7 @@ const Faqs = () => {
 
   const showDetails = (faqID) => {
     setViewLoader(true);
-    axios.get(`/faq/${faqID}`).then((response) => {
+    axiosInstance.get(`/faq/${faqID}`).then((response) => {
       setViewFaq(response.data.data);
       setViewLoader(false);
     });

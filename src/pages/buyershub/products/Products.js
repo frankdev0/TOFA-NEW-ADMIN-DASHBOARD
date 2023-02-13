@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./products.css";
@@ -30,8 +30,8 @@ const Products = () => {
 
   const getData = async () => {
     try {
-      axios
-        .get(`${process.env.REACT_APP_BACKEND_URL}/product`, {
+      axiosInstance
+        .get(`/product`, {
           withCredential: true,
         })
         .then((response) => {
@@ -70,7 +70,7 @@ const Products = () => {
   };
 
   const handleDelete = (productID) => {
-    axios
+    axiosInstance
       .delete(`${process.env.REACT_APP_BACKEND_URL}/product/${productID}`)
       .then((response) => {
         setViewProduct(response.data.data);
@@ -79,7 +79,7 @@ const Products = () => {
 
   const showDetails = (productID) => {
     setViewLoader(true);
-    axios
+    axiosInstance
       .get(`${process.env.REACT_APP_BACKEND_URL}/product/${productID}`)
       .then((response) => {
         setViewProduct(response.data.data);

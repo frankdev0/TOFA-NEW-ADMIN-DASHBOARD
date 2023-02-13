@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import logo from "../../assets/logos.png";
 import "./login.css";
 import { useNavigate } from "react-router-dom";
-// import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+// import axiosInstance from "axiosInstance";
 // import { AuthContext } from "../../utils/contexts/AuthContext";
 // import { useFetch } from "../../useFetch";
 
@@ -43,8 +43,8 @@ const Login = () => {
       e.preventDefault();
       console.log({ userInfo });
       setLoading(true);
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/signin-employee`,
+      const { data } = await axiosInstance.post(
+        `/auth/signin-employee`,
         {
           email: userInfo.email,
           password: userInfo.password,

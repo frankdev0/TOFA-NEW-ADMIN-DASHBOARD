@@ -7,7 +7,7 @@ import io from "socket.io-client";
 import "./message.css";
 import { NewOrderModal } from "./NewOrder";
 import ChatInput from "./ChatInput";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { Protectedd } from "../../../utils/Protectedd";
 
 const MessageCenter = () => {
@@ -31,7 +31,7 @@ const MessageCenter = () => {
 
   const myContacts = async () => {
     try {
-      axios.get("/admin/contacts").then((response) => {
+      axiosInstance.get("/admin/contacts").then((response) => {
         setContacts(response.data.data);
         console.log(response.data.data);
       });
@@ -80,7 +80,7 @@ const MessageCenter = () => {
     try {
       const {
         data: { data },
-      } = await axios.get(`/message/receive-message/${buyerId}`);
+      } = await axiosInstance.get(`/message/receive-message/${buyerId}`);
       console.log(data);
       setMessages(data);
       setBuyerId(buyerId);
@@ -112,7 +112,7 @@ const MessageCenter = () => {
       console.log(payload);
 
       socket.current.emit(socketEvents.sendMessage, payload);
-      axios.post("/message/send-message/", payload);
+      axiosInstance.post("/message/send-message/", payload);
 
       const msgs = [...messages];
       msgs.push({ fromSelf: true, message: msg });

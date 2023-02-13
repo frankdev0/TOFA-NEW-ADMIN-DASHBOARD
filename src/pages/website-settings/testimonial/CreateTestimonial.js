@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useNavigate } from "react-router-dom";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../../utils/Protectedd";
@@ -28,7 +28,7 @@ const CreateTestimonial = () => {
     setLoading(true);
     try {
       e.preventDefault();
-      const { data: result } = await axios.post("/testimonial", {
+      const { data: result } = await axiosInstance.post("/testimonial", {
         name: testimonial.name,
         company: testimonial.company,
         message: testimonial.message,

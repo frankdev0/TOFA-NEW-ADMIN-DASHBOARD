@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
 import { Protectedd } from "../../../utils/Protectedd";
@@ -26,7 +26,7 @@ const EditBanner = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/banner/${bannerId}`);
+      const response = await axiosInstance.get(`/banner/${bannerId}`);
       setCallToAction(response.data.data.callToAction);
       setImage(response.data.data.image);
       console.log(response.data.data.image);
@@ -57,11 +57,15 @@ const EditBanner = () => {
     }
     formData.append("image", imageBanner);
     // console.log(imageFile);
-    const { data: result } = await axios.patch(`/banner/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const { data: result } = await axiosInstance.patch(
+      `/banner/${id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     setLoading(false);
     setTimeout(() => {
       navigate(-1);

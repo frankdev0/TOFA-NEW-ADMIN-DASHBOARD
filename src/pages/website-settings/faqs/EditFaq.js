@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -26,7 +26,7 @@ const EditFaq = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/faq/${myFaqId}`);
+      const response = await axiosInstance.get(`/faq/${myFaqId}`);
       //   setFaqInfo(response.data.data);
       console.log(response.data.data);
       setId(response.data.data.id);
@@ -49,7 +49,7 @@ const EditFaq = () => {
     setLoading(true);
     try {
       e.preventDefault();
-      const { data: result } = await axios.patch(`/faq/${id}`, {
+      const { data: result } = await axiosInstance.patch(`/faq/${id}`, {
         answer: answer,
         question: question,
       });

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { Link } from "react-router-dom";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import dayjs from "dayjs";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -16,7 +16,7 @@ const Banners = () => {
 
   const getData = async () => {
     try {
-      axios
+      axiosInstance
         .get(
           "http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/banner"
         )
@@ -36,7 +36,7 @@ const Banners = () => {
   }, []);
 
   const handleDelete = (bannerID) => {
-    axios
+    axiosInstance
       .delete(
         `http://ec2-18-221-181-52.us-east-2.compute.amazonaws.com:8081/api/v2/banners/${bannerID}`
       )
@@ -64,7 +64,7 @@ const Banners = () => {
 
   const showDetails = (bannerID) => {
     setViewLoader(true);
-    axios.get(`/banner/${bannerID}`).then((response) => {
+    axiosInstance.get(`/banner/${bannerID}`).then((response) => {
       setViewBanner(response.data.data);
       console.log(response.data.data);
       setViewLoader(false);

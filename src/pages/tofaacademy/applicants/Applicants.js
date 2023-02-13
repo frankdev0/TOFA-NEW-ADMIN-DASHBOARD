@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -16,7 +16,7 @@ const Applicants = () => {
 
   const getData = async () => {
     try {
-      axios.get("/tofa-academy").then((response) => {
+      axiosInstance.get("/tofa-academy").then((response) => {
         console.log(response.data);
         setApplicants(response.data.data);
         setLoading(true);
@@ -28,14 +28,14 @@ const Applicants = () => {
 
   const showDetails = (applicantID) => {
     setViewLoader(true);
-    axios.get(`/tofa-academy/${applicantID}`).then((response) => {
+    axiosInstance.get(`/tofa-academy/${applicantID}`).then((response) => {
       setApplicantView(response.data.data);
       setViewLoader(false);
     });
   };
 
   // const handleDelete = (applicantID) => {
-  //   axios.delete(`/product/${applicantID}`).then(() => {
+  //   axiosInstance.delete(`/product/${applicantID}`).then(() => {
 
   //   })
   // }

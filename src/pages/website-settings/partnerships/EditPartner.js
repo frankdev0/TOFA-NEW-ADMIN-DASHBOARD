@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -20,7 +20,7 @@ const CreatePartner = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/testimonial/${myPartnerId}`);
+      const response = await axiosInstance.get(`/testimonial/${myPartnerId}`);
       // setTestimonialInfo(response.data.data)
       console.log(response.data.data);
       setId(response.data.data.id);
@@ -48,11 +48,15 @@ const CreatePartner = () => {
     }
     formData.append("image", imageFile);
     console.log(imageFile);
-    const { data: result } = await axios.patch(`/partner/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const { data: result } = await axiosInstance.patch(
+      `/partner/${id}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     console.log(result);
     toast.success("EDITED SUCCESSFULLY", {
       position: "top-right",

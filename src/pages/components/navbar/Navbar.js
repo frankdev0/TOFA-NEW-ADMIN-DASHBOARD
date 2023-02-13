@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from "react";
 import logo from "../../../assets/logo.JPG";
-import { axios } from "../baseUrl";
+import { axiosInstance } from "../baseUrl";
 import { Link, useNavigate } from "react-router-dom";
 import "./navbar.css";
 import { AppContext } from "../../../utils/contexts/AppState";
@@ -19,7 +19,7 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    axios
+    axiosInstance
       .get("auth/signout")
       .then((response) => {
         console.log("this is from protected route", response.data.currentUser);

@@ -13,7 +13,7 @@ import "./editor.css";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { Protectedd } from "../../../utils/Protectedd";
@@ -26,7 +26,7 @@ const CommodityInsight = () => {
 
   const getData = async () => {
     try {
-      axios.get("/commodity").then((response) => {
+      axiosInstance.get("/commodity").then((response) => {
         setCommodity(response.data.data);
         console.log(response.data.data);
         setLoading(true);
@@ -41,7 +41,7 @@ const CommodityInsight = () => {
   }, []);
 
   const handleDelete = (commodityID) => {
-    axios.delete(`/commodity/${commodityID}`).then((response) => {
+    axiosInstance.delete(`/commodity/${commodityID}`).then((response) => {
       getData();
     });
   };
@@ -65,7 +65,7 @@ const CommodityInsight = () => {
 
   const showDetails = (commodityID) => {
     setViewLoader(true);
-    axios.get(`/commodity/${commodityID}`).then((response) => {
+    axiosInstance.get(`/commodity/${commodityID}`).then((response) => {
       setViewCommodity(response.data.data);
       setViewLoader(false);
 

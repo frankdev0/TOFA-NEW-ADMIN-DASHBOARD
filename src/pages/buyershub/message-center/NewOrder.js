@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import countryList from "react-select-country-list";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "./message.css";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -52,7 +52,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
 
   const getProductInfo = async () => {
     try {
-      const { data } = await axios.get("/product");
+      const { data } = await axiosInstance.get("/product");
       setProducts(data.data);
       console.log(data.data);
     } catch (error) {
@@ -98,7 +98,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
       };
       if (!orderDetails.address) {
         console.log("these are values for foreign", foreignOrderInfo);
-        const { data: result } = await axios.post(
+        const { data: result } = await axiosInstance.post(
           "/order/foreign",
           foreignOrderInfo
         );
@@ -112,7 +112,7 @@ export const NewOrderModal = ({ buyerId, handleSendMsg }) => {
         console.log(localOrderInfo);
       } else {
         console.log("these are values for local", localOrderInfo);
-        const { data: result } = await axios.post(
+        const { data: result } = await axiosInstance.post(
           "/order/local",
           localOrderInfo
         );

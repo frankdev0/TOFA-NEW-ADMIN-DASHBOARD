@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from "../components/baseUrl";
+import { axiosInstance } from "../components/baseUrl";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -19,7 +19,7 @@ const Users = () => {
 
   const getData = async () => {
     try {
-      axios.get("/auth/employees").then((response) => {
+      axiosInstance.get("/auth/employees").then((response) => {
         console.log(response.data);
         setBuyer(response.data.data);
         setLoading(true);
@@ -30,7 +30,7 @@ const Users = () => {
   };
 
   const handleDelete = (employeeID) => {
-    axios.delete(`/auth/employees/${employeeID}`).then(() => {
+    axiosInstance.delete(`/auth/employees/${employeeID}`).then(() => {
       getData();
     });
   };
@@ -54,7 +54,7 @@ const Users = () => {
 
   const showDetails = (employeeID) => {
     setViewLoader(true);
-    axios.get(`/auth/employees/${employeeID}`).then((response) => {
+    axiosInstance.get(`/auth/employees/${employeeID}`).then((response) => {
       setViewUser(response.data.data);
       setViewLoader(false);
     });

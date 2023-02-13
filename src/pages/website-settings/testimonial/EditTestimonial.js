@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -26,7 +26,9 @@ const EditTestimonial = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/testimonial/${myTestimonialId}`);
+      const response = await axiosInstance.get(
+        `/testimonial/${myTestimonialId}`
+      );
       // setTestimonialInfo(response.data.data)
       console.log(response.data.data);
       setId(response.data.data.id);
@@ -48,7 +50,7 @@ const EditTestimonial = () => {
     setLoading(true);
     try {
       e.preventDefault();
-      await axios.patch(`/testimonial/${id}`, {
+      await axiosInstance.patch(`/testimonial/${id}`, {
         name: name,
         company: company,
         message: message,

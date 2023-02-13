@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -54,7 +54,7 @@ const CreateBanner = () => {
       }
       formData.append("image", e.target.image.files[0]);
       console.log(e.target.image.files[0]);
-      const { data: result } = await axios.post("/banner", formData, {
+      const { data: result } = await axiosInstance.post("/banner", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

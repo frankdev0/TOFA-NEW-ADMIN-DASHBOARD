@@ -6,7 +6,7 @@ import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import $ from "jquery";
 import { confirmAlert } from "react-confirm-alert";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import dayjs from "dayjs";
 import { Protectedd } from "../../../utils/Protectedd";
 import "./orders.css";
@@ -23,7 +23,7 @@ const Orders = () => {
 
   const getOrders = async () => {
     try {
-      axios.get("/order").then((response) => {
+      axiosInstance.get("/order").then((response) => {
         console.log(response.data);
         setOrders(response.data.data);
         setLoading(false);
@@ -57,7 +57,7 @@ const Orders = () => {
 
   const deletePaymentReceipt = async (paymentReceiptID) => {
     try {
-      await axios
+      await axiosInstance
         .delete(`order/image/receipt/${paymentReceiptID}`)
         .then((response) => {
           console.log(response.data);
@@ -82,7 +82,7 @@ const Orders = () => {
 
   const updateOrder = async (id) => {
     try {
-      const { data } = await axios.patch("/order", {
+      const { data } = await axiosInstance.patch("/order", {
         status: status,
         orderID: id,
       });
@@ -93,7 +93,7 @@ const Orders = () => {
   };
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get("/admin/dashboard-metrics")
       .then((response) => {
         setMetrics(response.data.data);
@@ -122,7 +122,7 @@ const Orders = () => {
   const showDetails = async (orderID) => {
     try {
       setViewLoader(true);
-      await axios.get(`/order/${orderID}`).then((response) => {
+      await axiosInstance.get(`/order/${orderID}`).then((response) => {
         setOrder(response.data.data);
         console.log(response.data.data);
         setViewLoader(false);

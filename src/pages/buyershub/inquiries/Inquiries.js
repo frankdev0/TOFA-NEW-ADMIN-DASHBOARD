@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import { useFetch } from '../../../useFetch'
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "jquery/dist/jquery.min.js";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
@@ -17,7 +17,7 @@ const Inquiries = () => {
 
   const getData = async () => {
     try {
-      axios.get("/rfq/all").then((response) => {
+      axiosInstance.get("/rfq/all").then((response) => {
         console.log(response.data);
         setInquiries(response.data.data);
         setLoading(true);
@@ -35,7 +35,7 @@ const Inquiries = () => {
 
   const showDetails = (productID) => {
     setViewLoader(true);
-    axios.get(`/rfq/${productID}`).then((response) => {
+    axiosInstance.get(`/rfq/${productID}`).then((response) => {
       setInquiryView(response.data.data);
       setViewLoader(false);
     });

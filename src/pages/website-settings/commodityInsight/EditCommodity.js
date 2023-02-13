@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
-import { axios } from "../../components/baseUrl";
+import { axiosInstance } from "../../components/baseUrl";
 import "react-toastify/dist/ReactToastify.css";
 import { africanCountryData } from "../../buyershub/products/africanCountries";
 import { toast, ToastContainer } from "react-toastify";
@@ -34,7 +34,7 @@ const EditCommodity = () => {
 
   const getInfo = async () => {
     try {
-      const response = await axios.get(`/commodity/${commodityId}`);
+      const response = await axiosInstance.get(`/commodity/${commodityId}`);
       setName(response.data.data.name);
       setBriefHistory(response.data.data.briefHistory);
       console.log(response.data.data.briefHistory);
@@ -85,7 +85,7 @@ const EditCommodity = () => {
       formData.append("image", e.target.image.files[0]);
       console.log("this is json", jsonData);
       // console.log("target files", e.target.image.files[0]);
-      const { data } = await axios.patch("/commodity", jsonData);
+      const { data } = await axiosInstance.patch("/commodity", jsonData);
       setLoading(false);
       console.log(data);
       setTimeout(() => {
